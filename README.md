@@ -4,14 +4,14 @@
 
 #NDK FRAMEWORK
 The NDK Framework is a lightweight framework used for developing small programs for Norddjurs Kommune.
-The framework standardizes development og plugins and takes care of the following trivial tasks:
+The framework standardizes development of plugins and takes care of the following trivial tasks:
 
 * Configuration (store, read and write configuration)
 * Logging (where to log and what to log)
 * Resource loading (easy load resources from plugin assembly)
 * Mail sending (send e-mail messages)
-* Database connection (connect to database and execut queries)
-* Execution (execute as commandline program or as a service)
+* Database connection (connect to database and execute queries)
+* Execution (execute plugin from the commandline or as a service)
 
 The idea with the framework, it to make it easy for the plugin developer to use the resources
 mentioned above, without knowledge about how they are configured.
@@ -30,7 +30,7 @@ It is wery easy to write plugins for the NDK Framework:
 * Create a C# project and reference the "NDK Framework.dll" assembly.
 * Use the namespace "NDK.Framework".
 * Create a class that extends the abstract class "PluginBase".
-* Implement the abstract methods
+* Implement the abstract methods.
 
 Each plugin developed must have a static guid. This guid is used when creating configuration
 for the plugin, and when selecting the plugin for execution.
@@ -75,7 +75,7 @@ the resources will be available, identified by their file name.
 
 
 ###Mail
-The NDK Framework makes it easy to send e-mail message and attachments.
+The NDK Framework makes it easy to send e-mail messages and attachments.
 
 
 
@@ -85,7 +85,7 @@ The NDK Framework takes care of configuring and selecting datasources (databases
 The plugin developer simply connects to a database using a key, which is associated with
 a database connection in the configuration.
 
-The plugin developer should write SQL code using Quited Identifiers.
+The plugin developer should write SQL code using Quoted Identifiers.
 This makes it easier to reuse the code on other database engines, such as MariaDB.
 
 

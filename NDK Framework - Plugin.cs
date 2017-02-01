@@ -8,6 +8,7 @@ using System.Text;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.DirectoryServices.AccountManagement;
 
 namespace NDK.Framework {
 
@@ -196,9 +197,9 @@ namespace NDK.Framework {
 		/// Gets the configuration keys associated with this plugin.
 		/// </summary>
 		/// <returns>All the keys associated with this plugin.</returns>
-		public String[] GetKeys() {
+		public String[] GetConfigKeys() {
 			return this.Config.GetKeys(this.GetGuid());
-		} // GetKeys
+		} // GetConfigKeys
 
 		/// <summary>
 		/// Gets the configuration value associated with this plugin and the key.
@@ -208,9 +209,9 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value (null).</param>
 		/// <returns>The value.</returns>
-		public String GetValue(String key, String defaultValue = null) {
+		public String GetConfigValue(String key, String defaultValue = null) {
 			return this.Config.GetValue(this.GetGuid(), key, defaultValue);
-		} // GetValue
+		} // GetConfigValue
 
 		/// <summary>
 		/// Gets the integer configuration value associated with this plugin and the key.
@@ -220,13 +221,13 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The default value.</param>
 		/// <returns>The value.</returns>
-		public Int32 GetValue(String key, Int32 defaultValue) {
+		public Int32 GetConfigValue(String key, Int32 defaultValue) {
 			try {
 				return Int32.Parse(this.Config.GetValue(this.GetGuid(), key));
 			} catch {
 				return defaultValue;
 			}
-		} // GetValue
+		} // GetConfigValue
 
 		/// <summary>
 		/// Gets the datetime configuration value associated with this plugin and the key.
@@ -236,13 +237,13 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The default value.</param>
 		/// <returns>The value.</returns>
-		public DateTime GetValue(String key, DateTime defaultValue) {
+		public DateTime GetConfigValue(String key, DateTime defaultValue) {
 			try {
 				return DateTime.Parse(this.Config.GetValue(this.GetGuid(), key));
 			} catch {
 				return defaultValue;
 			}
-		} // GetValue
+		} // GetConfigValue
 
 		/// <summary>
 		/// Gets the guid configuration value associated with this plugin and the key.
@@ -252,13 +253,13 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The default value.</param>
 		/// <returns>The value.</returns>
-		public Guid GetValue(String key, Guid defaultValue) {
+		public Guid GetConfigValue(String key, Guid defaultValue) {
 			try {
 				return Guid.Parse(this.Config.GetValue(this.GetGuid(), key));
 			} catch {
 				return defaultValue;
 			}
-		} // GetValue
+		} // GetConfigValue
 
 		/// <summary>
 		/// Gets the configuration values associated with this plugin and the key.
@@ -266,18 +267,18 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <param name="key">The key.</param>
 		/// <returns>The value list.</returns>
-		public List<String> GetValues(String key) {
+		public List<String> GetConfigValues(String key) {
 			return this.Config.GetValues(this.GetGuid(), key);
-		} // GetValues
+		} // GetConfigValues
 
 		/// <summary>
 		/// Sets the configuration values associated with this plugin and the key.
 		/// </summary>
 		/// <param name="key">The key.</param>
 		/// <param name="values">The values</param>
-		public void SetValues(String key, params String[] values) {
+		public void SetConfigValues(String key, params String[] values) {
 			this.Config.SetValues(this.GetGuid(), key, values);
-		} // SetValues
+		} // SetConfigValues
 		#endregion
 
 		#region Logging methods.
@@ -607,6 +608,187 @@ namespace NDK.Framework {
 				return null;
 			}
 		} // ExecuteSql
+		#endregion
+
+		#region ActiveDirectory methods.
+		/// <summary>
+		/// Gets the current user.
+		/// </summary>
+		/// <returns>The current user.</returns>
+		public UserPrincipal GetCurrentUser() {
+			return UserPrincipal.Current;
+		} // GetCurrentUser
+
+		/// <summary>
+		/// Gets the user identified by the user id.
+		/// The user id can be Guid, Distinguished Name, Sam Account Name, User Principal Name or Security Identifier.
+		/// </summary>
+		/// <param name="userId">The user id to find.</param>
+		/// <returns>The matching user or null.</returns>
+		public UserPrincipal GetUser(String userId) {
+			// Connect to the Active Directory.
+			PrincipalContext context = new PrincipalContext(ContextType.Domain);
+			UserPrincipal user = null;
+
+			// Search guid.
+			Guid userGuid = Guid.Empty;
+			if ((user == null) && (Guid.TryParse(userId, out userGuid) == true)) {
+				try {
+					user = UserPrincipal.FindByIdentity(context, IdentityType.Guid, userId);
+				} catch {}
+			}
+
+			// Search distinguished name.
+			if (user == null) {
+				try {
+					user = UserPrincipal.FindByIdentity(context, IdentityType.DistinguishedName, userId);
+				} catch { }
+			}
+
+			// Search sam account name.
+			if (user == null) {
+				try {
+					user = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, userId);
+				} catch { }
+			}
+
+			// Search user principal name.
+			if (user == null) {
+				try {
+					user = UserPrincipal.FindByIdentity(context, IdentityType.UserPrincipalName, userId);
+				} catch { }
+			}
+
+			// Search security identifier.
+			if (user == null) {
+				try {
+					user = UserPrincipal.FindByIdentity(context, IdentityType.Sid, userId);
+				} catch { }
+			}
+
+			// Return the user or null.
+			return user;
+		} // GetUser
+
+		/// <summary>
+		/// Gets all users.
+		/// </summary>
+		/// <returns>All users.</returns>
+		public List<UserPrincipal> GetAllUsers() {
+			List<UserPrincipal> users = new List<UserPrincipal>();
+
+			// Connect to the Active Directory.
+			PrincipalContext context = new PrincipalContext(ContextType.Domain);
+
+			// Find all users.
+			UserPrincipal userQueryFilter = new UserPrincipal(context);
+			userQueryFilter.Name = "*";
+			PrincipalSearcher searcher = new PrincipalSearcher();
+			searcher.QueryFilter = userQueryFilter;
+			PrincipalSearchResult<Principal> searchResults = searcher.FindAll();
+			foreach (Principal searchResult in searchResults) {
+				users.Add((UserPrincipal)searchResult);
+			}
+
+			// Return the found users.
+			return users;
+		} // GetAllUsers
+
+		/// <summary>
+		/// Gets the group identified by the group id.
+		/// The group id can be Guid, Distinguished Name, Sam Account Name, User Principal Name or Security Identifier.
+		/// </summary>
+		/// <param name="userId">The group id to find.</param>
+		/// <returns>The matching group or null.</returns>
+		public GroupPrincipal GetGroup(String groupId) {
+			// Connect to the Active Directory.
+			PrincipalContext context = new PrincipalContext(ContextType.Domain);
+			GroupPrincipal group = null;
+
+			// Search guid.
+			Guid groupGuid = Guid.Empty;
+			if ((group ==  null) && (Guid.TryParse(groupId, out groupGuid) == true)) {
+				try {
+					group = GroupPrincipal.FindByIdentity(context, IdentityType.Guid, groupId);
+				} catch {}
+			}
+
+			// Search distinguished name.
+			if (group == null) {
+				try {
+					group = GroupPrincipal.FindByIdentity(context, IdentityType.DistinguishedName, groupId);
+				} catch { }
+			}
+
+			// Search sam account name.
+			if (group == null) {
+				try {
+					group = GroupPrincipal.FindByIdentity(context, IdentityType.SamAccountName, groupId);
+				} catch { }
+			}
+
+			// Search user principal name.
+			if (group == null) {
+				try {
+					group = GroupPrincipal.FindByIdentity(context, IdentityType.UserPrincipalName, groupId);
+				} catch { }
+			}
+
+			// Search security identifier.
+			if (group == null) {
+				try {
+					group = GroupPrincipal.FindByIdentity(context, IdentityType.Sid, groupId);
+				} catch { }
+			}
+
+			// Return the group or null.
+			return group;
+		} // GetGroup
+
+		/// <summary>
+		/// Gets all groups.
+		/// </summary>
+		/// <returns>All groups.</returns>
+		public List<GroupPrincipal> GetAllGroups() {
+			List<GroupPrincipal> groups = new List<GroupPrincipal>();
+
+			// Connect to the Active Directory.
+			PrincipalContext context = new PrincipalContext(ContextType.Domain);
+
+			// Find all groups.
+			GroupPrincipal groupQueryFilter = new GroupPrincipal(context);
+			groupQueryFilter.Name = "*";
+			PrincipalSearcher searcher = new PrincipalSearcher();
+			searcher.QueryFilter = groupQueryFilter;
+			PrincipalSearchResult<Principal> searchResults = searcher.FindAll();
+			foreach (Principal searchResult in searchResults) {
+				groups.Add((GroupPrincipal)searchResult);
+			}
+
+			// Return the found groups.
+			return groups;
+		} // GetAllGroups
+
+		/// <summary>
+		/// Gets if the current user is member of the group.
+		/// </summary>
+		/// <param name="group">The group.</param>
+		/// <param name="recursive">True to search recursive.</param>
+		/// <returns>True if the current user is member of the group.</returns>
+		public Boolean IsUserMemberOfGroup(GroupPrincipal group, Boolean recursive = true) {
+			return this.IsUserMemberOfGroup(this.GetCurrentUser(), group, recursive);
+		} // IsUserMemberOfGroup
+
+		/// <summary>
+		/// Gets if the user is member of the group.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		/// <param name="group">The group.</param>
+		/// <param name="recursive">True to search recursive.</param>
+		/// <returns>True if the user is member of the group.</returns>
+		public Boolean IsUserMemberOfGroup(UserPrincipal user, GroupPrincipal group, Boolean recursive = true) {
+			return false;
+		} // IsUserMemberOfGroup
 		#endregion
 
 		#region Abstract methods.
