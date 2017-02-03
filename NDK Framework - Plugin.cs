@@ -173,6 +173,11 @@ namespace NDK.Framework {
 		protected String[] Arguments { get; private set; }
 
 		/// <summary>
+		/// The initialized and plugins.
+		/// </summary>
+		protected PluginList<PluginBase> Plugins { get; private set; }
+
+		/// <summary>
 		/// The object can be tagged with some object.
 		/// </summary>
 		public Object Tag { get; set; }
@@ -180,15 +185,43 @@ namespace NDK.Framework {
 
 		#region Methods.
 		/// <summary>
+		/// Initialize the plugin, with defaults.
+		/// </summary>
+		/// <param name="plugins">The loaded plugins.</param>
+		/// <param name="arguments">The arguments.</param>
+		public void Initialize(PluginList<PluginBase> plugins, params String[] arguments) {
+			this.Config = new Configuration();
+			this.Logger = new Logger(this.Config);
+			this.Plugins = plugins;
+			this.Arguments = arguments;
+
+			// Initialize all plugins, that are not initialized.
+			foreach (PluginBase plugin in this.Plugins) {
+				if (plugin.Plugins == null) {
+					plugin.Initialize(this.Plugins, this.Config, this.Logger, this.Arguments);
+				}
+			}
+		} // Initialize
+
+		/// <summary>
 		/// Initialize the plugin.
 		/// </summary>
+		/// <param name="plugins">The loaded plugins.</param>
 		/// <param name="config">The configuration.</param>
 		/// <param name="logger">The logger.</param>
 		/// <param name="arguments">The arguments.</param>
-		public void Initialize(IConfiguration config, ILogger logger, String[] arguments) {
+		public void Initialize(PluginList<PluginBase> plugins, IConfiguration config, ILogger logger, params String[] arguments) {
 			this.Config = config;
 			this.Logger = logger;
+			this.Plugins = plugins;
 			this.Arguments = arguments;
+
+			// Initialize all plugins, that are not initialized.
+			foreach (PluginBase plugin in this.Plugins) {
+				if (plugin.Plugins == null) {
+					plugin.Initialize(this.Plugins, this.Config, this.Logger, this.Arguments);
+				}
+			}
 		} // Initialize
 		#endregion
 
@@ -280,6 +313,8 @@ namespace NDK.Framework {
 			this.Config.SetValues(this.GetGuid(), key, values);
 		} // SetConfigValues
 		#endregion
+
+		// TODO: Some current user key/value storage, perhaps in the registry.
 
 		#region Logging methods.
 		/// <summary>
@@ -421,6 +456,22 @@ namespace NDK.Framework {
 
 		#region Mail methods.
 		/// <summary>
+		/// Send e-mail message as plain text to the configured service desk recepient.
+		/// </summary>
+		/// <param name="subject">The subject.</param>
+		/// <param name="text">The message text.</param>
+		/// <param name="attachments">The attachments (filenames).</param>
+		/// <returns>True if the e-mail was send.</returns>
+		public Boolean SendMail(String subject, String text, params String[] attachments) {
+			// Get configuration.
+			String from = this.Config.GetValue("SmtpFrom", "noreply@internal");
+			String to = this.Config.GetValue("SmtpTo", "noreply@internal");
+
+			// Send the message.
+			return this.SendMailFrom(from, to, subject, text, false, attachments);
+		} // SendMail
+
+		/// <summary>
 		/// Send e-mail message as plain text.
 		/// </summary>
 		/// <param name="to">One or more to addresses.</param>
@@ -502,6 +553,7 @@ namespace NDK.Framework {
 				// Success.
 				return true;
 			} catch (Exception exception) {
+				// Log.
 				this.Logger.LogError(exception);
 
 				// Failure.
@@ -615,54 +667,120 @@ namespace NDK.Framework {
 		/// Gets the current user.
 		/// </summary>
 		/// <returns>The current user.</returns>
-		public UserPrincipal GetCurrentUser() {
-			return UserPrincipal.Current;
+		public Person GetCurrentUser() {
+			return this.GetUser(Environment.UserName);
 		} // GetCurrentUser
 
 		/// <summary>
 		/// Gets the user identified by the user id.
-		/// The user id can be Guid, Distinguished Name, Sam Account Name, User Principal Name or Security Identifier.
+		/// The user id can be person number (CPR), Guid, Distinguished Name, Sam Account Name, User Principal Name or Security Identifier.
 		/// </summary>
 		/// <param name="userId">The user id to find.</param>
 		/// <returns>The matching user or null.</returns>
-		public UserPrincipal GetUser(String userId) {
+		public Person GetUser(String userId) {
 			// Connect to the Active Directory.
 			PrincipalContext context = new PrincipalContext(ContextType.Domain);
-			UserPrincipal user = null;
+			Person user = null;
+
+			// Search cpr number.
+			// TODO: Add check for numeric userId.
+			if (userId.Trim().Replace("-", String.Empty).Length == 10) {
+				try {
+					// Get which attribute stores the cpr number.
+					String userCprAttribute = this.GetConfigValue("ActiveDirectoryCprAttribute", "EmployeeId");
+
+					// Initialize the query.
+					Person userQueryFilter = new Person(context);
+					switch (userCprAttribute.ToLower()) {
+						case "extensionattribute1":
+							userQueryFilter.ExtensionAttribute1 = userId;
+							break;
+						case "extensionattribute2":
+							userQueryFilter.ExtensionAttribute2 = userId;
+							break;
+						case "extensionattribute3":
+							userQueryFilter.ExtensionAttribute3 = userId;
+							break;
+						case "extensionattribute4":
+							userQueryFilter.ExtensionAttribute4 = userId;
+							break;
+						case "extensionattribute5":
+							userQueryFilter.ExtensionAttribute5 = userId;
+							break;
+						case "extensionattribute6":
+							userQueryFilter.ExtensionAttribute6 = userId;
+							break;
+						case "extensionattribute7":
+							userQueryFilter.ExtensionAttribute7 = userId;
+							break;
+						case "extensionattribute8":
+							userQueryFilter.ExtensionAttribute8 = userId;
+							break;
+						case "extensionattribute9":
+							userQueryFilter.ExtensionAttribute9 = userId;
+							break;
+						case "extensionattribute10":
+							userQueryFilter.ExtensionAttribute10 = userId;
+							break;
+						case "extensionattribute11":
+							userQueryFilter.ExtensionAttribute11 = userId;
+							break;
+						case "extensionattribute12":
+							userQueryFilter.ExtensionAttribute12 = userId;
+							break;
+						case "extensionattribute13":
+							userQueryFilter.ExtensionAttribute13 = userId;
+							break;
+						case "extensionattribute14":
+							userQueryFilter.ExtensionAttribute14 = userId;
+							break;
+						case "extensionattribute15":
+							userQueryFilter.ExtensionAttribute15 = userId;
+							break;
+						case "employeeid":
+						default:
+							userQueryFilter.EmployeeId = userId;
+							break;
+					}
+					PrincipalSearcher searcher = new PrincipalSearcher();
+					searcher.QueryFilter = userQueryFilter;
+					user = (Person)searcher.FindOne();
+				} catch { }
+			}
 
 			// Search guid.
 			Guid userGuid = Guid.Empty;
 			if ((user == null) && (Guid.TryParse(userId, out userGuid) == true)) {
 				try {
-					user = UserPrincipal.FindByIdentity(context, IdentityType.Guid, userId);
+					user = Person.FindByIdentity(context, IdentityType.Guid, userId);
 				} catch {}
 			}
 
 			// Search distinguished name.
 			if (user == null) {
 				try {
-					user = UserPrincipal.FindByIdentity(context, IdentityType.DistinguishedName, userId);
+					user = Person.FindByIdentity(context, IdentityType.DistinguishedName, userId);
 				} catch { }
 			}
 
 			// Search sam account name.
 			if (user == null) {
 				try {
-					user = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, userId);
+					user = Person.FindByIdentity(context, IdentityType.SamAccountName, userId);
 				} catch { }
 			}
 
 			// Search user principal name.
 			if (user == null) {
 				try {
-					user = UserPrincipal.FindByIdentity(context, IdentityType.UserPrincipalName, userId);
+					user = Person.FindByIdentity(context, IdentityType.UserPrincipalName, userId);
 				} catch { }
 			}
 
 			// Search security identifier.
 			if (user == null) {
 				try {
-					user = UserPrincipal.FindByIdentity(context, IdentityType.Sid, userId);
+					user = Person.FindByIdentity(context, IdentityType.Sid, userId);
 				} catch { }
 			}
 
@@ -670,29 +788,155 @@ namespace NDK.Framework {
 			return user;
 		} // GetUser
 
+
+		public enum UserQuery {
+			/// <summary>
+			/// Get all enabled users.
+			/// </summary>
+			ENABLED = 1,
+
+			/// <summary>
+			/// Get all disabled users.
+			/// </summary>
+			DISABLED = 2,
+
+			/// <summary>
+			/// Get all users, where the password newer expires.
+			/// </summary>
+			PASSWORD_NEWER_EXPIRES = 3,
+
+			/// <summary>
+			/// Get all users, where the password expire at some time.
+			/// </summary>
+			PASSWORD_EXPIRES = 4,
+
+			/// <summary>
+			/// Get all users, where a password is not required.
+			/// </summary>
+			PASSWORD_NOT_REQUIRED = 5,
+
+			/// <summary>
+			/// Get all users, where a password is required.
+			/// </summary>
+			PASSWORD_REQUIRED = 6,
+
+			/// <summary>
+			/// Get all users, who can change their own password.
+			/// </summary>
+			PASSWORD_CHANGE_ENABLED = 7,
+
+			/// <summary>
+			/// Get all users, who can not change their own password.
+			/// </summary>
+			PASSWORD_CHANGE_DISABLED = 8,
+
+			/// <summary>
+			/// Get all users, where the account is not expired.
+			/// </summary>
+			ACCOUNT_NOT_EXPIRED = 101,
+
+			/// <summary>
+			/// Get all users, where the account is expired.
+			/// </summary>
+			ACCOUNT_EXPIRED = 102,
+
+			/// <summary>
+			/// Gets all users, where the account is not locked out.
+			/// </summary>
+			ACCOUNT_NOT_LOCKED_OUT = 103,
+
+			/// <summary>
+			/// Gets all users, where the account is locked out.
+			/// </summary>
+			ACCOUNT_LOCKED_OUT = 104,
+
+
+
+
+			/// <summary>
+			/// Get all users.
+			/// </summary>
+			ALL = 0
+		} // UserQuery
+
+
+
+
 		/// <summary>
 		/// Gets all users.
+		/// Use the filter, to only get for example disabled users.
 		/// </summary>
+		/// <param name="userFilter">Filter which users to query.</param>
 		/// <returns>All users.</returns>
-		public List<UserPrincipal> GetAllUsers() {
-			List<UserPrincipal> users = new List<UserPrincipal>();
+		public List<Person> GetAllUsers(UserQuery userFilter = UserQuery.ALL) {
+			List<Person> users = new List<Person>();
 
 			// Connect to the Active Directory.
 			PrincipalContext context = new PrincipalContext(ContextType.Domain);
 
-			// Find all users.
-			UserPrincipal userQueryFilter = new UserPrincipal(context);
-			userQueryFilter.Name = "*";
+			// Create local datetime.
+			DateTime localDateTime = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Local);
+
+			// Find all users, matching the filter.
+			Person userQueryFilter = new Person(context);
+			switch (userFilter) {
+				// Simple queries.
+				case UserQuery.ENABLED:
+					userQueryFilter.Enabled = true;
+					break;
+				case UserQuery.DISABLED:
+					userQueryFilter.Enabled = false;
+					break;
+				case UserQuery.PASSWORD_NEWER_EXPIRES:
+					userQueryFilter.PasswordNeverExpires = true;
+					break;
+				case UserQuery.PASSWORD_EXPIRES:
+					userQueryFilter.PasswordNeverExpires = false;
+					break;
+				case UserQuery.PASSWORD_NOT_REQUIRED:
+					userQueryFilter.PasswordNotRequired = true;
+					break;
+				case UserQuery.PASSWORD_REQUIRED:
+					userQueryFilter.PasswordNotRequired = false;
+					break;
+				case UserQuery.PASSWORD_CHANGE_ENABLED:
+					userQueryFilter.UserCannotChangePassword = false;
+					break;
+				case UserQuery.PASSWORD_CHANGE_DISABLED:
+					userQueryFilter.UserCannotChangePassword = true;
+					break;
+
+				// Advanced queries.
+				case UserQuery.ACCOUNT_NOT_EXPIRED:
+					userQueryFilter.AdvancedSearchFilter.AccountExpirationDate(localDateTime, MatchType.LessThanOrEquals);
+					break;
+				case UserQuery.ACCOUNT_EXPIRED:
+					userQueryFilter.AdvancedSearchFilter.AccountExpirationDate(localDateTime, MatchType.GreaterThan);
+					break;
+				case UserQuery.ACCOUNT_NOT_LOCKED_OUT:
+					userQueryFilter.AdvancedSearchFilter.AccountLockoutTime(localDateTime, MatchType.LessThanOrEquals);
+					break;
+				case UserQuery.ACCOUNT_LOCKED_OUT:
+					userQueryFilter.AdvancedSearchFilter.AccountLockoutTime(localDateTime, MatchType.GreaterThan);
+					break;
+
+				case UserQuery.ALL:
+				default:
+					userQueryFilter.Name = "*";
+					break;
+			}
 			PrincipalSearcher searcher = new PrincipalSearcher();
 			searcher.QueryFilter = userQueryFilter;
 			PrincipalSearchResult<Principal> searchResults = searcher.FindAll();
 			foreach (Principal searchResult in searchResults) {
-				users.Add((UserPrincipal)searchResult);
+				users.Add((Person)searchResult);
 			}
 
 			// Return the found users.
 			return users;
 		} // GetAllUsers
+
+		//AccountInactive
 
 		/// <summary>
 		/// Gets the group identified by the group id.
@@ -786,12 +1030,138 @@ namespace NDK.Framework {
 		/// <param name="group">The group.</param>
 		/// <param name="recursive">True to search recursive.</param>
 		/// <returns>True if the user is member of the group.</returns>
-		public Boolean IsUserMemberOfGroup(UserPrincipal user, GroupPrincipal group, Boolean recursive = true) {
+		public Boolean IsUserMemberOfGroup(Person user, GroupPrincipal group, Boolean recursive = true) {
 			return false;
 		} // IsUserMemberOfGroup
 		#endregion
 
-		#region Abstract methods.
+		// TODO: SOFD methods.
+
+		#region Event methods.
+		/// <summary>
+		/// Default event id.
+		/// </summary>
+		public const Int32 EVENT_NONE = 0;
+
+		/// <summary>
+		/// Executes the RunEvent method on all the loaded plugins.
+		/// Exceptions are caught and logged.
+		/// 
+		/// Only event id lover then 1000 is allowed to be send to all loaded plugins, because you don't know
+		/// which plugins might be loaded and available.
+		/// 
+		/// The keyValuesPairs object must be an anonymous object containing key/value pairs, like this:
+		///		new { Key1 = valueObject1, Key2 = valueObject2 }
+		/// </summary>
+		/// <param name="eventId">The event identifier.</param>
+		/// <param name="keyValuePairs">The anonymous object containing key/value pairs.</param>
+		public void TrySendEvent(Int32 eventId, Object keyValuePairs = null) {
+			try {
+				// Send event.
+				this.SendEvent(eventId, keyValuePairs);
+			} catch (Exception exception) {
+				// Log.
+				this.Logger.LogError(exception);
+			}
+		} // TrySendEvent
+
+		/// <summary>
+		/// Executes the RunEvent method on the plugin identified by the guid.
+		/// Exceptions are caught and logged.
+		/// 
+		/// The keyValuesPairs object must be an anonymous object containing key/value pairs, like this:
+		///		new { Key1 = valueObject1, Key2 = valueObject2 }
+		/// </summary>
+		/// <param name="pluginGuid">The plugin guid</param>
+		/// <param name="eventId">The event identifier.</param>
+		/// <param name="keyValuePairs">The anonymous object containing key/value pairs.</param>
+		public void TrySendEvent(Guid pluginGuid, Int32 eventId, Object keyValuePairs = null) {
+			try {
+				// Send event.
+				this.SendEvent(pluginGuid, eventId, keyValuePairs);
+			} catch (Exception exception) {
+				// Log.
+				this.Logger.LogError(exception);
+			}
+		} // TrySendEvent
+
+		/// <summary>
+		/// Executes the RunEvent method on all the loaded plugins.
+		/// Exceptions are thrown from the RunEvent method.
+		/// 
+		/// Only event id lover then 1000 is allowed to be send to all loaded plugins, because you don't know
+		/// which plugins might be loaded and available.
+		/// 
+		/// The keyValuesPairs object must be an anonymous object containing key/value pairs, like this:
+		///		new { Key1 = valueObject1, Key2 = valueObject2 }
+		/// </summary>
+		/// <param name="eventId">The event identifier.</param>
+		/// <param name="keyValuePairs">The anonymous object containing key/value pairs.</param>
+		public void SendEvent(Int32 eventId, Object keyValuePairs = null) {
+			// Validate the event id.
+			if (eventId > 999) {
+				throw new Exception(String.Format("To avoid unintended execution, only global reserved event id (< 1000) is allowed to be executed on all loaded plugins.", eventId));
+			}
+
+			// Initialize a dictionary from the anonymous object
+			IDictionary<String, Object> eventObjects = new Dictionary<String, Object>();
+			if (keyValuePairs != null) {
+				PropertyInfo[] properties = keyValuePairs.GetType().GetProperties();
+				foreach (PropertyInfo prop in properties) {
+					eventObjects.Add(prop.Name, prop.GetValue(keyValuePairs, null));
+				}
+			}
+
+			// Execute the RunEvent methods.
+			foreach (PluginBase plugin in this.Plugins) {
+				// Log.
+				this.Logger.LogDebug("Event: Triggering event id {0} in plugin {1}   {2}.", eventId, plugin.GetGuid(), plugin.GetName());
+
+				// Call the RunEvent method.
+				plugin.RunEvent(eventId, eventObjects);
+			}
+		} // SendEvent
+
+		/// <summary>
+		/// Executes the RunEvent method on the plugin identified by the guid.
+		/// Exceptions are thrown, when the plugin isn't available or from the RunEvent method.
+		/// 
+		/// The keyValuesPairs object must be an anonymous object containing key/value pairs, like this:
+		///		new { Key1 = valueObject1, Key2 = valueObject2 }
+		/// </summary>
+		/// <param name="pluginGuid">The plugin guid</param>
+		/// <param name="eventId">The event identifier.</param>
+		/// <param name="keyValuePairs">The anonymous object containing key/value pairs.</param>
+		public void SendEvent(Guid pluginGuid, Int32 eventId, Object keyValuePairs = null) {
+			// Initialize a dictionary from the anonymous object
+			IDictionary<String, Object> eventObjects = new Dictionary<String, Object>();
+			if (keyValuePairs != null) {
+				PropertyInfo[] properties = keyValuePairs.GetType().GetProperties();
+				foreach (PropertyInfo prop in properties) {
+					eventObjects.Add(prop.Name, prop.GetValue(keyValuePairs, null));
+				}
+			}
+
+			// Find plugin and execute the RunEvent method.
+			foreach (PluginBase plugin in this.Plugins) {
+				if (plugin.GetGuid().Equals(pluginGuid) == true) {
+					// Log.
+					this.Logger.LogDebug("Event: Triggering event id {0} in plugin {1}   {2}.", eventId, plugin.GetGuid(), plugin.GetName());
+
+					// Call the RunEvent method.
+					plugin.RunEvent(eventId, eventObjects);
+
+					// Exit.
+					return;
+				}
+			}
+
+			// The plugin was not found.
+			throw new Exception(String.Format("Unable to trigger event in {0} in plugin {1}. No plugin with this guid is loaded.", eventId, pluginGuid));
+		} // SendEvent
+		#endregion
+
+		#region Abstract and Virtual methods.
 		/// <summary>
 		/// Gets the unique plugin guid.
 		/// When implementing a plugin, this method should return the same unique guid every time. 
@@ -808,7 +1178,7 @@ namespace NDK.Framework {
 
 		/// <summary>
 		/// Run the plugin.
-		/// When implementing a plugin, this method is invoked by the service application or the commandline application.
+		/// This method is invoked by the service application or the commandline application.
 		/// 
 		/// If the method finishes when invoked by the service application, it is reinvoked after a short while as long as the
 		/// service application is running.
@@ -816,6 +1186,19 @@ namespace NDK.Framework {
 		/// Take care to write good comments in the code, log as much as possible, as correctly as possible (little normal, much debug).
 		/// </summary>
 		public abstract void Run();
+
+		/// <summary>
+		/// Handle events.
+		/// This method is invoked by another plugin.
+		/// 
+		/// When implementing a plugin, only use your own event id greater then 1000. Event id less then 1000 is reserved
+		/// for global events. They will be declared as public constants in the PluginBase class like "EVENT_NONE".
+		/// </summary>
+		/// <param name="eventId">The event identifier.</param>
+		/// <param name="eventObjects">The event objects.</param>
+		public virtual void RunEvent(Int32 eventId, IDictionary<String, Object> eventObjects) {
+			// Do nothing.
+		} // Event
 		#endregion
 
 	} // PluginBase

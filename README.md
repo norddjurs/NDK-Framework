@@ -98,11 +98,12 @@ configured in the plugin configuration.
 
 Execute plugins as application:
 
-"NDK Service.exe"  <guid0>,<guid1>,<guidN>
+"NDK Service.exe"  guid0,guid1,guidN
 
 
 Execute plugins as service: 
 
-<enable the plugin in the global configuration>
+First enable the plugin in the global configuration, then execute:
+
 "NDK Service.exe"  install
 "NDK Service.exe"  start

@@ -142,7 +142,7 @@ namespace NDK.Framework {
 							foreach (String pluginEnabledGuidStr in this.config.GetValues("ServicePluginEnabled")) {
 								if ((Guid.TryParse(pluginEnabledGuidStr, out pluginEnabledGuid) == true) && (plugin.GetGuid().Equals(pluginEnabledGuid) == true)) {
 									pluginIndex++;
-									plugin.Initialize(this.config, this.logger, this.serviceArguments);
+									plugin.Initialize(plugins, this.config, this.logger, this.serviceArguments);
 									plugin.Tag = new PluginTag();
 									logger.LogDebug("Service:  {0}   {1}  (enabled)", plugin.GetGuid(), plugin.GetName());
 								} else {
