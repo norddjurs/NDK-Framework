@@ -178,6 +178,11 @@ namespace NDK.Framework {
 		protected PluginList<PluginBase> Plugins { get; private set; }
 
 		/// <summary>
+		/// The initialized active directory.
+		/// </summary>
+		protected ActiveDirectory ActiveDirectory { get; private set; }
+
+		/// <summary>
 		/// The object can be tagged with some object.
 		/// </summary>
 		public Object Tag { get; set; }
@@ -194,6 +199,7 @@ namespace NDK.Framework {
 			this.Logger = new Logger(this.Config);
 			this.Plugins = plugins;
 			this.Arguments = arguments;
+			this.ActiveDirectory = new ActiveDirectory(this.Config);
 
 			// Initialize all plugins, that are not initialized.
 			foreach (PluginBase plugin in this.Plugins) {
@@ -215,6 +221,7 @@ namespace NDK.Framework {
 			this.Logger = logger;
 			this.Plugins = plugins;
 			this.Arguments = arguments;
+			this.ActiveDirectory = new ActiveDirectory(this.Config);
 
 			// Initialize all plugins, that are not initialized.
 			foreach (PluginBase plugin in this.Plugins) {
@@ -668,7 +675,7 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <returns>The current user.</returns>
 		public Person GetCurrentUser() {
-			return this.GetUser(Environment.UserName);
+			return this.ActiveDirectory.GetCurrentUser();
 		} // GetCurrentUser
 
 		/// <summary>
@@ -678,265 +685,27 @@ namespace NDK.Framework {
 		/// <param name="userId">The user id to find.</param>
 		/// <returns>The matching user or null.</returns>
 		public Person GetUser(String userId) {
-			// Connect to the Active Directory.
-			PrincipalContext context = new PrincipalContext(ContextType.Domain);
-			Person user = null;
-
-			// Search cpr number.
-			// TODO: Add check for numeric userId.
-			if (userId.Trim().Replace("-", String.Empty).Length == 10) {
-				try {
-					// Get which attribute stores the cpr number.
-					String userCprAttribute = this.GetConfigValue("ActiveDirectoryCprAttribute", "EmployeeId");
-
-					// Initialize the query.
-					Person userQueryFilter = new Person(context);
-					switch (userCprAttribute.ToLower()) {
-						case "extensionattribute1":
-							userQueryFilter.ExtensionAttribute1 = userId;
-							break;
-						case "extensionattribute2":
-							userQueryFilter.ExtensionAttribute2 = userId;
-							break;
-						case "extensionattribute3":
-							userQueryFilter.ExtensionAttribute3 = userId;
-							break;
-						case "extensionattribute4":
-							userQueryFilter.ExtensionAttribute4 = userId;
-							break;
-						case "extensionattribute5":
-							userQueryFilter.ExtensionAttribute5 = userId;
-							break;
-						case "extensionattribute6":
-							userQueryFilter.ExtensionAttribute6 = userId;
-							break;
-						case "extensionattribute7":
-							userQueryFilter.ExtensionAttribute7 = userId;
-							break;
-						case "extensionattribute8":
-							userQueryFilter.ExtensionAttribute8 = userId;
-							break;
-						case "extensionattribute9":
-							userQueryFilter.ExtensionAttribute9 = userId;
-							break;
-						case "extensionattribute10":
-							userQueryFilter.ExtensionAttribute10 = userId;
-							break;
-						case "extensionattribute11":
-							userQueryFilter.ExtensionAttribute11 = userId;
-							break;
-						case "extensionattribute12":
-							userQueryFilter.ExtensionAttribute12 = userId;
-							break;
-						case "extensionattribute13":
-							userQueryFilter.ExtensionAttribute13 = userId;
-							break;
-						case "extensionattribute14":
-							userQueryFilter.ExtensionAttribute14 = userId;
-							break;
-						case "extensionattribute15":
-							userQueryFilter.ExtensionAttribute15 = userId;
-							break;
-						case "employeeid":
-						default:
-							userQueryFilter.EmployeeId = userId;
-							break;
-					}
-					PrincipalSearcher searcher = new PrincipalSearcher();
-					searcher.QueryFilter = userQueryFilter;
-					user = (Person)searcher.FindOne();
-				} catch { }
-			}
-
-			// Search guid.
-			Guid userGuid = Guid.Empty;
-			if ((user == null) && (Guid.TryParse(userId, out userGuid) == true)) {
-				try {
-					user = Person.FindByIdentity(context, IdentityType.Guid, userId);
-				} catch {}
-			}
-
-			// Search distinguished name.
-			if (user == null) {
-				try {
-					user = Person.FindByIdentity(context, IdentityType.DistinguishedName, userId);
-				} catch { }
-			}
-
-			// Search sam account name.
-			if (user == null) {
-				try {
-					user = Person.FindByIdentity(context, IdentityType.SamAccountName, userId);
-				} catch { }
-			}
-
-			// Search user principal name.
-			if (user == null) {
-				try {
-					user = Person.FindByIdentity(context, IdentityType.UserPrincipalName, userId);
-				} catch { }
-			}
-
-			// Search security identifier.
-			if (user == null) {
-				try {
-					user = Person.FindByIdentity(context, IdentityType.Sid, userId);
-				} catch { }
-			}
-
-			// Return the user or null.
-			return user;
+			return this.ActiveDirectory.GetUser(userId);
 		} // GetUser
 
-
-		public enum UserQuery {
-			/// <summary>
-			/// Get all enabled users.
-			/// </summary>
-			ENABLED = 1,
-
-			/// <summary>
-			/// Get all disabled users.
-			/// </summary>
-			DISABLED = 2,
-
-			/// <summary>
-			/// Get all users, where the password newer expires.
-			/// </summary>
-			PASSWORD_NEWER_EXPIRES = 3,
-
-			/// <summary>
-			/// Get all users, where the password expire at some time.
-			/// </summary>
-			PASSWORD_EXPIRES = 4,
-
-			/// <summary>
-			/// Get all users, where a password is not required.
-			/// </summary>
-			PASSWORD_NOT_REQUIRED = 5,
-
-			/// <summary>
-			/// Get all users, where a password is required.
-			/// </summary>
-			PASSWORD_REQUIRED = 6,
-
-			/// <summary>
-			/// Get all users, who can change their own password.
-			/// </summary>
-			PASSWORD_CHANGE_ENABLED = 7,
-
-			/// <summary>
-			/// Get all users, who can not change their own password.
-			/// </summary>
-			PASSWORD_CHANGE_DISABLED = 8,
-
-			/// <summary>
-			/// Get all users, where the account is not expired.
-			/// </summary>
-			ACCOUNT_NOT_EXPIRED = 101,
-
-			/// <summary>
-			/// Get all users, where the account is expired.
-			/// </summary>
-			ACCOUNT_EXPIRED = 102,
-
-			/// <summary>
-			/// Gets all users, where the account is not locked out.
-			/// </summary>
-			ACCOUNT_NOT_LOCKED_OUT = 103,
-
-			/// <summary>
-			/// Gets all users, where the account is locked out.
-			/// </summary>
-			ACCOUNT_LOCKED_OUT = 104,
-
-
-
-
-			/// <summary>
-			/// Get all users.
-			/// </summary>
-			ALL = 0
-		} // UserQuery
-
-
-
-
 		/// <summary>
-		/// Gets all users.
-		/// Use the filter, to only get for example disabled users.
+		/// Gets all users or filtered users.
 		/// </summary>
 		/// <param name="userFilter">Filter which users to query.</param>
 		/// <returns>All users.</returns>
 		public List<Person> GetAllUsers(UserQuery userFilter = UserQuery.ALL) {
-			List<Person> users = new List<Person>();
-
-			// Connect to the Active Directory.
-			PrincipalContext context = new PrincipalContext(ContextType.Domain);
-
-			// Create local datetime.
-			DateTime localDateTime = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Local);
-
-			// Find all users, matching the filter.
-			Person userQueryFilter = new Person(context);
-			switch (userFilter) {
-				// Simple queries.
-				case UserQuery.ENABLED:
-					userQueryFilter.Enabled = true;
-					break;
-				case UserQuery.DISABLED:
-					userQueryFilter.Enabled = false;
-					break;
-				case UserQuery.PASSWORD_NEWER_EXPIRES:
-					userQueryFilter.PasswordNeverExpires = true;
-					break;
-				case UserQuery.PASSWORD_EXPIRES:
-					userQueryFilter.PasswordNeverExpires = false;
-					break;
-				case UserQuery.PASSWORD_NOT_REQUIRED:
-					userQueryFilter.PasswordNotRequired = true;
-					break;
-				case UserQuery.PASSWORD_REQUIRED:
-					userQueryFilter.PasswordNotRequired = false;
-					break;
-				case UserQuery.PASSWORD_CHANGE_ENABLED:
-					userQueryFilter.UserCannotChangePassword = false;
-					break;
-				case UserQuery.PASSWORD_CHANGE_DISABLED:
-					userQueryFilter.UserCannotChangePassword = true;
-					break;
-
-				// Advanced queries.
-				case UserQuery.ACCOUNT_NOT_EXPIRED:
-					userQueryFilter.AdvancedSearchFilter.AccountExpirationDate(localDateTime, MatchType.LessThanOrEquals);
-					break;
-				case UserQuery.ACCOUNT_EXPIRED:
-					userQueryFilter.AdvancedSearchFilter.AccountExpirationDate(localDateTime, MatchType.GreaterThan);
-					break;
-				case UserQuery.ACCOUNT_NOT_LOCKED_OUT:
-					userQueryFilter.AdvancedSearchFilter.AccountLockoutTime(localDateTime, MatchType.LessThanOrEquals);
-					break;
-				case UserQuery.ACCOUNT_LOCKED_OUT:
-					userQueryFilter.AdvancedSearchFilter.AccountLockoutTime(localDateTime, MatchType.GreaterThan);
-					break;
-
-				case UserQuery.ALL:
-				default:
-					userQueryFilter.Name = "*";
-					break;
-			}
-			PrincipalSearcher searcher = new PrincipalSearcher();
-			searcher.QueryFilter = userQueryFilter;
-			PrincipalSearchResult<Principal> searchResults = searcher.FindAll();
-			foreach (Principal searchResult in searchResults) {
-				users.Add((Person)searchResult);
-			}
-
-			// Return the found users.
-			return users;
+			return this.ActiveDirectory.GetAllUsers(userFilter, 0);
 		} // GetAllUsers
 
-		//AccountInactive
+		/// <summary>
+		/// Gets all users or filtered users.
+		/// </summary>
+		/// <param name="userFilter">Filter which users to query.</param>
+		/// <param name="advancedUserFilterDays">Days added/substracted when using advanced user filters.</param>
+		/// <returns>All users.</returns>
+		public List<Person> GetAllUsers(UserQuery userFilter, Int32 advancedUserFilterDays = 0) {
+			return this.ActiveDirectory.GetAllUsers(userFilter, advancedUserFilterDays);
+		} // GetAllUsers
 
 		/// <summary>
 		/// Gets the group identified by the group id.
@@ -945,48 +714,7 @@ namespace NDK.Framework {
 		/// <param name="userId">The group id to find.</param>
 		/// <returns>The matching group or null.</returns>
 		public GroupPrincipal GetGroup(String groupId) {
-			// Connect to the Active Directory.
-			PrincipalContext context = new PrincipalContext(ContextType.Domain);
-			GroupPrincipal group = null;
-
-			// Search guid.
-			Guid groupGuid = Guid.Empty;
-			if ((group ==  null) && (Guid.TryParse(groupId, out groupGuid) == true)) {
-				try {
-					group = GroupPrincipal.FindByIdentity(context, IdentityType.Guid, groupId);
-				} catch {}
-			}
-
-			// Search distinguished name.
-			if (group == null) {
-				try {
-					group = GroupPrincipal.FindByIdentity(context, IdentityType.DistinguishedName, groupId);
-				} catch { }
-			}
-
-			// Search sam account name.
-			if (group == null) {
-				try {
-					group = GroupPrincipal.FindByIdentity(context, IdentityType.SamAccountName, groupId);
-				} catch { }
-			}
-
-			// Search user principal name.
-			if (group == null) {
-				try {
-					group = GroupPrincipal.FindByIdentity(context, IdentityType.UserPrincipalName, groupId);
-				} catch { }
-			}
-
-			// Search security identifier.
-			if (group == null) {
-				try {
-					group = GroupPrincipal.FindByIdentity(context, IdentityType.Sid, groupId);
-				} catch { }
-			}
-
-			// Return the group or null.
-			return group;
+			return this.ActiveDirectory.GetGroup(groupId);
 		} // GetGroup
 
 		/// <summary>
@@ -994,23 +722,7 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <returns>All groups.</returns>
 		public List<GroupPrincipal> GetAllGroups() {
-			List<GroupPrincipal> groups = new List<GroupPrincipal>();
-
-			// Connect to the Active Directory.
-			PrincipalContext context = new PrincipalContext(ContextType.Domain);
-
-			// Find all groups.
-			GroupPrincipal groupQueryFilter = new GroupPrincipal(context);
-			groupQueryFilter.Name = "*";
-			PrincipalSearcher searcher = new PrincipalSearcher();
-			searcher.QueryFilter = groupQueryFilter;
-			PrincipalSearchResult<Principal> searchResults = searcher.FindAll();
-			foreach (Principal searchResult in searchResults) {
-				groups.Add((GroupPrincipal)searchResult);
-			}
-
-			// Return the found groups.
-			return groups;
+			return this.ActiveDirectory.GetAllGroups();
 		} // GetAllGroups
 
 		/// <summary>
@@ -1020,7 +732,7 @@ namespace NDK.Framework {
 		/// <param name="recursive">True to search recursive.</param>
 		/// <returns>True if the current user is member of the group.</returns>
 		public Boolean IsUserMemberOfGroup(GroupPrincipal group, Boolean recursive = true) {
-			return this.IsUserMemberOfGroup(this.GetCurrentUser(), group, recursive);
+			return this.ActiveDirectory.IsUserMemberOfGroup(group, recursive);
 		} // IsUserMemberOfGroup
 
 		/// <summary>
@@ -1031,11 +743,14 @@ namespace NDK.Framework {
 		/// <param name="recursive">True to search recursive.</param>
 		/// <returns>True if the user is member of the group.</returns>
 		public Boolean IsUserMemberOfGroup(Person user, GroupPrincipal group, Boolean recursive = true) {
-			return false;
+			return this.ActiveDirectory.IsUserMemberOfGroup(user, group, recursive);
 		} // IsUserMemberOfGroup
 		#endregion
 
 		// TODO: SOFD methods.
+		#region SOFD methods.
+
+		#endregion
 
 		#region Event methods.
 		/// <summary>
