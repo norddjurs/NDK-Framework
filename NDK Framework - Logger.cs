@@ -13,6 +13,11 @@ namespace NDK.Framework {
 	public interface ILogger {
 
 		/// <summary>
+		/// Occurs when something is logged, and event logging is enabled.
+		/// </summary>
+		event LoggerEventHandler OnLog;
+
+		/// <summary>
 		/// Writes the text to the log.
 		/// </summary>
 		/// <param name="text">The text.</param>
@@ -111,7 +116,7 @@ namespace NDK.Framework {
 	#endregion
 
 	#region Logger delegates.
-	public delegate void LoggerEventHandler(LoggerFlags logFlags, String text);
+	public delegate void LoggerEventHandler(LoggerFlags logFlags, String text, String formattedText);
 	#endregion
 
 	#region Logger class.
@@ -461,11 +466,36 @@ namespace NDK.Framework {
 			// Log to the registed event handlers.
 			if (((this.logFlags & LoggerFlags.Event) == LoggerFlags.Event) &&
 				(this.logLogEvents != null)) {
+				// Add header.
+				String textHeader = String.Format("{0:ddd dd MMM HH:mm:ss} | {1:000000} | ", DateTime.Now, Process.GetCurrentProcess().Id);
+
+				// Log to event handlers.
 				Delegate[] subscribers = this.logLogEvents.GetInvocationList();
 				foreach (Delegate subscriber in subscribers) {
 					try {
-						// Invoke the event delegate.
-						((LoggerEventHandler)subscriber)(logFlags, text);
+						// Log normal information.
+						if (((this.logFlags & LoggerFlags.Normal) == LoggerFlags.Normal) &&
+							((logFlags & LoggerFlags.Normal) == LoggerFlags.Normal)) {
+							foreach (String textLine in textLines) {
+								((LoggerEventHandler)subscriber)(logFlags, text, textHeader + "Norml: " + textLine);
+							}
+						}
+
+						// Log debug information.
+						if (((this.logFlags & LoggerFlags.Debug) == LoggerFlags.Debug) &&
+							((logFlags & LoggerFlags.Debug) == LoggerFlags.Debug)) {
+							foreach (String textLine in textLines) {
+								((LoggerEventHandler)subscriber)(logFlags, text, textHeader + "Debug: " + textLine);
+							}
+						}
+
+						// Log error information.
+						if (((this.logFlags & LoggerFlags.Error) == LoggerFlags.Error) &&
+							((logFlags & LoggerFlags.Error) == LoggerFlags.Error)) {
+							foreach (String textLine in textLines) {
+								((LoggerEventHandler)subscriber)(logFlags, text, textHeader + "Error: " + textLine);
+							}
+						}
 					} catch { }
 				}
 			}

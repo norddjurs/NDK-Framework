@@ -165,6 +165,13 @@ namespace NDK.Framework {
 
 		// TODO: Some current user key/value storage, perhaps in the registry.
 
+		#region Logging events.
+		/// <summary>
+		/// Occurs when something is logged, and event logging is enabled.
+		/// </summary>
+		event LoggerEventHandler OnLog;
+		#endregion
+
 		#region Logging methods.
 		/// <summary>
 		/// Writes the text to the log.
@@ -617,6 +624,20 @@ namespace NDK.Framework {
 		#endregion
 
 		// TODO: Some current user key/value storage, perhaps in the registry.
+
+		#region Logging events.
+		/// <summary>
+		/// Occurs when something is logged, and event logging is enabled.
+		/// </summary>
+		public event LoggerEventHandler OnLog {
+			add {
+				this.Logger.OnLog += value;
+			}
+			remove {
+				this.Logger.OnLog -= value;
+			}
+		} // OnLog
+		#endregion
 
 		#region Logging methods.
 		/// <summary>

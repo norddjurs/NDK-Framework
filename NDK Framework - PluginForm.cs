@@ -29,9 +29,12 @@ namespace NDK.Framework {
 		/// Initialize the framework and the form.
 		/// </summary>
 		protected override void OnLoad(EventArgs e) {
+			// Load the plugins.
+			PluginList<IPlugin> plugins = new PluginList<IPlugin>();
+
 			// Initialize the framework.
 			this.framework = new FrameworkBase();
-			this.framework.Initialize(this.GetGuid(), new PluginList<IPlugin>());
+			this.framework.Initialize(this.GetGuid(), plugins);
 
 			// Initialize the form.
 			base.Text = this.GetName();
@@ -248,6 +251,20 @@ namespace NDK.Framework {
 		#endregion
 
 		// TODO: Some current user key/value storage, perhaps in the registry.
+
+		#region Logging events.
+		/// <summary>
+		/// Occurs when something is logged, and event logging is enabled.
+		/// </summary>
+		public event LoggerEventHandler OnLog {
+			add {
+				this.framework.OnLog += value;
+			}
+			remove {
+				this.framework.OnLog -= value;
+			}
+		} // OnLog
+		#endregion
 
 		#region Logging methods.
 		/// <summary>
