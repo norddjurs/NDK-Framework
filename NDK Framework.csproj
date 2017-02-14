@@ -75,6 +75,10 @@
   <ItemGroup>
     <Compile Include="NDK Framework - ActiveDirectory.cs" />
     <Compile Include="NDK Framework - AssemblyInfo.cs" />
+    <Compile Include="NDK Framework - Framework.cs" />
+    <Compile Include="NDK Framework - PluginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="NDK Framework - Plugin.cs" />
     <Compile Include="NDK Framework - Service.cs">
       <SubType>Component</SubType>

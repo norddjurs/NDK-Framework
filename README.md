@@ -8,9 +8,11 @@ The framework standardizes development of plugins and takes care of the followin
 
 * Configuration (store, read and write configuration)
 * Logging (where to log and what to log)
-* Resource loading (easy load resources from plugin assembly)
+* Resource loading (load resources from plugin assembly)
 * Mail sending (send e-mail messages)
 * Database connection (connect to database and execute queries)
+* Active Directory (connect and query users/groups)
+* SOFD Directory (query enployees/organazations)
 * Execution (execute plugin from the commandline or as a service)
 
 The idea with the framework, it to make it easy for the plugin developer to use the resources
@@ -49,7 +51,7 @@ plugin configurations identified by the individual plugin guid.
 The global configuration, is used to configure the NDK Framework and setup logging, mail,
 database and service executions.
 
-The configuration is stored in the "NDK Service.xml" file, in the same directory as the
+The configuration is stored in the "NDK Framework.xml" file, in the same directory as the
 executing program.
 
 The plugin developer should make the plugin as configurable as possible, with fallback
@@ -87,6 +89,18 @@ a database connection in the configuration.
 
 The plugin developer should write SQL code using Quoted Identifiers.
 This makes it easier to reuse the code on other database engines, such as MariaDB.
+
+
+
+###Active Directory
+The NDK Framework makes it easy to query users and groups from the Active Directory.
+This includes querieng users by cpr number.
+
+
+
+###SOFD Directory
+The NDK Framework makes it easy to query enployees and organazations from the SOFD database.
+This includes querieng enployees by cpr number and some other filters.
 
 
 

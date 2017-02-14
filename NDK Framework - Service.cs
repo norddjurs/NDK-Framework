@@ -115,7 +115,7 @@ namespace NDK.Framework {
 				Int32 pluginsReloadInterval = 60;
 				Int32 pluginsReloadIntervalConfig = 60;
 				DateTime pluginsLastLoadTime = DateTime.MinValue;
-				PluginList<PluginBase> plugins = null;
+				PluginList<IPlugin> plugins = null;
 
 				// Loop until the service is stopped.
 				while (this.threadShutdownEvent.WaitOne(0) == false) {
@@ -131,13 +131,13 @@ namespace NDK.Framework {
 					// Loading plugins.
 					if (pluginsLastLoadTime.AddMinutes(pluginsReloadInterval).CompareTo(DateTime.Now) < 0) {
 						logger.LogDebug("Service: Loading plugins.");
-						plugins = new PluginList<PluginBase>();
+						plugins = new PluginList<IPlugin>();
 						pluginsLastLoadTime = DateTime.Now;
 						logger.LogDebug("Service: {0} plugin(s) found.", plugins.Count);
 
 						// Initialize plugins that are enabled in the configuration, remove plugins, that are not enabled in the configuration.
 						for (Int32 pluginIndex = 0; pluginIndex < plugins.Count;) {
-							PluginBase plugin = plugins[pluginIndex];
+							IPlugin plugin = plugins[pluginIndex];
 							Guid pluginEnabledGuid = Guid.Empty;
 							foreach (String pluginEnabledGuidStr in this.config.GetValues("ServicePluginEnabled")) {
 								if ((Guid.TryParse(pluginEnabledGuidStr, out pluginEnabledGuid) == true) && (plugin.GetGuid().Equals(pluginEnabledGuid) == true)) {
