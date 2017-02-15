@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.DirectoryServices.AccountManagement;
 using System.Drawing;
-using System.IO;
-using System.Net.Mail;
 using System.Reflection;
-using System.Text;
 using System.Windows.Forms;
 
 namespace NDK.Framework {
@@ -52,6 +48,15 @@ namespace NDK.Framework {
 
 		#region Properties.
 		/// <summary>
+		/// Gets the initialized logger class.
+		/// </summary>
+		public ILogger Logger {
+			get {
+				return this.framework.Logger;
+			}
+		} // Logger
+
+		/// <summary>
 		/// The initialized configuration class.
 		/// </summary>
 		public IConfiguration Config {
@@ -61,13 +66,13 @@ namespace NDK.Framework {
 		} // Config
 
 		/// <summary>
-		/// Gets the initialized logger class.
+		/// The initialized option class.
 		/// </summary>
-		public ILogger Logger {
+		public IOption Option {
 			get {
-				return this.framework.Logger;
+				return this.framework.Option;
 			}
-		} // Logger
+		} // Option
 
 		/// <summary>
 		/// Gets the initialized arguments.
@@ -152,106 +157,6 @@ namespace NDK.Framework {
 		} // Initialize
 		#endregion
 
-		#region Configuration methods.
-		/// <summary>
-		/// Gets the configuration keys associated with the initialized guid.
-		/// </summary>
-		/// <returns>All the keys associated with the initialized guid.</returns>
-		public String[] GetConfigKeys() {
-			return this.framework.GetConfigKeys();
-		} // GetConfigKeys
-
-		/// <summary>
-		/// Gets the configuration value associated with the initialized guid and the key.
-		/// If more then one value is associated with the initialized guid and the key, the first value is returned.
-		/// If no value is associated with the initialized guid and the key, the default value is returned.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
-		/// <returns>The value.</returns>
-		public String GetConfigValue(String key, String defaultValue = null) {
-			return this.framework.GetConfigValue(key, defaultValue);
-		} // GetConfigValue
-
-		/// <summary>
-		/// Gets the configuration value associated with the empty guid and key.
-		/// If more then one value is associated with the empty guid and key, the first value is returned.
-		/// If no value is associated with the empty guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a Boolean. The default value is returned on parse errors.
-		/// True values are "true", "yes" and "1" in any case.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
-		/// <returns>The value.</returns>
-		public Boolean GetValue(String key, Boolean defaultValue) {
-			return this.framework.GetValue(key, defaultValue);
-		} // GetValue
-
-		/// <summary>
-		/// Gets the configuration value associated with the empty guid and key.
-		/// If more then one value is associated with the empty guid and key, the first value is returned.
-		/// If no value is associated with the empty guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a Int32. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
-		/// <returns>The value.</returns>
-		public Int32 GetValue(String key, Int32 defaultValue) {
-			return this.framework.GetValue(key, defaultValue);
-		} // GetValue
-
-		/// <summary>
-		/// Gets the configuration value associated with the empty guid and key.
-		/// If more then one value is associated with the empty guid and key, the first value is returned.
-		/// If no value is associated with the empty guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a DateTime. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
-		/// <returns>The value.</returns>
-		public DateTime GetValue(String key, DateTime defaultValue) {
-			return this.framework.GetValue(key, defaultValue);
-		} // GetValue
-
-		/// <summary>
-		/// Gets the configuration value associated with the empty guid and key.
-		/// If more then one value is associated with the empty guid and key, the first value is returned.
-		/// If no value is associated with the empty guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a Guid. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
-		/// <returns>The value.</returns>
-		public Guid GetValue(String key, Guid defaultValue) {
-			return this.framework.GetValue(key, defaultValue);
-		} // GetValue
-
-		/// <summary>
-		/// Gets the configuration values associated with the initialized guid and the key.
-		/// If no value is associated with the initialized guid and the key, an empty list is returned.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <returns>The value list.</returns>
-		public List<String> GetConfigValues(String key) {
-			return this.framework.GetConfigValues(key);
-		} // GetConfigValues
-
-		/// <summary>
-		/// Sets the configuration values associated with the initialized guid and the key.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="values">The values</param>
-		public void SetConfigValues(String key, params String[] values) {
-			this.framework.SetConfigValues(key, values);
-		} // SetConfigValues
-		#endregion
-
-		// TODO: Some current user key/value storage, perhaps in the registry.
-
 		#region Logging events.
 		/// <summary>
 		/// Occurs when something is logged, and event logging is enabled.
@@ -306,6 +211,274 @@ namespace NDK.Framework {
 		} // LogError
 		#endregion
 
+		#region Configuration methods.
+		/// <summary>
+		/// Gets the local configuration keys associated with the initialized guid.
+		/// </summary>
+		/// <returns>All the keys associated with the initialized guid.</returns>
+		public String[] GetConfigKeys() {
+			return this.framework.GetConfigKeys();
+		} // GetConfigKeys
+
+		/// <summary>
+		/// Gets the local configuration value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Boolean. The default value is returned on parse errors.
+		/// True values are "true", "yes" and "1" in any case.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value.</param>
+		/// <returns>The value.</returns>
+		public Boolean GetConfigValue(String key, Boolean defaultValue) {
+			return this.framework.GetConfigValue(key, defaultValue);
+		} // GetConfigValue
+
+		/// <summary>
+		/// Gets the local configuration value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Int32. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value.</param>
+		/// <returns>The value.</returns>
+		public Int32 GetConfigValue(String key, Int32 defaultValue) {
+			return this.framework.GetConfigValue(key, defaultValue);
+		} // GetConfigValue
+
+		/// <summary>
+		/// Gets the local configuration value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a DateTime. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value.</param>
+		/// <returns>The value.</returns>
+		public DateTime GetConfigValue(String key, DateTime defaultValue) {
+			return this.framework.GetConfigValue(key, defaultValue);
+		} // GetConfigValue
+
+		/// <summary>
+		/// Gets the local configuration value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Guid. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value.</param>
+		/// <returns>The value.</returns>
+		public Guid GetConfigValue(String key, Guid defaultValue) {
+			return this.framework.GetConfigValue(key, defaultValue);
+		} // GetConfigValue
+
+		/// <summary>
+		/// Gets the local configuration value associated with the initialized guid and the key.
+		/// If more then one value is associated with the initialized guid and the key, the first value is returned.
+		/// If no value is associated with the initialized guid and the key, the default value is returned.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value.</param>
+		/// <returns>The value.</returns>
+		public String GetConfigValue(String key, String defaultValue = null) {
+			return this.framework.GetConfigValue(key, defaultValue);
+		} // GetConfigValue
+
+		/// <summary>
+		/// Gets the local configuration values associated with the initialized guid and the key.
+		/// If no value is associated with the initialized guid and the key, an empty list is returned.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <returns>The value list.</returns>
+		public List<String> GetConfigValues(String key) {
+			return this.framework.GetConfigValues(key);
+		} // GetConfigValues
+
+		/// <summary>
+		/// Sets the local configuration value associated with the initialized guid and the key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetConfigValue(String key, Boolean value) {
+			this.framework.SetConfigValue(key, value);
+		} // SetConfigValue
+
+		/// <summary>
+		/// Sets the local configuration value associated with the initialized guid and the key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetConfigValue(String key, Int32 value) {
+			this.framework.SetConfigValue(key, value);
+		} // SetConfigValue
+
+		/// <summary>
+		/// Sets the local configuration value associated with the initialized guid and the key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetConfigValue(String key, DateTime value) {
+			this.framework.SetConfigValue(key, value);
+		} // SetConfigValue
+
+		/// <summary>
+		/// Sets the local configuration value associated with the initialized guid and the key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetConfigValue(String key, Guid value) {
+			this.framework.SetConfigValue(key, value);
+		} // SetConfigValue
+
+		/// <summary>
+		/// Sets the local configuration values associated with the initialized guid and the key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="values">The values</param>
+		public void SetConfigValues(String key, params String[] values) {
+			this.framework.SetConfigValues(key, values);
+		} // SetConfigValues
+		#endregion
+
+		#region Option methods.
+		/// <summary>
+		/// Gets the user option keys associated with the initialized guid.
+		/// </summary>
+		/// <returns>All the keys associated with the initialized guid.</returns>
+		public String[] GetOptionKeys() {
+			return this.framework.GetOptionKeys();
+		} // GetOptionKeys
+
+		/// <summary>
+		/// Gets the user option value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Boolean. The default value is returned on parse errors.
+		/// True values are "true", "yes" and "1" in any case.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value.</param>
+		/// <returns>The value.</returns>
+		public Boolean GetOptionValue(String key, Boolean defaultValue) {
+			return this.framework.GetOptionValue(key, defaultValue);
+		} // GetOptionValue
+
+		/// <summary>
+		/// Gets the user option value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Int32. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value.</param>
+		/// <returns>The value.</returns>
+		public Int32 GetOptionValue(String key, Int32 defaultValue) {
+			return this.framework.GetOptionValue(key, defaultValue);
+		} // GetOptionValue
+
+		/// <summary>
+		/// Gets the user option value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a DateTime. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value.</param>
+		/// <returns>The value.</returns>
+		public DateTime GetOptionValue(String key, DateTime defaultValue) {
+			return this.framework.GetOptionValue(key, defaultValue);
+		} // GetOptionValue
+
+		/// <summary>
+		/// Gets the user option value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Guid. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value.</param>
+		/// <returns>The value.</returns>
+		public Guid GetOptionValue(String key, Guid defaultValue) {
+			return this.framework.GetOptionValue(key, defaultValue);
+		} // GetOptionValue
+
+		/// <summary>
+		/// Gets the user option value associated with the initialized guid and the key.
+		/// If more then one value is associated with the initialized guid and the key, the first value is returned.
+		/// If no value is associated with the initialized guid and the key, the default value is returned.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value.</param>
+		/// <returns>The value.</returns>
+		public String GetOptionValue(String key, String defaultValue = null) {
+			return this.framework.GetOptionValue(key, defaultValue);
+		} // GetOptionValue
+
+		/// <summary>
+		/// Gets the user option values associated with the initialized guid and the key.
+		/// If no value is associated with the initialized guid and the key, an empty list is returned.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <returns>The value list.</returns>
+		public List<String> GetOptionValues(String key) {
+			return this.framework.GetOptionValues(key);
+		} // GetOptionValues
+
+		/// <summary>
+		/// Sets the user option value associated with the initialized guid and the key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetOptionValue(String key, Boolean value) {
+			this.framework.SetOptionValue(key, value);
+		} // SetOptionValue
+
+		/// <summary>
+		/// Sets the user option value associated with the initialized guid and the key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetOptionValue(String key, Int32 value) {
+			this.framework.SetOptionValue(key, value);
+		} // SetOptionValue
+
+		/// <summary>
+		/// Sets the user option value associated with the initialized guid and the key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetOptionValue(String key, DateTime value) {
+			this.framework.SetOptionValue(key, value);
+		} // SetOptionValue
+
+		/// <summary>
+		/// Sets the user option value associated with the initialized guid and the key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetOptionValue(String key, Guid value) {
+			this.framework.SetOptionValue(key, value);
+		} // SetOptionValue
+
+		/// <summary>
+		/// Sets the user option values associated with the initialized guid and the key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="values">The values</param>
+		public void SetOptionValues(String key, params String[] values) {
+			this.framework.SetOptionValues(key, values);
+		} // SetOptionValues
+		#endregion
+
 		#region Resource methods.
 		/// <summary>
 		/// Gets the resource keys, to the resources embedded in the calling assembly.
@@ -325,7 +498,7 @@ namespace NDK.Framework {
 		/// The resource keys are probably the filenames of the embedded resources, unless some fiddeling with the ".csproj" file has been done.
 		/// </summary>
 		/// <param name="key">The resource key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <param name="defaultValue">The optional default value.</param>
 		/// <returns>The resource data.</returns>
 		public String GetResourceStr(String key, String defaultValue = null) {
 			return this.framework.GetResourceStr(key, defaultValue);
@@ -338,7 +511,7 @@ namespace NDK.Framework {
 		/// The resource keys are probably the filenames of the embedded resources, unless some fiddeling with the ".csproj" file has been done.
 		/// </summary>
 		/// <param name="key">The resource key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <param name="defaultValue">The optional default value.</param>
 		/// <returns>The resource data.</returns>
 		public Image GetResourceImage(String key, Image defaultValue = null) {
 			return this.framework.GetResourceImage(key, defaultValue);

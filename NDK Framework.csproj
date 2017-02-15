@@ -80,6 +80,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="NDK Framework - Plugin.cs" />
+    <Compile Include="NDK Framework - Option.cs" />
     <Compile Include="NDK Framework - Service.cs">
       <SubType>Component</SubType>
     </Compile>

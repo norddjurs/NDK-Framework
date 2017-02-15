@@ -9,52 +9,20 @@ namespace NDK.Framework {
 	#region IConfiguration interface.
 	/// <summary>
 	/// Configuration interface.
-	/// Multiple configurationsets can be stored and identified by a GUID.
+	/// System configurations are global for the framework installation and not identified by a guid.
+	/// Multiple local configurations can be stored and identified by a guid.
 	/// </summary>
 	public interface IConfiguration {
 
+		#region System configuration methods.
 		/// <summary>
-		/// Gets the configuration guids.
-		/// </summary>
-		/// <returns>All the guids.</returns>
-		Guid[] GetGuids();
-
-		/// <summary>
-		/// Gets the configuration keys associated with the empty guid.
+		/// Gets the system configuration keys associated with the empty guid.
 		/// </summary>
 		/// <returns>All the keys associated with the empty guid.</returns>
-		String[] GetKeys();
+		String[] GetSystemKeys();
 
 		/// <summary>
-		/// Gets the configuration keys associated with the guid.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <returns>All the keys associated with the guid.</returns>
-		String[] GetKeys(Guid guid);
-
-		/// <summary>
-		/// Gets the configuration value associated with the empty guid and key.
-		/// If more then one value is associated with the empty guid and key, the first value is returned.
-		/// If no value is associated with the empty guid and key, the default value is returned.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
-		/// <returns>The value.</returns>
-		String GetValue(String key, String defaultValue = null);
-
-		/// <summary>
-		/// Gets the configuration value associated with the guid and key.
-		/// If more then one value is associated with the guid and key, the first value is returned.
-		/// If no value is associated with the guid and key, the default value is returned.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
-		/// <returns>The value.</returns>
-		String GetValue(Guid guid, String key, String defaultValue = null);
-
-		/// <summary>
-		/// Gets the configuration value associated with the empty guid and key.
+		/// Gets the system configuration value associated with the empty guid and key.
 		/// If more then one value is associated with the empty guid and key, the first value is returned.
 		/// If no value is associated with the empty guid and key, the default value is returned.
 		/// 
@@ -63,23 +31,10 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value (null).</param>
 		/// <returns>The value.</returns>
-		Boolean GetValue(String key, Boolean defaultValue);
+		Boolean GetSystemValue(String key, Boolean defaultValue);
 
 		/// <summary>
-		/// Gets the configuration value associated with the guid and key.
-		/// If more then one value is associated with the guid and key, the first value is returned.
-		/// If no value is associated with the guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a Boolean. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
-		/// <returns>The value.</returns>
-		Boolean GetValue(Guid guid, String key, Boolean defaultValue);
-
-		/// <summary>
-		/// Gets the configuration value associated with the empty guid and key.
+		/// Gets the system configuration value associated with the empty guid and key.
 		/// If more then one value is associated with the empty guid and key, the first value is returned.
 		/// If no value is associated with the empty guid and key, the default value is returned.
 		/// 
@@ -88,23 +43,10 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value (null).</param>
 		/// <returns>The value.</returns>
-		Int32 GetValue(String key, Int32 defaultValue);
+		Int32 GetSystemValue(String key, Int32 defaultValue);
 
 		/// <summary>
-		/// Gets the configuration value associated with the guid and key.
-		/// If more then one value is associated with the guid and key, the first value is returned.
-		/// If no value is associated with the guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a Int32. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
-		/// <returns>The value.</returns>
-		Int32 GetValue(Guid guid, String key, Int32 defaultValue);
-
-		/// <summary>
-		/// Gets the configuration value associated with the empty guid and key.
+		/// Gets the system configuration value associated with the empty guid and key.
 		/// If more then one value is associated with the empty guid and key, the first value is returned.
 		/// If no value is associated with the empty guid and key, the default value is returned.
 		/// 
@@ -113,23 +55,10 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value (null).</param>
 		/// <returns>The value.</returns>
-		DateTime GetValue(String key, DateTime defaultValue);
+		DateTime GetSystemValue(String key, DateTime defaultValue);
 
 		/// <summary>
-		/// Gets the configuration value associated with the guid and key.
-		/// If more then one value is associated with the guid and key, the first value is returned.
-		/// If no value is associated with the guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a DateTime. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
-		/// <returns>The value.</returns>
-		DateTime GetValue(Guid guid, String key, DateTime defaultValue);
-
-		/// <summary>
-		/// Gets the configuration value associated with the empty guid and key.
+		/// Gets the system configuration value associated with the empty guid and key.
 		/// If more then one value is associated with the empty guid and key, the first value is returned.
 		/// If no value is associated with the empty guid and key, the default value is returned.
 		/// 
@@ -138,52 +67,188 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value (null).</param>
 		/// <returns>The value.</returns>
-		Guid GetValue(String key, Guid defaultValue);
+		Guid GetSystemValue(String key, Guid defaultValue);
 
 		/// <summary>
-		/// Gets the configuration value associated with the guid and key.
-		/// If more then one value is associated with the guid and key, the first value is returned.
-		/// If no value is associated with the guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a Guid. The default value is returned on parse errors.
+		/// Gets the system configuration value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
 		/// </summary>
-		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value (null).</param>
 		/// <returns>The value.</returns>
-		Guid GetValue(Guid guid, String key, Guid defaultValue);
+		String GetSystemValue(String key, String defaultValue = null);
 
 		/// <summary>
-		/// Gets the configuration values associated with the empty guid and key.
+		/// Gets the system configuration values associated with the empty guid and key.
 		/// If no value is associated with the empty guid and key, an empty list is returned.
 		/// </summary>
 		/// <param name="key">The key.</param>
 		/// <returns>The value list.</returns>
-		List<String> GetValues(String key);
+		List<String> GetSystemValues(String key);
 
 		/// <summary>
-		/// Gets the configuration values associated with the guid and key.
+		/// Sets the system configuration value associated with the empty guid and key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		void SetSystemValue(String key, Boolean value);
+
+		/// <summary>
+		/// Sets the system configuration value associated with the empty guid and key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		void SetSystemValue(String key, Int32 value);
+
+		/// <summary>
+		/// Sets the system configuration value associated with the empty guid and key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		void SetSystemValue(String key, DateTime value);
+
+		/// <summary>
+		/// Sets the system configuration value associated with the empty guid and key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		void SetSystemValue(String key, Guid value);
+
+		/// <summary>
+		/// Sets the system configuration values associated with the empty guid and key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="values">The values</param>
+		void SetSystemValues(String key, params String[] values);
+		#endregion
+
+		#region Local configuration methods.
+		/// <summary>
+		/// Gets the local configuration guids.
+		/// </summary>
+		/// <returns>All the guids.</returns>
+		Guid[] GetLocalGuids();
+
+		/// <summary>
+		/// Gets the local configuration keys associated with the guid.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <returns>All the keys associated with the guid.</returns>
+		String[] GetLocalKeys(Guid guid);
+
+		/// <summary>
+		/// Gets the local configuration value associated with the guid and key.
+		/// If more then one value is associated with the guid and key, the first value is returned.
+		/// If no value is associated with the guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Boolean. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		Boolean GetLocalValue(Guid guid, String key, Boolean defaultValue);
+
+		/// <summary>
+		/// Gets the local configuration value associated with the guid and key.
+		/// If more then one value is associated with the guid and key, the first value is returned.
+		/// If no value is associated with the guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Int32. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		Int32 GetLocalValue(Guid guid, String key, Int32 defaultValue);
+
+		/// <summary>
+		/// Gets the local configuration value associated with the guid and key.
+		/// If more then one value is associated with the guid and key, the first value is returned.
+		/// If no value is associated with the guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a DateTime. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		DateTime GetLocalValue(Guid guid, String key, DateTime defaultValue);
+
+		/// <summary>
+		/// Gets the local configuration value associated with the guid and key.
+		/// If more then one value is associated with the guid and key, the first value is returned.
+		/// If no value is associated with the guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Guid. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		Guid GetLocalValue(Guid guid, String key, Guid defaultValue);
+
+		/// <summary>
+		/// Gets the local configuration value associated with the guid and key.
+		/// If more then one value is associated with the guid and key, the first value is returned.
+		/// If no value is associated with the guid and key, the default value is returned.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		String GetLocalValue(Guid guid, String key, String defaultValue = null);
+
+		/// <summary>
+		/// Gets the local configuration values associated with the guid and key.
 		/// If no value is associated with the key, an empty list is returned.
 		/// </summary>
 		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
 		/// <returns>The value list.</returns>
-		List<String> GetValues(Guid guid, String key);
+		List<String> GetLocalValues(Guid guid, String key);
 
 		/// <summary>
-		/// Sets the configuration values associated with the empty guid and key.
+		/// Sets the local configuration value associated with the guid and key.
 		/// </summary>
+		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
-		/// <param name="values">The values</param>
-		void SetValues(String key, params String[] values);
+		/// <param name="value">The value</param>
+		void SetLocalValue(Guid guid, String key, Boolean value);
 
 		/// <summary>
-		/// Sets the configuration values associated with the guid and key.
+		/// Sets the local configuration value associated with the guid and key.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		void SetLocalValue(Guid guid, String key, Int32 value);
+
+		/// <summary>
+		/// Sets the local configuration value associated with the guid and key.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		void SetLocalValue(Guid guid, String key, DateTime value);
+
+		/// <summary>
+		/// Sets the local configuration value associated with the guid and key.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		void SetLocalValue(Guid guid, String key, Guid value);
+
+		/// <summary>
+		/// Sets the local configuration values associated with the guid and key.
 		/// </summary>
 		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
 		/// <param name="values">The values</param>
-		void SetValues(Guid guid, String key, params String[] values);
+		void SetLocalValues(Guid guid, String key, params String[] values);
+		#endregion
 
 	} // IConfiguration
 	#endregion
@@ -191,21 +256,185 @@ namespace NDK.Framework {
 	#region Configuration class.
 	/// <summary>
 	/// Default configuration class, that stores the data in a XML file.
-	/// The configuration file name is the same as the entry assembly (.exe), but with the ".xml" file extension.
+	/// The configuration file name is the same as the framework assembly (.dll), but with the ".xml" file extension.
+	/// 
+	/// System configurations are identified by a Guid.Empty.
+	/// Local configurations are identified by an other guid.
 	/// </summary>
 	public class Configuration : IConfiguration {
 		private String configFileName = null;
 
+		#region Constructor methods.
 		public Configuration() {
 			this.configFileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, "xml");
 		} // Configuration
+		#endregion
 
-		#region Implement IConfiguration
+		#region System configuration methods.
 		/// <summary>
-		/// Gets the configuration guids.
+		/// Gets the system configuration keys associated with the empty guid.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <returns>All the keys associated with the empty guid.</returns>
+		public String[] GetSystemKeys() {
+			return this.GetLocalKeys(Guid.Empty);
+		}// GetSystemKeys
+
+		/// <summary>
+		/// Gets the system configuration value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Boolean. The default value is returned on parse errors.
+		/// True values are "true", "yes" and "1" in any case.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		public Boolean GetSystemValue(String key, Boolean defaultValue) {
+			try {
+				String value = this.GetSystemValue(key);
+				return ((value.ToLower() == "true") || (value.ToLower() == "yes") || (value.ToLower() == "1"));
+			} catch {
+				// Return the default value.
+				return defaultValue;
+			}
+		} // GetSystemValue
+
+		/// <summary>
+		/// Gets the system configuration value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Int32. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		public Int32 GetSystemValue(String key, Int32 defaultValue) {
+			try {
+				String value = this.GetSystemValue(key);
+				return Int32.Parse(value);
+			} catch {
+				// Return the default value.
+				return defaultValue;
+			}
+		} // GetSystemValue
+
+		/// <summary>
+		/// Gets the system configuration value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a DateTime. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		public DateTime GetSystemValue(String key, DateTime defaultValue) {
+			try {
+				String value = this.GetSystemValue(key);
+				return DateTime.Parse(value);
+			} catch {
+				// Return the default value.
+				return defaultValue;
+			}
+		} // GetSystemValue
+
+		/// <summary>
+		/// Gets the system configuration value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Guid. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		public Guid GetSystemValue(String key, Guid defaultValue) {
+			try {
+				String value = this.GetSystemValue(key);
+				return Guid.Parse(value);
+			} catch {
+				// Return the default value.
+				return defaultValue;
+			}
+		} // GetSystemValue
+
+		/// <summary>
+		/// Gets the system configuration value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		public String GetSystemValue(String key, String defaultValue = null) {
+			return this.GetLocalValue(Guid.Empty, key, defaultValue);
+		} // GetSystemValue
+
+		/// <summary>
+		/// Gets the system configuration values associated with the empty guid and key.
+		/// If no value is associated with the empty guid and key, an empty list is returned.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <returns>The value list.</returns>
+		public List<String> GetSystemValues(String key) {
+			return this.GetLocalValues(Guid.Empty, key);
+		} // GetSystemValues
+
+		/// <summary>
+		/// Sets the system configuration value associated with the empty guid and key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetSystemValue(String key, Boolean value) {
+			this.SetLocalValues(Guid.Empty, key, value.ToString());
+		} // SetSystemValue
+
+		/// <summary>
+		/// Sets the system configuration value associated with the empty guid and key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetSystemValue(String key, Int32 value) {
+			this.SetLocalValues(Guid.Empty, key, value.ToString());
+		} // SetSystemValue
+
+		/// <summary>
+		/// Sets the system configuration value associated with the empty guid and key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetSystemValue(String key, DateTime value) {
+			this.SetLocalValues(Guid.Empty, key, value.ToString());
+		} // SetSystemValue
+
+		/// <summary>
+		/// Sets the system configuration value associated with the empty guid and key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetSystemValue(String key, Guid value) {
+			this.SetLocalValues(Guid.Empty, key, value.ToString());
+		} // SetSystemValue
+
+		/// <summary>
+		/// Sets the system configuration values associated with the empty guid and key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="values">The values</param>
+		public void SetSystemValues(String key, params String[] values) {
+			this.SetLocalValues(Guid.Empty, key, values);
+		} // SetSystemValues
+		#endregion
+
+		#region Local configuration methods.
+		/// <summary>
+		/// Gets the local configuration guids.
 		/// </summary>
 		/// <returns>All the guids.</returns>
-		public Guid[] GetGuids() {
+		public Guid[] GetLocalGuids() {
 			try {
 				List<Guid> result = new List<Guid>();
 				XmlDocument xmlDocument = new XmlDocument();
@@ -228,23 +457,14 @@ namespace NDK.Framework {
 				// Return empty list.
 				return new Guid[0];
 			}
-		} // GetGuids
+		} // GetLocalGuids
 
 		/// <summary>
-		/// Gets the configuration keys associated with the empty guid.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <returns>All the keys associated with the empty guid.</returns>
-		public String[] GetKeys() {
-			return this.GetKeys(Guid.Empty);
-		}// GetKeys
-
-		/// <summary>
-		/// Gets the configuration keys associated with the guid.
+		/// Gets the local configuration keys associated with the guid.
 		/// </summary>
 		/// <param name="guid">The guid.</param>
 		/// <returns>All the keys associated with the guid.</returns>
-		public String[] GetKeys(Guid guid) {
+		public String[] GetLocalKeys(Guid guid) {
 			try {
 				List<String> result = new List<String>();
 				XmlDocument xmlDocument = new XmlDocument();
@@ -267,22 +487,95 @@ namespace NDK.Framework {
 				// Return empty list.
 				return new String[0];
 			}
-		} // GetKeys
+		} // GetLocalKeys
 
 		/// <summary>
-		/// Gets the configuration value associated with the empty guid and key.
-		/// If more then one value is associated with the empty guid and key, the first value is returned.
-		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// Gets the local configuration value associated with the guid and key.
+		/// If more then one value is associated with the guid and key, the first value is returned.
+		/// If no value is associated with the guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Boolean. The default value is returned on parse errors.
+		/// True values are "true", "yes" and "1" in any case.
 		/// </summary>
+		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value (null).</param>
 		/// <returns>The value.</returns>
-		public String GetValue(String key, String defaultValue = null) {
-			return this.GetValue(Guid.Empty, key, defaultValue);
-		} // GetValue
+		public Boolean GetLocalValue(Guid guid, String key, Boolean defaultValue) {
+			try {
+				String value = this.GetLocalValue(guid, key);
+				return ((value.ToLower() == "true") || (value.ToLower() == "yes") || (value.ToLower() == "1"));
+			} catch {
+				// Return the default value.
+				return defaultValue;
+			}
+		} // GetLocalValue
 
 		/// <summary>
-		/// Gets the configuration value associated with the guid and key.
+		/// Gets the local configuration value associated with the guid and key.
+		/// If more then one value is associated with the guid and key, the first value is returned.
+		/// If no value is associated with the guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Int32. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		public Int32 GetLocalValue(Guid guid, String key, Int32 defaultValue) {
+			try {
+				String value = this.GetLocalValue(guid, key);
+				return Int32.Parse(value);
+			} catch {
+				// Return the default value.
+				return defaultValue;
+			}
+		} // GetLocalValue
+
+		/// <summary>
+		/// Gets the local configuration value associated with the guid and key.
+		/// If more then one value is associated with the guid and key, the first value is returned.
+		/// If no value is associated with the guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a DateTime. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		public DateTime GetLocalValue(Guid guid, String key, DateTime defaultValue) {
+			try {
+				String value = this.GetLocalValue(guid, key);
+				return DateTime.Parse(value);
+			} catch {
+				// Return the default value.
+				return defaultValue;
+			}
+		} // GetLocalValue
+
+		/// <summary>
+		/// Gets the local configuration value associated with the guid and key.
+		/// If more then one value is associated with the guid and key, the first value is returned.
+		/// If no value is associated with the guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Guid. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		public Guid GetLocalValue(Guid guid, String key, Guid defaultValue) {
+			try {
+				String value = this.GetSystemValue(key);
+				return Guid.Parse(value);
+			} catch {
+				// Return the default value.
+				return defaultValue;
+			}
+		} // GetLocalValue
+
+		/// <summary>
+		/// Gets the local configuration value associated with the guid and key.
 		/// If more then one value is associated with the guid and key, the first value is returned.
 		/// If no value is associated with the guid and key, the default value is returned.
 		/// </summary>
@@ -290,8 +583,8 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value (null).</param>
 		/// <returns>The value.</returns>
-		public String GetValue(Guid guid, String key, String defaultValue = null) {
-			List<String> values = this.GetValues(guid, key);
+		public String GetLocalValue(Guid guid, String key, String defaultValue = null) {
+			List<String> values = this.GetLocalValues(guid, key);
 			if (values.Count > 0) {
 				// Return the first value.
 				return values[0];
@@ -299,192 +592,16 @@ namespace NDK.Framework {
 				// Return the default value.
 				return defaultValue;
 			}
-		} // GetValue
+		} // GetLocalValue
 
 		/// <summary>
-		/// Gets the configuration value associated with the empty guid and key.
-		/// If more then one value is associated with the empty guid and key, the first value is returned.
-		/// If no value is associated with the empty guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a Boolean. The default value is returned on parse errors.
-		/// True values are "true", "yes" and "1" in any case.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
-		/// <returns>The value.</returns>
-		public Boolean GetValue(String key, Boolean defaultValue) {
-			try {
-				String value = this.GetValue(key);
-				return ((value.ToLower() == "true") || (value.ToLower() == "yes") || (value.ToLower() == "1"));
-			} catch {
-				// Return the default value.
-				return defaultValue;
-			}
-		} // GetValue
-
-		/// <summary>
-		/// Gets the configuration value associated with the guid and key.
-		/// If more then one value is associated with the guid and key, the first value is returned.
-		/// If no value is associated with the guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a Boolean. The default value is returned on parse errors.
-		/// True values are "true", "yes" and "1" in any case.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
-		/// <returns>The value.</returns>
-		public Boolean GetValue(Guid guid, String key, Boolean defaultValue) {
-			try {
-				String value = this.GetValue(guid, key);
-				return ((value.ToLower() == "true") || (value.ToLower() == "yes") || (value.ToLower() == "1"));
-			} catch {
-				// Return the default value.
-				return defaultValue;
-			}
-		} // GetValue
-
-		/// <summary>
-		/// Gets the configuration value associated with the empty guid and key.
-		/// If more then one value is associated with the empty guid and key, the first value is returned.
-		/// If no value is associated with the empty guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a Int32. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
-		/// <returns>The value.</returns>
-		public Int32 GetValue(String key, Int32 defaultValue) {
-			try {
-				String value = this.GetValue(key);
-				return Int32.Parse(value);
-			} catch {
-				// Return the default value.
-				return defaultValue;
-			}
-		} // GetValue
-
-		/// <summary>
-		/// Gets the configuration value associated with the guid and key.
-		/// If more then one value is associated with the guid and key, the first value is returned.
-		/// If no value is associated with the guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a Int32. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
-		/// <returns>The value.</returns>
-		public Int32 GetValue(Guid guid, String key, Int32 defaultValue) {
-			try {
-				String value = this.GetValue(guid, key);
-				return Int32.Parse(value);
-			} catch {
-				// Return the default value.
-				return defaultValue;
-			}
-		} // GetValue
-
-		/// <summary>
-		/// Gets the configuration value associated with the empty guid and key.
-		/// If more then one value is associated with the empty guid and key, the first value is returned.
-		/// If no value is associated with the empty guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a DateTime. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
-		/// <returns>The value.</returns>
-		public DateTime GetValue(String key, DateTime defaultValue) {
-			try {
-				String value = this.GetValue(key);
-				return DateTime.Parse(value);
-			} catch {
-				// Return the default value.
-				return defaultValue;
-			}
-		} // GetValue
-
-		/// <summary>
-		/// Gets the configuration value associated with the guid and key.
-		/// If more then one value is associated with the guid and key, the first value is returned.
-		/// If no value is associated with the guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a DateTime. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
-		/// <returns>The value.</returns>
-		public DateTime GetValue(Guid guid, String key, DateTime defaultValue) {
-			try {
-				String value = this.GetValue(guid, key);
-				return DateTime.Parse(value);
-			} catch {
-				// Return the default value.
-				return defaultValue;
-			}
-		} // GetValue
-
-		/// <summary>
-		/// Gets the configuration value associated with the empty guid and key.
-		/// If more then one value is associated with the empty guid and key, the first value is returned.
-		/// If no value is associated with the empty guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a Guid. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
-		/// <returns>The value.</returns>
-		public Guid GetValue(String key, Guid defaultValue) {
-			try {
-				String value = this.GetValue(key);
-				return Guid.Parse(value);
-			} catch {
-				// Return the default value.
-				return defaultValue;
-			}
-		} // GetValue
-
-		/// <summary>
-		/// Gets the configuration value associated with the guid and key.
-		/// If more then one value is associated with the guid and key, the first value is returned.
-		/// If no value is associated with the guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a Guid. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value (null).</param>
-		/// <returns>The value.</returns>
-		public Guid GetValue(Guid guid, String key, Guid defaultValue) {
-			try {
-				String value = this.GetValue(key);
-				return Guid.Parse(value);
-			} catch {
-				// Return the default value.
-				return defaultValue;
-			}
-		} // GetValue
-
-		/// <summary>
-		/// Gets the configuration values associated with the empty guid and key.
-		/// If no value is associated with the empty guid and key, an empty list is returned.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <returns>The value list.</returns>
-		public List<String> GetValues(String key) {
-			return this.GetValues(Guid.Empty, key);
-		} // GetValues
-
-		/// <summary>
-		/// Gets the configuration values associated with the guid and key.
+		/// Gets the local configuration values associated with the guid and key.
 		/// If no value is associated with the guid and key, an empty list is returned.
 		/// </summary>
 		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
 		/// <returns>The value list.</returns>
-		public List<String> GetValues(Guid guid, String key) {
+		public List<String> GetLocalValues(Guid guid, String key) {
 			try {
 				List<String> result = new List<String>();
 				XmlDocument xmlDocument = new XmlDocument();
@@ -507,24 +624,55 @@ namespace NDK.Framework {
 				// Return empty list.
 				return new List<String>();
 			}
-		} // GetValues
+		} // GetLocalValues
 
 		/// <summary>
-		/// Sets the configuration values associated with the empty guid and key.
+		/// Sets the local configuration value associated with the guid and key.
 		/// </summary>
+		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
-		/// <param name="values">The values</param>
-		public void SetValues(String key, params String[] values) {
-			this.SetValues(Guid.Empty, key, values);
-		} // SetValues
+		/// <param name="value">The value</param>
+		public void SetLocalValue(Guid guid, String key, Boolean value) {
+			this.SetLocalValues(guid, key, value.ToString());
+		} // SetLocalValue
 
 		/// <summary>
-		/// Sets the configuration values associated with the guid and key.
+		/// Sets the local configuration value associated with the guid and key.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetLocalValue(Guid guid, String key, Int32 value) {
+			this.SetLocalValues(guid, key, value.ToString());
+		} // SetLocalValue
+
+		/// <summary>
+		/// Sets the local configuration value associated with the guid and key.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetLocalValue(Guid guid, String key, DateTime value) {
+			this.SetLocalValues(guid, key, value.ToString());
+		} // SetLocalValue
+
+		/// <summary>
+		/// Sets the local configuration value associated with the guid and key.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetLocalValue(Guid guid, String key, Guid value) {
+			this.SetLocalValues(guid, key, value.ToString());
+		} // SetLocalValue
+
+		/// <summary>
+		/// Sets the local configuration values associated with the guid and key.
 		/// </summary>
 		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
 		/// <param name="values">The values</param>
-		public void SetValues(Guid guid, String key, params String[] values) {
+		public void SetLocalValues(Guid guid, String key, params String[] values) {
 			try {
 				XmlDocument xmlDocument = new XmlDocument();
 				XmlNode rootNode = null;
@@ -581,7 +729,7 @@ namespace NDK.Framework {
 			} catch (Exception exception) {
 				//throw;
 			}
-		} // SetValues
+		} // SetLocalValues
 		#endregion
 
 	} // Configuration

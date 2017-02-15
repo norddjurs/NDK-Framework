@@ -185,47 +185,47 @@ namespace NDK.Framework {
 			this.logFile = null;
 			this.logLogEvents = null;
 
-			if (config.GetValue("LogNormal", false) == true) {
+			if (config.GetSystemValue("LogNormal", false) == true) {
 				this.logFlags |= LoggerFlags.Normal;
 			}
 
-			if (config.GetValue("LogDebug", false) == true) {
+			if (config.GetSystemValue("LogDebug", false) == true) {
 				this.logFlags |= LoggerFlags.Debug;
 			}
 
-			if (config.GetValue("LogError", false) == true) {
+			if (config.GetSystemValue("LogError", false) == true) {
 				this.logFlags |= LoggerFlags.Error;
 			}
 
-			if (config.GetValue("LogConsole", false) == true) {
+			if (config.GetSystemValue("LogConsole", false) == true) {
 				this.logFlags |= LoggerFlags.Console;
 			}
 
-			if (config.GetValue("LogWindows", false) == true) {
+			if (config.GetSystemValue("LogWindows", false) == true) {
 				this.logFlags |= LoggerFlags.Windows;
 			}
 
-			if (config.GetValue("LogEvent", false) == true) {
+			if (config.GetSystemValue("LogEvent", false) == true) {
 				this.logFlags |= LoggerFlags.Event;
 			}
 
-			if (config.GetValue("LogFile", false) == true) {
+			if (config.GetSystemValue("LogFile", false) == true) {
 				this.logFlags |= LoggerFlags.File;
 				this.logFileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, "log");
 			}
 
-			if ((config.GetValue("LogFile", String.Empty).ToLower() != String.Empty) &&
-				(Directory.Exists(Path.GetDirectoryName(config.GetValue("LogFile", String.Empty))) == true)) {
+			if ((config.GetSystemValue("LogFile", String.Empty).ToLower() != String.Empty) &&
+				(Directory.Exists(Path.GetDirectoryName(config.GetSystemValue("LogFile", String.Empty))) == true)) {
 				this.logFlags |= LoggerFlags.File;
-				this.logFileName = config.GetValue("LogFile");
+				this.logFileName = config.GetSystemValue("LogFile");
 			}
 
-			if (config.GetValue("LogFileRollSizeMB", 0) > 0) {
+			if (config.GetSystemValue("LogFileRollSizeMB", 0) > 0) {
 				this.logFileRollSize = 20 * 1024;//config.GetValue("LogFileRollSizeMB", 0) * 1024 * 1024;	// MB to bytes.
 			}
 
-			if (config.GetValue("LogFileRollCount", 0) > 0) {
-				this.logFileRollCount = config.GetValue("LogFileRollCount", 0);
+			if (config.GetSystemValue("LogFileRollCount", 0) > 0) {
+				this.logFileRollCount = config.GetSystemValue("LogFileRollCount", 0);
 			}
 
 			// Log.

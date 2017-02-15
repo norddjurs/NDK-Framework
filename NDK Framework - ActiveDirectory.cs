@@ -122,7 +122,7 @@ namespace NDK.Framework {
 			if (userId.Trim().Replace("-", String.Empty).Length == 10) {
 				try {
 					// Get which attribute stores the cpr number.
-					String userCprAttribute = this.config.GetValue("ActiveDirectoryCprAttribute", "EmployeeId");
+					String userCprAttribute = this.config.GetSystemValue("ActiveDirectoryCprAttribute", "EmployeeId");
 
 					// Initialize the query.
 					Person userQueryFilter = new Person(this.context);

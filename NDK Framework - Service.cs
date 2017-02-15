@@ -121,7 +121,7 @@ namespace NDK.Framework {
 				while (this.threadShutdownEvent.WaitOne(0) == false) {
 					// Read plugin reload interval from the configuration.
 					// This is done every 30 minutes as default.
-					if (Int32.TryParse(this.config.GetValue("ServicePluginReloadInterval", "30"), out pluginsReloadIntervalConfig) == true) {
+					if (Int32.TryParse(this.config.GetSystemValue("ServicePluginReloadInterval", "30"), out pluginsReloadIntervalConfig) == true) {
 						if ((pluginsReloadInterval != pluginsReloadIntervalConfig) && (pluginsReloadIntervalConfig > 0)) {
 							pluginsReloadInterval = pluginsReloadIntervalConfig;
 							logger.LogDebug("Service: Loading plugins every {0} minute(s).", pluginsReloadInterval);
@@ -139,7 +139,7 @@ namespace NDK.Framework {
 						for (Int32 pluginIndex = 0; pluginIndex < plugins.Count;) {
 							IPlugin plugin = plugins[pluginIndex];
 							Guid pluginEnabledGuid = Guid.Empty;
-							foreach (String pluginEnabledGuidStr in this.config.GetValues("ServicePluginEnabled")) {
+							foreach (String pluginEnabledGuidStr in this.config.GetSystemValues("ServicePluginEnabled")) {
 								if ((Guid.TryParse(pluginEnabledGuidStr, out pluginEnabledGuid) == true) && (plugin.GetGuid().Equals(pluginEnabledGuid) == true)) {
 									pluginIndex++;
 									plugin.Initialize(plugins, this.config, this.logger, this.serviceArguments);
@@ -158,12 +158,12 @@ namespace NDK.Framework {
 							PluginTag pluginTag = (PluginTag)plugin.Tag;
 
 							// Read plugin schedule from the configurations.
-							pluginTag.ScheduleMatchYear = this.config.GetValues(plugin.GetGuid(), "ServiceScheduleMatchYear");
-							pluginTag.ScheduleMatchMonth = this.config.GetValues(plugin.GetGuid(), "ServiceScheduleMatchMonth");
-							pluginTag.ScheduleMatchDate = this.config.GetValues(plugin.GetGuid(), "ServiceScheduleMatchDate");
-							pluginTag.ScheduleMatchDay = this.config.GetValues(plugin.GetGuid(), "ServiceScheduleMatchDay");
-							pluginTag.ScheduleMatchHour = this.config.GetValues(plugin.GetGuid(), "ServiceScheduleMatchHour");
-							pluginTag.ScheduleMatchMinute = this.config.GetValues(plugin.GetGuid(), "ServiceScheduleMatchMinute");
+							pluginTag.ScheduleMatchYear = this.config.GetLocalValues(plugin.GetGuid(), "ServiceScheduleMatchYear");
+							pluginTag.ScheduleMatchMonth = this.config.GetLocalValues(plugin.GetGuid(), "ServiceScheduleMatchMonth");
+							pluginTag.ScheduleMatchDate = this.config.GetLocalValues(plugin.GetGuid(), "ServiceScheduleMatchDate");
+							pluginTag.ScheduleMatchDay = this.config.GetLocalValues(plugin.GetGuid(), "ServiceScheduleMatchDay");
+							pluginTag.ScheduleMatchHour = this.config.GetLocalValues(plugin.GetGuid(), "ServiceScheduleMatchHour");
+							pluginTag.ScheduleMatchMinute = this.config.GetLocalValues(plugin.GetGuid(), "ServiceScheduleMatchMinute");
 
 							// Log.
 							logger.LogDebug("Service: Schedule for plugin  {0}   {1}", plugin.GetGuid(), plugin.GetName());

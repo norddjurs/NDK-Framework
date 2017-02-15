@@ -6,8 +6,9 @@
 The NDK Framework is a lightweight framework used for developing small programs for Norddjurs Kommune.
 The framework standardizes development of plugins and takes care of the following trivial tasks:
 
-* Configuration (store, read and write configuration)
 * Logging (where to log and what to log)
+* Configuration (read and write configuration)
+* Option (read and write options)
 * Resource loading (load resources from plugin assembly)
 * Mail sending (send e-mail messages)
 * Database connection (connect to database and execute queries)
@@ -41,14 +42,23 @@ Please see the "NDK Demo Plugin" project for demonstration plugin and example co
 
 
 
+###Logging
+The NDK Framework takes care of selecting what to log, and this is configured in the
+global configuration.
+
+The plugin developer should log as much as possible in the categories NORMAL, DEBUG and ERROR, and
+let the NDK Framework filter which categories are written to the log.
+
+
+
 ###Configuration
 The NDK Framework takes care of reading and writing configuration properties, stored as keys with
 associated values.
 
-There are two types of configuration, global configuration identified by a ALL-0-guid and
-plugin configurations identified by the individual plugin guid.
+There are two types of configuration, system configuration identified by a ALL-0-guid and
+local configurations identified by the individual plugin guid.
 
-The global configuration, is used to configure the NDK Framework and setup logging, mail,
+The system configuration, is used to configure the NDK Framework and setup logging, mail,
 database and service executions.
 
 The configuration is stored in the "NDK Framework.xml" file, in the same directory as the
@@ -59,12 +69,11 @@ default values.
 
 
 
-###Logging
-The NDK Framework takes care of selecting what to log, and this is configured in the
-global configuration.
+###Option
+The NDK Framework takes care of reading and writing user options, stored as keys with
+associated values.
 
-The plugin developer should log as much as possible in the categories NORMAL, DEBUG and ERROR, and
-let the NDK Framework filter which categories are written to the log.
+The options are stored in the Windows registry.
 
 
 
