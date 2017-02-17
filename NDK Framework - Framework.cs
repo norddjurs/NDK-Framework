@@ -46,9 +46,19 @@ namespace NDK.Framework {
 		PluginList<IPlugin> Plugins { get; }
 
 		/// <summary>
+		/// Gets the initialized database manager.
+		/// </summary>
+		Database Database { get; }
+
+		/// <summary>
 		/// Gets the initialized active directory.
 		/// </summary>
 		ActiveDirectory ActiveDirectory { get; }
+
+		/// <summary>
+		/// Gets the initialized sofd directory.
+		/// </summary>
+		SofdDirectory SofdDirectory { get; }
 
 		/// <summary>
 		/// Gets the initialized guid used when referencing resources.
@@ -437,8 +447,20 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <param name="connection">The database connection.</param>
 		/// <param name="sql">The sql.</param>
+		/// <param name="formatArgs">The optional sql string format arguments.</param>
 		/// <returns>The data reader result, or null.</returns>
-		IDataReader ExecuteSql(IDbConnection connection, String sql);
+		IDataReader ExecuteSql(IDbConnection connection, String sql, params Object[] formatArgs);
+
+		/// <summary>
+		/// Executes a query on the schema and table, filtering the result using the WHERE filters.
+		/// The connection must be open.
+		/// </summary>
+		/// <param name="connection">The database connection.</param>
+		/// <param name="schemaName">The schema name.</param>
+		/// <param name="tableName">The table name.</param>
+		/// <param name="whereFilters">The optional WHERE filters.</param>
+		/// <returns>The data reader result, or null.</returns>
+		IDataReader ExecuteSql(IDbConnection connection, String schemaName, String tableName, params SqlWhereFilterBase[] whereFilters);
 		#endregion
 
 		#region ActiveDirectory methods.
@@ -503,7 +525,6 @@ namespace NDK.Framework {
 		Boolean IsUserMemberOfGroup(Person user, GroupPrincipal group, Boolean recursive = true);
 		#endregion
 
-		// TODO: SOFD methods.
 		#region SOFD methods.
 
 		#endregion
@@ -599,9 +620,19 @@ namespace NDK.Framework {
 		public PluginList<IPlugin> Plugins { get; private set; }
 
 		/// <summary>
+		/// Gets the initialized database manager.
+		/// </summary>
+		public Database Database { get; private set; }
+
+		/// <summary>
 		/// Gets the initialized active directory.
 		/// </summary>
 		public ActiveDirectory ActiveDirectory { get; private set; }
+
+		/// <summary>
+		/// Gets the initialized sofd directory.
+		/// </summary>
+		public SofdDirectory SofdDirectory { get; private set; }
 
 		/// <summary>
 		/// Gets the initialized guid used when referencing resources.
@@ -637,7 +668,9 @@ namespace NDK.Framework {
 			this.Option = new Option(this.Config, this.Logger);
 			this.Plugins = plugins;
 			this.Arguments = arguments;
-			this.ActiveDirectory = new ActiveDirectory(this.Config);
+			this.Database = new Database(this);
+			this.ActiveDirectory = new ActiveDirectory(this.Config, this.Logger);
+			this.SofdDirectory = new SofdDirectory(this);
 
 			// Initialize all plugins, that are not initialized.
 			foreach (IPlugin plugin in this.Plugins) {
@@ -662,7 +695,9 @@ namespace NDK.Framework {
 			this.Option = new Option(this.Config, this.Logger);
 			this.Plugins = plugins;
 			this.Arguments = arguments;
-			this.ActiveDirectory = new ActiveDirectory(this.Config);
+			this.Database = new Database(this);
+			this.ActiveDirectory = new ActiveDirectory(this.Config, this.Logger);
+			this.SofdDirectory = new SofdDirectory(this);
 
 			// Initialize all plugins, that are not initialized.
 			foreach (IPlugin plugin in this.Plugins) {
@@ -1208,55 +1243,7 @@ namespace NDK.Framework {
 		/// <param name="key">The database connection identifier.</param>
 		/// <returns>The database connection or null.</returns>
 		public IDbConnection GetSqlConnection(String key) {
-			try {
-				// Get configuration.
-				Int32 dbTimeout = 30;
-				String dbEngine = this.Config.GetSystemValue("SqlEngine" + key, "0");
-				String dbHost = this.Config.GetSystemValue("SqlHost" + key, "localhost");
-				String dbName = this.Config.GetSystemValue("SqlDatabase" + key);
-				String dbUserName = this.Config.GetSystemValue("SqlUserid" + key);
-				String dbUserPassword = this.Config.GetSystemValue("SqlPassword" + key);
-
-				// Log.
-				this.Logger.Log("SQL: Connecting to database '{2}' at '{1}' as '{3}'", dbEngine, dbHost, dbName, ((dbUserName != null) ? dbUserName : "SSPI (" + Environment.UserName + ")"));
-
-				// Connect to the database.
-				IDbConnection dbConnection = null;
-				switch (dbEngine.ToLower()) {
-					case "0":
-					case "mssql":
-					default:
-						// Create the connection.
-						dbConnection = new SqlConnection();
-						if ((dbUserName != null) && (dbUserName != String.Empty) && (dbUserPassword != null) && (dbUserPassword != String.Empty)) {
-							// SQL server authentication.
-							dbConnection.ConnectionString = String.Format("data source = {0}; database = {1}; user id = {2}; password = {3}; Connect Timeout = {4}; Pooling = False;", dbHost, dbName, dbUserName, dbUserPassword, dbTimeout);
-						} else {
-							// Windows authentication.
-							dbConnection.ConnectionString = String.Format("data source = {0}; database = {1}; integrated security = SSPI; Connect Timeout = {4}; Pooling = False;", dbHost, dbName, dbUserName, dbUserPassword, dbTimeout);
-						}
-
-						// Open the connection.
-						dbConnection.Open();
-
-						// Enable quoted identifiers.
-						// Execute the SQL command.
-						if (dbConnection.State == ConnectionState.Open) {
-							using (IDataReader dataReader = this.ExecuteSql(dbConnection, "SET QUOTED_IDENTIFIER ON;")) {
-							}
-						}
-						break;
-				}
-
-				// Return the database connection.
-				return dbConnection;
-			} catch (Exception exception) {
-				// Log.
-				this.Logger.LogError(exception);
-
-				// Return null;
-				return null;
-			}
+			return this.Database.GetDatabaseConnection(key);
 		} // GetSqlConnection
 
 		/// <summary>
@@ -1266,38 +1253,23 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <param name="connection">The database connection.</param>
 		/// <param name="sql">The sql.</param>
+		/// <param name="formatArgs">The optional sql string format arguments.</param>
 		/// <returns>The data reader result, or null.</returns>
-		public IDataReader ExecuteSql(IDbConnection connection, String sql) {
-			try {
-				// Create the command object.
-				IDbCommand command = connection.CreateCommand();
-				command.CommandText = sql;
-				//command.Transaction = null;
-				//command.CommandTimeout = 30 * 1000;
+		public IDataReader ExecuteSql(IDbConnection connection, String sql, params Object[] formatArgs) {
+			return this.Database.ExecuteSql(connection, sql, formatArgs);
+		} // ExecuteSql
 
-				// Log.
-				this.Logger.LogDebug("SQL: Execute sql on '{0}':", connection.Database);
-				this.Logger.LogDebug(command.CommandText);
-
-				// Execute the SQL command.
-				IDataReader dataReader = command.ExecuteReader();
-
-				// Log.
-				if (dataReader.RecordsAffected < 0) {
-					this.Logger.LogDebug("SQL: {0} fields in each record.", dataReader.FieldCount);
-				} else {
-					this.Logger.LogDebug("SQL: {0} rows affected.", dataReader.RecordsAffected);
-				}
-
-				// Return the data reader.
-				return dataReader;
-			} catch (Exception exception) {
-				// Log.
-				this.Logger.LogError(exception);
-
-				// Return null;
-				return null;
-			}
+		/// <summary>
+		/// Executes a query on the schema and table, filtering the result using the WHERE filters.
+		/// The connection must be open.
+		/// </summary>
+		/// <param name="connection">The database connection.</param>
+		/// <param name="schemaName">The schema name.</param>
+		/// <param name="tableName">The table name.</param>
+		/// <param name="whereFilters">The optional WHERE filters.</param>
+		/// <returns>The data reader result, or null.</returns>
+		public IDataReader ExecuteSql(IDbConnection connection, String schemaName, String tableName, params SqlWhereFilterBase[] whereFilters) {
+			return this.Database.ExecuteSql(connection, schemaName, tableName, whereFilters);
 		} // ExecuteSql
 		#endregion
 

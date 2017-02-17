@@ -93,6 +93,15 @@ namespace NDK.Framework {
 		} // Plugins
 
 		/// <summary>
+		/// Gets the initialized database manager.
+		/// </summary>
+		public Database Database {
+			get {
+				return this.framework.Database;
+			}
+		} // Database
+
+		/// <summary>
 		/// Gets the initialized active directory.
 		/// </summary>
 		public ActiveDirectory ActiveDirectory {
@@ -100,6 +109,15 @@ namespace NDK.Framework {
 				return this.framework.ActiveDirectory;
 			}
 		} // ActiveDirectory
+
+		/// <summary>
+		/// Gets the initialized sofd directory.
+		/// </summary>
+		public SofdDirectory SofdDirectory {
+			get {
+				return this.framework.SofdDirectory;
+			}
+		} // SofdDirectory
 
 		/// <summary>
 		/// Gets the initialized guid used when referencing resources.
@@ -587,9 +605,23 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <param name="connection">The database connection.</param>
 		/// <param name="sql">The sql.</param>
+		/// <param name="formatArgs">The optional sql string format arguments.</param>
 		/// <returns>The data reader result, or null.</returns>
-		public IDataReader ExecuteSql(IDbConnection connection, String sql) {
-			return this.framework.ExecuteSql(connection, sql);
+		public IDataReader ExecuteSql(IDbConnection connection, String sql, params Object[] formatArgs) {
+			return this.framework.ExecuteSql(connection, sql, formatArgs);
+		} // ExecuteSql
+
+		/// <summary>
+		/// Executes a query on the schema and table, filtering the result using the WHERE filters.
+		/// The connection must be open.
+		/// </summary>
+		/// <param name="connection">The database connection.</param>
+		/// <param name="schemaName">The schema name.</param>
+		/// <param name="tableName">The table name.</param>
+		/// <param name="whereFilters">The optional WHERE filters.</param>
+		/// <returns>The data reader result, or null.</returns>
+		public IDataReader ExecuteSql(IDbConnection connection, String schemaName, String tableName, params SqlWhereFilterBase[] whereFilters) {
+			return this.framework.ExecuteSql(connection, schemaName, tableName, whereFilters);
 		} // ExecuteSql
 		#endregion
 
@@ -671,7 +703,6 @@ namespace NDK.Framework {
 		} // IsUserMemberOfGroup
 		#endregion
 
-		// TODO: SOFD methods.
 		#region SOFD methods.
 
 		#endregion

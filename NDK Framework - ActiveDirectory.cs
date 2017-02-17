@@ -88,13 +88,15 @@ namespace NDK.Framework {
 	#region ActiveDirectory class.
 	public class ActiveDirectory {
 		private IConfiguration config = null;
+		private ILogger logger = null;
 		private PrincipalContext context = null;
 
 		/// <summary>
 		/// Connect to the Active Directory as the current user.
 		/// </summary>
-		public ActiveDirectory(IConfiguration config) {
+		public ActiveDirectory(IConfiguration config, ILogger logger) {
 			this.config = config;
+			this.logger = logger;
 
 			// Connect to the Active Directory.
 			this.context = new PrincipalContext(ContextType.Domain);

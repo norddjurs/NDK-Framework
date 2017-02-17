@@ -75,6 +75,7 @@
   <ItemGroup>
     <Compile Include="NDK Framework - ActiveDirectory.cs" />
     <Compile Include="NDK Framework - AssemblyInfo.cs" />
+    <Compile Include="NDK Framework - Extensions.cs" />
     <Compile Include="NDK Framework - Framework.cs" />
     <Compile Include="NDK Framework - PluginForm.cs">
       <SubType>Form</SubType>
@@ -86,7 +87,10 @@
     </Compile>
     <Compile Include="NDK Framework - Configuration.cs" />
     <Compile Include="NDK Framework - Logger.cs" />
+    <Compile Include="NDK Framework - SofdDirectory Employee.cs" />
+    <Compile Include="NDK Framework - SofdDirectory Organization.cs" />
     <Compile Include="NDK Framework - SofdDirectory.cs" />
+    <Compile Include="NDK Framework - Database.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
