@@ -691,7 +691,7 @@ namespace NDK.Framework {
 			// Get all matching employees.
 			List<SofdEmployee> employees = this.sofdDirectory.GetAllEmployees(
 				new SofdEmployeeFilter_MaNummer(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.naermesteLederMaNummer),
-				new SofdOrganisationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
+				new SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
 			);
 
 			// Return the employee, only if one matched the filters.
@@ -711,7 +711,7 @@ namespace NDK.Framework {
 			// Get all matching employees.
 			List<SofdEmployee> employees = this.sofdDirectory.GetAllEmployees(
 				new SofdEmployeeFilter_NaermesteLederMaNummer(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.maNummer),
-				new SofdOrganisationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
+				new SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
 			);
 
 			// Return the employees.
@@ -727,7 +727,7 @@ namespace NDK.Framework {
 			// Get all matching employees.
 			List<SofdEmployee> employees = this.sofdDirectory.GetAllEmployees(
 				new SofdEmployeeFilter_NaermesteLederMaNummer(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.NaermesteLederMaNummer),
-				new SofdOrganisationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
+				new SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
 			);
 
 			// Remove this employee from the result.
@@ -744,11 +744,11 @@ namespace NDK.Framework {
 		/// Gets the organisation associated with this employee.
 		/// </summary>
 		/// <returns>The matching organisation.</returns>
-		public SofdOrganisation GetOrganisation() {
+		public SofdOrganization GetOrganisation() {
 			// Get all matching organisations.
-			List<SofdOrganisation> organisations = this.sofdDirectory.GetAllOrganisations(
-				new SofdOrganisationFilter_OrganisationId(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.organisationId),
-				new SofdOrganisationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
+			List<SofdOrganization> organisations = this.sofdDirectory.GetAllOrganisations(
+				new SofdOrganizationFilter_OrganisationId(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.organisationId),
+				new SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
 			);
 
 			// Return the organisation, only if one matched the filters.

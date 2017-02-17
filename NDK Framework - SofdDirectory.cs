@@ -126,68 +126,68 @@ namespace NDK.Framework {
 
 		#region Organization methods.
 		/// <summary>
-		/// Gets the organisation identified by the organisation id.
-		/// The organisation id can be OrganisationId, CvrNummer, SeNummer, EanNummer, PNummer, Uuid.
+		/// Gets the organization identified by the organization id.
+		/// The organization id can be OrganisationId, CvrNummer, SeNummer, EanNummer, PNummer, Uuid.
 		/// </summary>
-		/// <param name="organisationId">The organisation id to find.</param>
-		/// <returns>The matching organisation or null.</returns>
-		public SofdOrganisation GetOrganization(String organisationId) {
+		/// <param name="organizationId">The organization id to find.</param>
+		/// <returns>The matching organization or null.</returns>
+		public SofdOrganization GetOrganization(String organizationId) {
 			try {
 				// Log.
-				this.logger.Log("SOFD: Getting organisation identified by '{0}'.", organisationId);
+				this.logger.Log("SOFD: Getting organization identified by '{0}'.", organizationId);
 
 				// Add filters.
 				Int32 parsedNumber;
 				Guid parsedGuid;
-				List<SqlWhereFilterBase> organisationFilters = new List<SqlWhereFilterBase>();
+				List<SqlWhereFilterBase> organizationFilters = new List<SqlWhereFilterBase>();
 
-				organisationFilters.Add(new SqlWhereFilterBeginGroup());
+				organizationFilters.Add(new SqlWhereFilterBeginGroup());
 
 				parsedNumber = 0;
-				Int32.TryParse(organisationId, out parsedNumber);
+				Int32.TryParse(organizationId, out parsedNumber);
 				if (parsedNumber > 0) {
-					organisationFilters.Add(new SofdOrganisationFilter_OrganisationId(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, parsedNumber));
+					organizationFilters.Add(new SofdOrganizationFilter_OrganisationId(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, parsedNumber));
 				}
 
 				parsedNumber = 0;
-				Int32.TryParse(organisationId, out parsedNumber);
+				Int32.TryParse(organizationId, out parsedNumber);
 				if (parsedNumber > 0) {
-					organisationFilters.Add(new SofdOrganisationFilter_CvrNumber(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, parsedNumber));
+					organizationFilters.Add(new SofdOrganizationFilter_CvrNumber(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, parsedNumber));
 				}
 
 				parsedNumber = 0;
-				Int32.TryParse(organisationId, out parsedNumber);
+				Int32.TryParse(organizationId, out parsedNumber);
 				if (parsedNumber > 0) {
-					organisationFilters.Add(new SofdOrganisationFilter_SeNumber(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, parsedNumber));
+					organizationFilters.Add(new SofdOrganizationFilter_SeNumber(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, parsedNumber));
 				}
 
 				parsedNumber = 0;
-				Int32.TryParse(organisationId, out parsedNumber);
+				Int32.TryParse(organizationId, out parsedNumber);
 				if (parsedNumber > 0) {
-					organisationFilters.Add(new SofdOrganisationFilter_EanNumber(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, parsedNumber));
+					organizationFilters.Add(new SofdOrganizationFilter_EanNumber(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, parsedNumber));
 				}
 
 				parsedNumber = 0;
-				Int32.TryParse(organisationId, out parsedNumber);
+				Int32.TryParse(organizationId, out parsedNumber);
 				if (parsedNumber > 0) {
-					organisationFilters.Add(new SofdOrganisationFilter_PNumber(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, parsedNumber));
+					organizationFilters.Add(new SofdOrganizationFilter_PNumber(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, parsedNumber));
 				}
 
 				parsedGuid = Guid.Empty;
-				Guid.TryParse(organisationId, out parsedGuid);
+				Guid.TryParse(organizationId, out parsedGuid);
 				if (parsedGuid.Equals(Guid.Empty) == false) {
-					organisationFilters.Add(new SofdOrganisationFilter_Uuid(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, parsedGuid));
+					organizationFilters.Add(new SofdOrganizationFilter_Uuid(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, parsedGuid));
 				}
 
-				organisationFilters.Add(new SqlWhereFilterEndGroup());
+				organizationFilters.Add(new SqlWhereFilterEndGroup());
 
-				organisationFilters.Add(new SofdOrganisationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true));
+				organizationFilters.Add(new SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true));
 
-				// Get all matching organisations.
-				List<SofdOrganisation> organisations = this.GetAllOrganisations(organisationFilters.ToArray());
-				if (organisations.Count == 1) {
-					// Return the organisation.
-					return organisations[0];
+				// Get all matching organizations.
+				List<SofdOrganization> organizations = this.GetAllOrganisations(organizationFilters.ToArray());
+				if (organizations.Count == 1) {
+					// Return the organization.
+					return organizations[0];
 				} else {
 					// Return null.
 					return null;
@@ -202,37 +202,37 @@ namespace NDK.Framework {
 		} // GetOrganization
 
 		/// <summary>
-		/// Gets all organisations or filtered organisations.
+		/// Gets all organizations or filtered organizations.
 		/// </summary>
-		/// <param name="organisationFilters">Sql WHERE filters.</param>
-		/// <returns>All matching organisations.</returns>
-		public List<SofdOrganisation> GetAllOrganisations(params SqlWhereFilterBase[] organisationFilters) {
+		/// <param name="organizationFilters">Sql WHERE filters.</param>
+		/// <returns>All matching organizations.</returns>
+		public List<SofdOrganization> GetAllOrganisations(params SqlWhereFilterBase[] organizationFilters) {
 			try {
-				List<SofdOrganisation> organisations = new List<SofdOrganisation>();
+				List<SofdOrganization> organizations = new List<SofdOrganization>();
 
 				// Log.
-				this.logger.Log("SOFD: Getting all organisations identified by {0} filters.", organisationFilters.Length);
+				this.logger.Log("SOFD: Getting all organizations identified by {0} filters.", organizationFilters.Length);
 
 				// Connect to the database.
 				using (IDbConnection dataConnection = this.framework.GetSqlConnection(this.sofdDatabaseKey)) {
 					// Execute the query.
-					using (IDataReader dataReader = this.framework.ExecuteSql(dataConnection, SofdOrganisation.SCHEMA_NAME, SofdOrganisation.TABLE_NAME, organisationFilters)) {
-						// Read all organisations.
+					using (IDataReader dataReader = this.framework.ExecuteSql(dataConnection, SofdOrganization.SCHEMA_NAME, SofdOrganization.TABLE_NAME, organizationFilters)) {
+						// Read all organizations.
 						while (dataReader.Read() == true) {
-							SofdOrganisation organisation = new SofdOrganisation(this, dataReader);
-							organisations.Add(organisation);
+							SofdOrganization organization = new SofdOrganization(this, dataReader);
+							organizations.Add(organization);
 						}
 					}
 				}
 
 				// Return the result.
-				return organisations;
+				return organizations;
 			} catch (Exception exception) {
 				// Log error.
 				this.logger.LogError(exception);
 
 				// Return empty list;
-				return new List<SofdOrganisation>();
+				return new List<SofdOrganization>();
 			}
 		} // GetAllOrganisations
 		#endregion

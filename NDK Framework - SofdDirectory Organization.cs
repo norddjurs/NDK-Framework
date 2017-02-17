@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 namespace NDK.Framework {
 
-	#region SofdOrganisation class.
-	public class SofdOrganisation : IEqualityComparer<SofdOrganisation>, IEquatable<SofdOrganisation>, IComparable {
+	#region SofdOrganization class.
+	public class SofdOrganization : IEqualityComparer<SofdOrganization>, IEquatable<SofdOrganization>, IComparable {
 		private SofdDirectory sofdDirectory;
 
 		#region Field name constants.
@@ -84,40 +84,40 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <param name="dbReader">The data reader.</param>
 		/// <param name="sofdDirectory">The SOFD directory.</param>
-		public SofdOrganisation(SofdDirectory sofdDirectory, IDataReader dbReader) {
+		public SofdOrganization(SofdDirectory sofdDirectory, IDataReader dbReader) {
 			this.sofdDirectory = sofdDirectory;
 
-			this.organisationHistorikId = dbReader.GetInt32(SofdOrganisation.FIELD_ORGANISATION_HISTORIK_ID);
-			this.organisationId = dbReader.GetInt32(SofdOrganisation.FIELD_ORGANISATION_ID);
-			this.aktiv = dbReader.GetBoolean(SofdOrganisation.FIELD_AKTIV);
-			this.senestAktiv = dbReader.GetBoolean(SofdOrganisation.FIELD_SENEST_AKTIV);
-			this.aktivFra = dbReader.GetDateTime(SofdOrganisation.FIELD_AKTIV_FRA);
-			this.aktivTil = dbReader.GetDateTime(SofdOrganisation.FIELD_AKTIV_TIL);
-			this.sidstAendret = dbReader.GetDateTime(SofdOrganisation.FIELD_SIDST_AENDRET);
-			this.losOrganisationId = dbReader.GetInt32(SofdOrganisation.FIELD_LOS_ORGANISATION_ID);
-			this.losForaelderOrganisationId = dbReader.GetInt32(SofdOrganisation.FIELD_PARENT_LOS_ORGANISATION_ID);
-			this.losSidstAendret = dbReader.GetDateTime(SofdOrganisation.FIELD_LOS_SIDST_AENDRET);
-			this.kortNavn = dbReader.GetString(SofdOrganisation.FIELD_KORT_NAVN);
-			this.navn = dbReader.GetString(SofdOrganisation.FIELD_NAVN);
-			this.gade = dbReader.GetString(SofdOrganisation.FIELD_GADE);
-			this.stedNavn = dbReader.GetString(SofdOrganisation.FIELD_STED_NAVN);
-			this.postNummer = dbReader.GetInt16(SofdOrganisation.FIELD_POST_NUMMER);
-			this.by = dbReader.GetString(SofdOrganisation.FIELD_BY);
-			this.telefonNummer = dbReader.GetString(SofdOrganisation.FIELD_TELEFON_NUMMER);
-			this.cvrNummer = dbReader.GetInt32(SofdOrganisation.FIELD_CVR_NUMMER);
-			this.seNummer = dbReader.GetInt32(SofdOrganisation.FIELD_SE_NUMMER);
-			this.eanNummer = dbReader.GetInt64(SofdOrganisation.FIELD_EAN_NUMMER);
-			this.pNummer = dbReader.GetInt32(SofdOrganisation.FIELD_P_NUMMER);
-			this.omkostningssted = dbReader.GetInt64(SofdOrganisation.FIELD_OMKOSTNINGS_STED);
-			this.organisationTypeID = dbReader.GetInt16(SofdOrganisation.FIELD_ORGANISATION_TYPE_ID);
-			this.organisationType = dbReader.GetString(SofdOrganisation.FIELD_ORGANISATION_TYPE);
-			this.uuid = dbReader.GetGuid(SofdOrganisation.FIELD_UUID);
-			this.lederMaNummer = dbReader.GetInt32(SofdOrganisation.FIELD_LEDER_MA_NUMMER);
-			this.lederMedarbejderId = dbReader.GetInt32(SofdOrganisation.FIELD_LEDER_MEDARBEJDER_ID);
-			this.lederNedarvet = dbReader.GetBoolean(SofdOrganisation.FIELD_LEDER_NEDARVET);
-			this.lederNavn = dbReader.GetString(SofdOrganisation.FIELD_LEDER_NAVN);
-			this.lederAdBrugerNavn = dbReader.GetString(SofdOrganisation.FIELD_LEDER_AD_BRUGER_NAVN);
-		} // SofdOrganisation
+			this.organisationHistorikId = dbReader.GetInt32(SofdOrganization.FIELD_ORGANISATION_HISTORIK_ID);
+			this.organisationId = dbReader.GetInt32(SofdOrganization.FIELD_ORGANISATION_ID);
+			this.aktiv = dbReader.GetBoolean(SofdOrganization.FIELD_AKTIV);
+			this.senestAktiv = dbReader.GetBoolean(SofdOrganization.FIELD_SENEST_AKTIV);
+			this.aktivFra = dbReader.GetDateTime(SofdOrganization.FIELD_AKTIV_FRA);
+			this.aktivTil = dbReader.GetDateTime(SofdOrganization.FIELD_AKTIV_TIL);
+			this.sidstAendret = dbReader.GetDateTime(SofdOrganization.FIELD_SIDST_AENDRET);
+			this.losOrganisationId = dbReader.GetInt32(SofdOrganization.FIELD_LOS_ORGANISATION_ID);
+			this.losForaelderOrganisationId = dbReader.GetInt32(SofdOrganization.FIELD_PARENT_LOS_ORGANISATION_ID);
+			this.losSidstAendret = dbReader.GetDateTime(SofdOrganization.FIELD_LOS_SIDST_AENDRET);
+			this.kortNavn = dbReader.GetString(SofdOrganization.FIELD_KORT_NAVN);
+			this.navn = dbReader.GetString(SofdOrganization.FIELD_NAVN);
+			this.gade = dbReader.GetString(SofdOrganization.FIELD_GADE);
+			this.stedNavn = dbReader.GetString(SofdOrganization.FIELD_STED_NAVN);
+			this.postNummer = dbReader.GetInt16(SofdOrganization.FIELD_POST_NUMMER);
+			this.by = dbReader.GetString(SofdOrganization.FIELD_BY);
+			this.telefonNummer = dbReader.GetString(SofdOrganization.FIELD_TELEFON_NUMMER);
+			this.cvrNummer = dbReader.GetInt32(SofdOrganization.FIELD_CVR_NUMMER);
+			this.seNummer = dbReader.GetInt32(SofdOrganization.FIELD_SE_NUMMER);
+			this.eanNummer = dbReader.GetInt64(SofdOrganization.FIELD_EAN_NUMMER);
+			this.pNummer = dbReader.GetInt32(SofdOrganization.FIELD_P_NUMMER);
+			this.omkostningssted = dbReader.GetInt64(SofdOrganization.FIELD_OMKOSTNINGS_STED);
+			this.organisationTypeID = dbReader.GetInt16(SofdOrganization.FIELD_ORGANISATION_TYPE_ID);
+			this.organisationType = dbReader.GetString(SofdOrganization.FIELD_ORGANISATION_TYPE);
+			this.uuid = dbReader.GetGuid(SofdOrganization.FIELD_UUID);
+			this.lederMaNummer = dbReader.GetInt32(SofdOrganization.FIELD_LEDER_MA_NUMMER);
+			this.lederMedarbejderId = dbReader.GetInt32(SofdOrganization.FIELD_LEDER_MEDARBEJDER_ID);
+			this.lederNedarvet = dbReader.GetBoolean(SofdOrganization.FIELD_LEDER_NEDARVET);
+			this.lederNavn = dbReader.GetString(SofdOrganization.FIELD_LEDER_NAVN);
+			this.lederAdBrugerNavn = dbReader.GetString(SofdOrganization.FIELD_LEDER_AD_BRUGER_NAVN);
+		} // SofdOrganization
 		#endregion
 
 		#region Compare and Equal methods.
@@ -128,7 +128,7 @@ namespace NDK.Framework {
 		/// <param name="x">The X instance.</param>
 		/// <param name="y">The Y instance.</param>
 		/// <returns>True if equal.</returns>
-		public Boolean Equals(SofdOrganisation x, SofdOrganisation y) {
+		public Boolean Equals(SofdOrganization x, SofdOrganization y) {
 			return x.organisationId.Equals(y.organisationId);
 		} // Equals
 
@@ -138,7 +138,7 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <param name="other">The other instance.</param>
 		/// <returns>True if equal.</returns>
-		public Boolean Equals(SofdOrganisation other) {
+		public Boolean Equals(SofdOrganization other) {
 			return this.organisationId.Equals(other.organisationId);
 		} // Equals
 
@@ -156,7 +156,7 @@ namespace NDK.Framework {
 				return 1;
 			} else {
 				// Compare.
-				return this.organisationId.CompareTo(((SofdOrganisation)obj).organisationId);
+				return this.organisationId.CompareTo(((SofdOrganization)obj).organisationId);
 			}
 		} // CompareTo
 
@@ -171,7 +171,7 @@ namespace NDK.Framework {
 				return false;
 			} else {
 				// Compare.
-				return this.organisationId.Equals(((SofdOrganisation)obj).organisationId);
+				return this.organisationId.Equals(((SofdOrganization)obj).organisationId);
 			}
 		} // Equals
 
@@ -180,7 +180,7 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <returns>The hash code.</returns>
-		public Int32 GetHashCode(SofdOrganisation obj) {
+		public Int32 GetHashCode(SofdOrganization obj) {
 			return obj.organisationId.GetHashCode();
 		} // GetHashCode
 
@@ -381,11 +381,11 @@ namespace NDK.Framework {
 		/// Gets the parent organisation associated with this organisation.
 		/// </summary>
 		/// <returns>The matching organisation.</returns>
-		public SofdOrganisation GetParentOrganisation() {
+		public SofdOrganization GetParentOrganisation() {
 			// Get all matching organisations.
-			List<SofdOrganisation> organisations = this.sofdDirectory.GetAllOrganisations(
-				new SofdOrganisationFilter_LosOrganisationId(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.losForaelderOrganisationId),
-				new SofdOrganisationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
+			List<SofdOrganization> organisations = this.sofdDirectory.GetAllOrganisations(
+				new SofdOrganizationFilter_LosOrganisationId(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.losForaelderOrganisationId),
+				new SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
 			);
 
 			// Return the organisation, only if one matched the filters.
@@ -402,11 +402,11 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <param name="removeThisOrganisation">True to remove this organisation from the result.</param>
 		/// <returns>The matching organisation.</returns>
-		public List<SofdOrganisation> GetSiblingOrganisations(Boolean removeThisOrganisation = false) {
+		public List<SofdOrganization> GetSiblingOrganisations(Boolean removeThisOrganisation = false) {
 			// Get all matching organisations.
-			List<SofdOrganisation> organisations = this.sofdDirectory.GetAllOrganisations(
-				new SofdOrganisationFilter_LosForaelderOrganisationId(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.losForaelderOrganisationId),
-				new SofdOrganisationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
+			List<SofdOrganization> organisations = this.sofdDirectory.GetAllOrganisations(
+				new SofdOrganizationFilter_LosForaelderOrganisationId(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.losForaelderOrganisationId),
+				new SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
 			);
 
 			// Remove this organisation from the result.
@@ -427,7 +427,7 @@ namespace NDK.Framework {
 			// Get all matching employees.
 			List<SofdEmployee> employees = this.sofdDirectory.GetAllEmployees(
 				new SofdEmployeeFilter_MaNummer(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.LederMaNummer),
-				new SofdOrganisationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
+				new SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
 			);
 
 			// Return the employee, only if one matched the filters.
@@ -447,7 +447,7 @@ namespace NDK.Framework {
 			// Get all matching employees.
 			List<SofdEmployee> employees = this.sofdDirectory.GetAllEmployees(
 				new SofdEmployeeFilter_OrganisationId(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.organisationId),
-				new SofdOrganisationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
+				new SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
 			);
 
 			// Return the employees.
@@ -456,14 +456,14 @@ namespace NDK.Framework {
 
 		#endregion
 
-	} // SofdOrganisation
+	} // SofdOrganization
 	#endregion
 
-	#region SofdOrganisationFilter_OrganisationHistorikId class
+	#region SofdOrganizationFilter_OrganisationHistorikId class
 	/// <summary>
 	/// Organisation filter on OrganisationHistorikId.
 	/// </summary>
-	public class SofdOrganisationFilter_OrganisationHistorikId : SqlWhereFilterInt32 {
+	public class SofdOrganizationFilter_OrganisationHistorikId : SqlWhereFilterInt32 {
 
 		/// <summary>
 		/// Organisation filter on OrganisationHistorikId.
@@ -471,17 +471,17 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdOrganisationFilter_OrganisationHistorikId(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganisation.FIELD_ORGANISATION_HISTORIK_ID, filterValueOperator, filterValue) {
-		} // SofdOrganisationFilter_OrganisationHistorikId
+		public SofdOrganizationFilter_OrganisationHistorikId(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganization.FIELD_ORGANISATION_HISTORIK_ID, filterValueOperator, filterValue) {
+		} // SofdOrganizationFilter_OrganisationHistorikId
 
-	} // SofdOrganisationFilter_OrganisationHistorikId
+	} // SofdOrganizationFilter_OrganisationHistorikId
 	#endregion
 
-	#region SofdOrganisationFilter_OrganisationId class
+	#region SofdOrganizationFilter_OrganisationId class
 	/// <summary>
 	/// Organisation filter on OrganisationId.
 	/// </summary>
-	public class SofdOrganisationFilter_OrganisationId : SqlWhereFilterInt32 {
+	public class SofdOrganizationFilter_OrganisationId : SqlWhereFilterInt32 {
 
 		/// <summary>
 		/// Organisation filter on OrganisationId.
@@ -489,17 +489,17 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdOrganisationFilter_OrganisationId(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganisation.FIELD_ORGANISATION_ID, filterValueOperator, filterValue) {
-		} // SofdOrganisationFilter_OrganisationId
+		public SofdOrganizationFilter_OrganisationId(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganization.FIELD_ORGANISATION_ID, filterValueOperator, filterValue) {
+		} // SofdOrganizationFilter_OrganisationId
 
-	} // SofdOrganisationFilter_OrganisationId
+	} // SofdOrganizationFilter_OrganisationId
 	#endregion
 
-	#region SofdOrganisationFilter_Aktiv class
+	#region SofdOrganizationFilter_Aktiv class
 	/// <summary>
 	/// Organisation filter on Aktiv.
 	/// </summary>
-	public class SofdOrganisationFilter_Aktiv : SqlWhereFilterInt32 {
+	public class SofdOrganizationFilter_Aktiv : SqlWhereFilterInt32 {
 
 		/// <summary>
 		/// Organisation filter on Aktiv.
@@ -507,17 +507,17 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdOrganisationFilter_Aktiv(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Boolean filterValue) : base(filterOperator, SofdOrganisation.FIELD_AKTIV, filterValueOperator, ((filterValue == true) ? 1 : 0)) {
-		} // SofdOrganisationFilter_Aktiv
+		public SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Boolean filterValue) : base(filterOperator, SofdOrganization.FIELD_AKTIV, filterValueOperator, ((filterValue == true) ? 1 : 0)) {
+		} // SofdOrganizationFilter_Aktiv
 
-	} // SofdOrganisationFilter_Aktiv
+	} // SofdOrganizationFilter_Aktiv
 	#endregion
 
-	#region SofdOrganisationFilter_LosOrganisationId class
+	#region SofdOrganizationFilter_LosOrganisationId class
 	/// <summary>
 	/// Organisation filter on LosOrganisationId.
 	/// </summary>
-	public class SofdOrganisationFilter_LosOrganisationId : SqlWhereFilterInt32 {
+	public class SofdOrganizationFilter_LosOrganisationId : SqlWhereFilterInt32 {
 
 		/// <summary>
 		/// Organisation filter on LosOrganisationId.
@@ -525,17 +525,17 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdOrganisationFilter_LosOrganisationId(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganisation.FIELD_LOS_ORGANISATION_ID, filterValueOperator, filterValue) {
-		} // SofdOrganisationFilter_LosOrganisationId
+		public SofdOrganizationFilter_LosOrganisationId(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganization.FIELD_LOS_ORGANISATION_ID, filterValueOperator, filterValue) {
+		} // SofdOrganizationFilter_LosOrganisationId
 
-	} // SofdOrganisationFilter_LosOrganisationId
+	} // SofdOrganizationFilter_LosOrganisationId
 	#endregion
 
-	#region SofdOrganisationFilter_LosForaelderOrganisationId class
+	#region SofdOrganizationFilter_LosForaelderOrganisationId class
 	/// <summary>
 	/// Organisation filter on LosForaelderOrganisationId.
 	/// </summary>
-	public class SofdOrganisationFilter_LosForaelderOrganisationId : SqlWhereFilterInt32 {
+	public class SofdOrganizationFilter_LosForaelderOrganisationId : SqlWhereFilterInt32 {
 
 		/// <summary>
 		/// Organisation filter on LosForaelderOrganisationId.
@@ -543,17 +543,17 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdOrganisationFilter_LosForaelderOrganisationId(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganisation.FIELD_PARENT_LOS_ORGANISATION_ID, filterValueOperator, filterValue) {
-		} // SofdOrganisationFilter_LosForaelderOrganisationId
+		public SofdOrganizationFilter_LosForaelderOrganisationId(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganization.FIELD_PARENT_LOS_ORGANISATION_ID, filterValueOperator, filterValue) {
+		} // SofdOrganizationFilter_LosForaelderOrganisationId
 
-	} // SofdOrganisationFilter_LosForaelderOrganisationId
+	} // SofdOrganizationFilter_LosForaelderOrganisationId
 	#endregion
 
-	#region SofdOrganisationFilter_CvrNumber class
+	#region SofdOrganizationFilter_CvrNumber class
 	/// <summary>
 	/// Organisation filter on CvrNumber.
 	/// </summary>
-	public class SofdOrganisationFilter_CvrNumber : SqlWhereFilterInt32 {
+	public class SofdOrganizationFilter_CvrNumber : SqlWhereFilterInt32 {
 
 		/// <summary>
 		/// Organisation filter on CvrNumber.
@@ -561,17 +561,17 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdOrganisationFilter_CvrNumber(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganisation.FIELD_ORGANISATION_HISTORIK_ID, filterValueOperator, filterValue) {
-		} // SofdOrganisationFilter_CvrNumber
+		public SofdOrganizationFilter_CvrNumber(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganization.FIELD_ORGANISATION_HISTORIK_ID, filterValueOperator, filterValue) {
+		} // SofdOrganizationFilter_CvrNumber
 
-	} // SofdOrganisationFilter_CvrNumber
+	} // SofdOrganizationFilter_CvrNumber
 	#endregion
 
-	#region SofdOrganisationFilter_SeNumber class
+	#region SofdOrganizationFilter_SeNumber class
 	/// <summary>
 	/// Organisation filter on SeNumber.
 	/// </summary>
-	public class SofdOrganisationFilter_SeNumber : SqlWhereFilterInt32 {
+	public class SofdOrganizationFilter_SeNumber : SqlWhereFilterInt32 {
 
 		/// <summary>
 		/// Organisation filter on SeNumber.
@@ -579,17 +579,17 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdOrganisationFilter_SeNumber(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganisation.FIELD_ORGANISATION_HISTORIK_ID, filterValueOperator, filterValue) {
-		} // SofdOrganisationFilter_SeNumber
+		public SofdOrganizationFilter_SeNumber(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganization.FIELD_ORGANISATION_HISTORIK_ID, filterValueOperator, filterValue) {
+		} // SofdOrganizationFilter_SeNumber
 
-	} // SofdOrganisationFilter_SeNumber
+	} // SofdOrganizationFilter_SeNumber
 	#endregion
 
-	#region SofdOrganisationFilter_EanNumber class
+	#region SofdOrganizationFilter_EanNumber class
 	/// <summary>
 	/// Organisation filter on EanNumber.
 	/// </summary>
-	public class SofdOrganisationFilter_EanNumber : SqlWhereFilterInt32 {
+	public class SofdOrganizationFilter_EanNumber : SqlWhereFilterInt32 {
 
 		/// <summary>
 		/// Organisation filter on EanNumber.
@@ -597,17 +597,17 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdOrganisationFilter_EanNumber(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganisation.FIELD_ORGANISATION_HISTORIK_ID, filterValueOperator, filterValue) {
-		} // SofdOrganisationFilter_EanNumber
+		public SofdOrganizationFilter_EanNumber(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganization.FIELD_ORGANISATION_HISTORIK_ID, filterValueOperator, filterValue) {
+		} // SofdOrganizationFilter_EanNumber
 
-	} // SofdOrganisationFilter_EanNumber
+	} // SofdOrganizationFilter_EanNumber
 	#endregion
 
-	#region SofdOrganisationFilter_PNumber class
+	#region SofdOrganizationFilter_PNumber class
 	/// <summary>
 	/// Organisation filter on PNumber.
 	/// </summary>
-	public class SofdOrganisationFilter_PNumber : SqlWhereFilterInt32 {
+	public class SofdOrganizationFilter_PNumber : SqlWhereFilterInt32 {
 
 		/// <summary>
 		/// Organisation filter on PNumber.
@@ -615,17 +615,17 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdOrganisationFilter_PNumber(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganisation.FIELD_ORGANISATION_HISTORIK_ID, filterValueOperator, filterValue) {
-		} // SofdOrganisationFilter_PNumber
+		public SofdOrganizationFilter_PNumber(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganization.FIELD_ORGANISATION_HISTORIK_ID, filterValueOperator, filterValue) {
+		} // SofdOrganizationFilter_PNumber
 
-	} // SofdOrganisationFilter_PNumber
+	} // SofdOrganizationFilter_PNumber
 	#endregion
 
-	#region SofdOrganisationFilter_Uuid class
+	#region SofdOrganizationFilter_Uuid class
 	/// <summary>
 	/// Organisation filter on Uuid.
 	/// </summary>
-	public class SofdOrganisationFilter_Uuid : SqlWhereFilterString {
+	public class SofdOrganizationFilter_Uuid : SqlWhereFilterString {
 
 		/// <summary>
 		/// Organisation filter on Uuid.
@@ -633,13 +633,10 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdOrganisationFilter_Uuid(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Guid filterValue) : base(filterOperator, SofdOrganisation.FIELD_ORGANISATION_HISTORIK_ID, filterValueOperator, filterValue.ToString()) {
-		} // SofdOrganisationFilter_Uuid
+		public SofdOrganizationFilter_Uuid(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Guid filterValue) : base(filterOperator, SofdOrganization.FIELD_ORGANISATION_HISTORIK_ID, filterValueOperator, filterValue.ToString()) {
+		} // SofdOrganizationFilter_Uuid
 
-	} // SofdOrganisationFilter_Uuid
+	} // SofdOrganizationFilter_Uuid
 	#endregion
-
-
-
 
 } // NDK.Framework
