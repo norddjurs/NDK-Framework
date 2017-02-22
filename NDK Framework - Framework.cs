@@ -390,13 +390,14 @@ namespace NDK.Framework {
 
 		#region Mail methods.
 		/// <summary>
-		/// Send e-mail message as plain text to the configured service desk recepient.
+		/// Send e-mail message as plain text or html to the configured service desk recepient.
 		/// </summary>
 		/// <param name="subject">The subject.</param>
 		/// <param name="text">The message text.</param>
+		/// <param name="textIsHtml">True if the message text is html code.</param>
 		/// <param name="attachments">The attachments (filenames).</param>
 		/// <returns>True if the e-mail was send.</returns>
-		Boolean SendMail(String subject, String text, params String[] attachments);
+		Boolean SendMail(String subject, String text, Boolean textIsHtml, params String[] attachments);
 
 		/// <summary>
 		/// Send e-mail message as plain text.
@@ -1130,19 +1131,20 @@ namespace NDK.Framework {
 
 		#region Mail methods.
 		/// <summary>
-		/// Send e-mail message as plain text to the configured service desk recepient.
+		/// Send e-mail message as plain text or html to the configured service desk recepient.
 		/// </summary>
 		/// <param name="subject">The subject.</param>
 		/// <param name="text">The message text.</param>
+		/// <param name="textIsHtml">True if the message text is html code.</param>
 		/// <param name="attachments">The attachments (filenames).</param>
 		/// <returns>True if the e-mail was send.</returns>
-		public Boolean SendMail(String subject, String text, params String[] attachments) {
+		public Boolean SendMail(String subject, String text, Boolean textIsHtml, params String[] attachments) {
 			// Get configuration.
 			String from = this.Config.GetSystemValue("SmtpFrom", "noreply@internal");
 			String to = this.Config.GetSystemValue("SmtpTo", String.Empty);
 
 			// Send the message.
-			return this.SendMailFrom(from, to, subject, text, false, attachments);
+			return this.SendMailFrom(from, to, subject, text, textIsHtml, attachments);
 		} // SendMail
 
 		/// <summary>

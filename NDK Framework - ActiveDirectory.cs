@@ -222,7 +222,11 @@ namespace NDK.Framework {
 			}
 
 			// Return the user or null.
-			return user;
+			if ((user != null) && (user.StructuralObjectClass == "user")) {
+				return user;
+			} else {
+				return null;
+			}
 		} // GetUser
 
 		/// <summary>
@@ -306,16 +310,20 @@ namespace NDK.Framework {
 			PrincipalSearchResult<Principal> searchResults = searcher.FindAll();
 			foreach (Person searchResult in searchResults) {
 				// Perform post filtering.
-				switch (userFilter) {
+					switch (userFilter) {
 					// Simple queries.
 					case UserQuery.PASSWORD_CHANGE_ENABLED:
 						if (searchResult.UserCannotChangePassword == false) {
-							users.Add((Person)searchResult);
+							if (searchResult.StructuralObjectClass.ToLower() == "user") {
+								users.Add((Person)searchResult);
+							}
 						}
 						break;
 					case UserQuery.PASSWORD_CHANGE_DISABLED:
 						if (searchResult.UserCannotChangePassword == true) {
-							users.Add(searchResult);
+							if (searchResult.StructuralObjectClass.ToLower() == "user") {
+								users.Add(searchResult);
+							}
 						}
 						break;
 
@@ -324,7 +332,9 @@ namespace NDK.Framework {
 					// Default query.
 					case UserQuery.ALL:
 					default:
-						users.Add(searchResult);
+						if (searchResult.StructuralObjectClass.ToLower() == "user") {
+							users.Add(searchResult);
+						}
 						break;
 				}
 			}

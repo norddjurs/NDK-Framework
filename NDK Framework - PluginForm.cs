@@ -538,14 +538,15 @@ namespace NDK.Framework {
 
 		#region Mail methods.
 		/// <summary>
-		/// Send e-mail message as plain text to the configured service desk recepient.
+		/// Send e-mail message as plain text or html to the configured service desk recepient.
 		/// </summary>
 		/// <param name="subject">The subject.</param>
 		/// <param name="text">The message text.</param>
+		/// <param name="textIsHtml">True if the message text is html code.</param>
 		/// <param name="attachments">The attachments (filenames).</param>
 		/// <returns>True if the e-mail was send.</returns>
-		public Boolean SendMail(String subject, String text, params String[] attachments) {
-			return this.framework.SendMail(subject, text, attachments);
+		public Boolean SendMail(String subject, String text, Boolean textIsHtml, params String[] attachments) {
+			return this.framework.SendMail(subject, text, textIsHtml, attachments);
 		} // SendMail
 
 		/// <summary>
