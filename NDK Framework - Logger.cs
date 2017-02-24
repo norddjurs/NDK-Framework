@@ -221,7 +221,7 @@ namespace NDK.Framework {
 			}
 
 			if (config.GetSystemValue("LogFileRollSizeMB", 0) > 0) {
-				this.logFileRollSize = 20 * 1024;//config.GetValue("LogFileRollSizeMB", 0) * 1024 * 1024;	// MB to bytes.
+				this.logFileRollSize = config.GetSystemValue("LogFileRollSizeMB", 0) * 1024 * 1024;	// MB to bytes.
 			}
 
 			if (config.GetSystemValue("LogFileRollCount", 0) > 0) {

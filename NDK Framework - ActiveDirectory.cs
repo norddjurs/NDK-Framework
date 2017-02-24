@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
+using System.DirectoryServices.ActiveDirectory;
 using System.Text;
 
 namespace NDK.Framework {
@@ -91,6 +92,7 @@ namespace NDK.Framework {
 		private ILogger logger = null;
 		private PrincipalContext context = null;
 
+		#region Constructors.
 		/// <summary>
 		/// Connect to the Active Directory as the current user.
 		/// </summary>
@@ -98,10 +100,57 @@ namespace NDK.Framework {
 			this.config = config;
 			this.logger = logger;
 
-			// Connect to the Active Directory.
-			this.context = new PrincipalContext(ContextType.Domain);
-		} // ActiveDirectory
+			// Convert the domain name to the distinguished name.
+			String domainName = this.DomainName;    // Environment.UserDomainName
+			String distinguishedName = "DC=" + domainName.Replace(".", ",DC=");    // "DC=intern,DC=norddjurs,DC=dk"
 
+			// Connect to the Active Directory.
+			// The distinguished name is given as the container (root conainer) to avoid
+			// this exception later: "The specified directory service attribute or value does not exist"
+			this.context = new PrincipalContext(ContextType.Domain, domainName, distinguishedName);
+		} // ActiveDirectory
+		#endregion
+
+		#region Properties.
+		/// <summary>
+		/// Gets the domain names in the current forest.
+		/// </summary>
+		public String[] DomainNames {
+			get {
+				try {
+					// Get the domains in the current forest.
+					List<String> domainNames = new List<String>();
+					Forest forest = Forest.GetCurrentForest();
+					DomainCollection domains = forest.Domains;
+					foreach (Domain domain in domains) {
+						domainNames.Add(domain.Name);
+					}
+
+					// Return the found domain names.
+					return domainNames.ToArray();
+				} catch {
+					return new String[0];
+				}
+			}
+		} // DomainNames
+
+		/// <summary>
+		/// Gets a random domain name in the current forest.
+		/// </summary>
+		public String DomainName {
+			get {
+				try {
+					Random random = new Random();
+					String[] domainNames = DomainNames;
+					return domainNames[random.Next(0, domainNames.Length - 1)];
+				} catch {
+					return String.Empty;
+				}
+			}
+		} // DomainName
+		#endregion
+
+		#region User methods.
 		/// <summary>
 		/// Gets the current user.
 		/// </summary>
@@ -342,7 +391,9 @@ namespace NDK.Framework {
 			// Return the found users.
 			return users;
 		} // GetAllUsers
+		#endregion
 
+		#region Group methods.
 		/// <summary>
 		/// Gets the group identified by the group id.
 		/// The group id can be Guid, Distinguished Name, Sam Account Name, User Principal Name or Security Identifier.
@@ -417,7 +468,9 @@ namespace NDK.Framework {
 			// Return the found groups.
 			return groups;
 		} // GetAllGroups
+		#endregion
 
+		#region Membership methods.
 		/// <summary>
 		/// Gets if the current user is member of the group.
 		/// </summary>
@@ -439,7 +492,7 @@ namespace NDK.Framework {
 			// Get the direct member groups.
 			List<GroupPrincipal> testetGroups = new List<GroupPrincipal>();
 			Stack<GroupPrincipal> groups = new Stack<GroupPrincipal>();
-			foreach (GroupPrincipal memberGroup in user.GetGroups()) {
+			foreach (GroupPrincipal memberGroup in user.GetGroups(this.context)) {
 				groups.Push(memberGroup);
 			}
 
@@ -457,7 +510,7 @@ namespace NDK.Framework {
 				testetGroups.Add(memberGroup);
 
 				// Get child groups.
-				foreach (GroupPrincipal childGroup in memberGroup.GetGroups()) {
+				foreach (GroupPrincipal childGroup in memberGroup.GetGroups(this.context)) {
 					if (testetGroups.Contains(childGroup) == false) {
 						groups.Push(childGroup);
 					}
@@ -467,6 +520,7 @@ namespace NDK.Framework {
 			// Return false.
 			return false;
 		} // IsUserMemberOfGroup
+		#endregion
 
 	} // ActiveDirectory
 	#endregion
@@ -536,6 +590,20 @@ namespace NDK.Framework {
 				}
 			}
 		} // LogonCount
+
+		[DirectoryProperty("info")]
+		public String Info {
+			get {
+				if (ExtensionGet("info").Length != 1) {
+					return null;
+				} else {
+					return (String)ExtensionGet("info")[0];
+				}
+			}
+			set {
+				ExtensionSet("info", value);
+			}
+		} // Info
 		#endregion
 
 		#region Implement directory object class "person" (ExtensionAttribute1 to 15).

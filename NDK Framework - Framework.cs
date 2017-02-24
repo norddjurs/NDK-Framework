@@ -1203,7 +1203,9 @@ namespace NDK.Framework {
 				using (MailMessage message = new MailMessage()) {
 					// Create the message.
 					message.From = new MailAddress(from);
-					message.To.Add(to);
+					foreach (String to1 in to.Split(new Char[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries)) {
+						message.To.Add(to1);
+					}
 					message.SubjectEncoding = Encoding.UTF8;
 					message.Subject = subject;
 					message.BodyEncoding = Encoding.UTF8;

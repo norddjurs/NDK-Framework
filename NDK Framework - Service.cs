@@ -63,6 +63,79 @@ namespace NDK.Framework {
 			public List<String> ScheduleMatchDay = new List<String>();
 			public List<String> ScheduleMatchHour = new List<String>();
 			public List<String> ScheduleMatchMinute = new List<String>();
+
+			public List<Int32> ScheduleMatchYearInt32 {
+				get {
+					List<Int32> values = new List<Int32>();
+					foreach (String valueStr in this.ScheduleMatchYear) {
+						try {
+							values.Add(Int32.Parse(valueStr));
+						} catch { }
+					}
+					return values;
+				}
+			} // ScheduleMatchYearInt32
+
+			public List<Int32> ScheduleMatchMonthInt32 {
+				get {
+					List<Int32> values = new List<Int32>();
+					foreach (String valueStr in this.ScheduleMatchMonth) {
+						try {
+							values.Add(Int32.Parse(valueStr));
+						} catch { }
+					}
+					return values;
+				}
+			} // ScheduleMatchMonthInt32
+
+			public List<Int32> ScheduleMatchDateInt32 {
+				get {
+					List<Int32> values = new List<Int32>();
+					foreach (String valueStr in this.ScheduleMatchDate) {
+						try {
+							values.Add(Int32.Parse(valueStr));
+						} catch { }
+					}
+					return values;
+				}
+			} // ScheduleMatchDateInt32
+
+			public List<Int32> ScheduleMatchDayInt32 {
+				get {
+					List<Int32> values = new List<Int32>();
+					foreach (String valueStr in this.ScheduleMatchDay) {
+						try {
+							values.Add(Int32.Parse(valueStr));
+						} catch { }
+					}
+					return values;
+				}
+			} // ScheduleMatchDayInt32
+
+			public List<Int32> ScheduleMatchHourInt32 {
+				get {
+					List<Int32> values = new List<Int32>();
+					foreach (String valueStr in this.ScheduleMatchHour) {
+						try {
+							values.Add(Int32.Parse(valueStr));
+						} catch { }
+					}
+					return values;
+				}
+			} // ScheduleMatchHourInt32
+
+			public List<Int32> ScheduleMatchMinuteInt32 {
+				get {
+					List<Int32> values = new List<Int32>();
+					foreach (String valueStr in this.ScheduleMatchMinute) {
+						try {
+							values.Add(Int32.Parse(valueStr));
+						} catch { }
+					}
+					return values;
+				}
+			} // ScheduleMatchMinuteInt32
+
 		} // PluginTag
 		#endregion
 
@@ -115,6 +188,7 @@ namespace NDK.Framework {
 				Int32 pluginsReloadInterval = 60;
 				Int32 pluginsReloadIntervalConfig = 60;
 				DateTime pluginsLastLoadTime = DateTime.MinValue;
+				List<String> pluginsEnabledGuidStr = new List<String>();
 				PluginList<IPlugin> plugins = null;
 
 				// Loop until the service is stopped.
@@ -132,6 +206,7 @@ namespace NDK.Framework {
 					if (pluginsLastLoadTime.AddMinutes(pluginsReloadInterval).CompareTo(DateTime.Now) < 0) {
 						logger.LogDebug("Service: Loading plugins.");
 						plugins = new PluginList<IPlugin>();
+						pluginsEnabledGuidStr = this.config.GetSystemValues("ServicePluginEnabled");
 						pluginsLastLoadTime = DateTime.Now;
 						logger.LogDebug("Service: {0} plugin(s) found.", plugins.Count);
 
@@ -139,16 +214,24 @@ namespace NDK.Framework {
 						for (Int32 pluginIndex = 0; pluginIndex < plugins.Count;) {
 							IPlugin plugin = plugins[pluginIndex];
 							Guid pluginEnabledGuid = Guid.Empty;
-							foreach (String pluginEnabledGuidStr in this.config.GetSystemValues("ServicePluginEnabled")) {
+							Boolean pluginEnabled = false;
+
+							// Initialize the plugin, if it is enabled.
+							foreach (String pluginEnabledGuidStr in pluginsEnabledGuidStr) {
 								if ((Guid.TryParse(pluginEnabledGuidStr, out pluginEnabledGuid) == true) && (plugin.GetGuid().Equals(pluginEnabledGuid) == true)) {
-									pluginIndex++;
+									pluginEnabled = true;
 									plugin.Initialize(plugins, this.config, this.logger, this.serviceArguments);
 									plugin.Tag = new PluginTag();
-									logger.LogDebug("Service:  {0}   {1}  (enabled)", plugin.GetGuid(), plugin.GetName());
-								} else {
-									plugins.RemoveAt(pluginIndex);
-									logger.LogDebug("Service:  {0}   {1}", plugin.GetGuid(), plugin.GetName());
 								}
+							}
+
+							// Iterate.
+							if (pluginEnabled == true) {
+								pluginIndex++;
+								logger.LogDebug("Service:  {0}   {1}  (enabled)", plugin.GetGuid(), plugin.GetName());
+							} else {
+								plugins.RemoveAt(pluginIndex);
+								logger.LogDebug("Service:  {0}   {1}", plugin.GetGuid(), plugin.GetName());
 							}
 						}
 
@@ -208,12 +291,12 @@ namespace NDK.Framework {
 						// Process the plugin, if it is not running.
 						if (pluginTag.Thread == null) {
 							if ((pluginTag.LastRunTime.AddMinutes(1).CompareTo(DateTime.Now) < 0) &&
-								((pluginTag.ScheduleMatchYear.Count == 0) || (pluginTag.ScheduleMatchYear.Contains(DateTime.Now.Year.ToString()) == true)) &&
-								((pluginTag.ScheduleMatchMonth.Count == 0) || (pluginTag.ScheduleMatchMonth.Contains(DateTime.Now.Month.ToString()) == true)) &&
-								((pluginTag.ScheduleMatchDate.Count == 0) || (pluginTag.ScheduleMatchDate.Contains(DateTime.Now.Date.ToString()) == true)) &&
-								((pluginTag.ScheduleMatchDay.Count == 0) || (pluginTag.ScheduleMatchDay.Contains(((Int32)(DateTime.Now.DayOfWeek)).ToString()) == true)) &&
-								((pluginTag.ScheduleMatchHour.Count == 0) || (pluginTag.ScheduleMatchHour.Contains(DateTime.Now.Hour.ToString()) == true)) &&
-								((pluginTag.ScheduleMatchMinute.Count == 0) || (pluginTag.ScheduleMatchMinute.Contains(DateTime.Now.Minute.ToString()) == true))) {
+								((pluginTag.ScheduleMatchYear.Count == 0) || (pluginTag.ScheduleMatchYearInt32.Contains(DateTime.Now.Year) == true)) &&
+								((pluginTag.ScheduleMatchMonth.Count == 0) || (pluginTag.ScheduleMatchMonthInt32.Contains(DateTime.Now.Month) == true)) &&
+								((pluginTag.ScheduleMatchDate.Count == 0) || (pluginTag.ScheduleMatchDateInt32.Contains(DateTime.Now.Day) == true)) &&
+								((pluginTag.ScheduleMatchDay.Count == 0) || (pluginTag.ScheduleMatchDayInt32.Contains(((Int32)(DateTime.Now.DayOfWeek))) == true)) &&
+								((pluginTag.ScheduleMatchHour.Count == 0) || (pluginTag.ScheduleMatchHourInt32.Contains(DateTime.Now.Hour) == true)) &&
+								((pluginTag.ScheduleMatchMinute.Count == 0) || (pluginTag.ScheduleMatchMinuteInt32.Contains(DateTime.Now.Minute) == true))) {
 								// Remember when the plugin was last executed.
 								pluginTag.LastRunTime = DateTime.Now;
 
