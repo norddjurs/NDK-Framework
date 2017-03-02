@@ -407,7 +407,7 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
 		public void SetSystemValue(String key, DateTime value) {
-			this.SetLocalValues(Guid.Empty, key, value.ToString());
+			this.SetLocalValues(Guid.Empty, key, value.ToString("yyyy-MM-dd HH:mm:ss.fffffff"));
 		} // SetSystemValue
 
 		/// <summary>
@@ -653,7 +653,7 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
 		public void SetLocalValue(Guid guid, String key, DateTime value) {
-			this.SetLocalValues(guid, key, value.ToString());
+			this.SetLocalValues(guid, key, value.ToString("yyyy-MM-dd HH:mm:ss.fffffff"));
 		} // SetLocalValue
 
 		/// <summary>

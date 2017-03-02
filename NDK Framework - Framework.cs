@@ -524,10 +524,48 @@ namespace NDK.Framework {
 		/// <param name="recursive">True to search recursive.</param>
 		/// <returns>True if the user is member of the group.</returns>
 		Boolean IsUserMemberOfGroup(Person user, GroupPrincipal group, Boolean recursive = true);
+
+		/// <summary>
+		/// Gets if the user is member of one or all the groups.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		/// <param name="recursive">True to search recursive.</param>
+		/// <param name="all">True if the user must be member of all the groups.</param>
+		/// <param name="groups">The groups.</param>
+		/// <returns>True if the user is member of one or all the groups as specified.</returns>
+		Boolean IsUserMemberOfGroups(Person user, Boolean recursive, Boolean all, params GroupPrincipal[] groups);
 		#endregion
 
 		#region SOFD methods.
+		/// <summary>
+		/// Gets the employee identified by the employee id.
+		/// The employee id can be MaNummer, OpusBrugerNavn, AdBrugerNavn, CprNummer, Epost, Uuid.
+		/// </summary>
+		/// <param name="employeeId">The employee id to find.</param>
+		/// <returns>The matching employee or null.</returns>
+		SofdEmployee GetEmployee(String employeeId);
 
+		/// <summary>
+		/// Gets all employees or filtered employees.
+		/// </summary>
+		/// <param name="employeeFilters">Sql WHERE filters.</param>
+		/// <returns>All matching employees.</returns>
+		List<SofdEmployee> GetAllEmployees(params SqlWhereFilterBase[] employeeFilters);
+
+		/// <summary>
+		/// Gets the organization identified by the organization id.
+		/// The organization id can be OrganisationId, CvrNummer, SeNummer, EanNummer, PNummer, Uuid.
+		/// </summary>
+		/// <param name="organizationId">The organization id to find.</param>
+		/// <returns>The matching organization or null.</returns>
+		SofdOrganization GetOrganization(String organizationId);
+
+		/// <summary>
+		/// Gets all organizations or filtered organizations.
+		/// </summary>
+		/// <param name="organizationFilters">Sql WHERE filters.</param>
+		/// <returns>All matching organizations.</returns>
+		List<SofdOrganization> GetAllOrganisations(params SqlWhereFilterBase[] organizationFilters);
 		#endregion
 
 		#region Event methods.
@@ -1045,8 +1083,27 @@ namespace NDK.Framework {
 			// Get all resources in the calling assembly, and strip the "<namespace>.resources" part from the resource names.
 			foreach (String name in Assembly.GetCallingAssembly().GetManifestResourceNames()) {
 				Int32 index = name.ToLower().IndexOf(".resources.");
-				if (index > -1) {
-					keys.Add(name.Substring(index + 11));
+				String name1 = name.Substring(index + 11);
+				if ((index > -1) && (keys.Contains(name1) == false)) {
+					keys.Add(name1);
+				}
+			}
+
+			// Get all resources in the executing assembly, and strip the "<namespace>.resources" part from the resource names.
+			foreach (String name in Assembly.GetExecutingAssembly().GetManifestResourceNames()) {
+				Int32 index = name.ToLower().IndexOf(".resources.");
+				String name1 = name.Substring(index + 11);
+				if ((index > -1) && (keys.Contains(name1) == false)) {
+					keys.Add(name1);
+				}
+			}
+
+			// Get all resources in the entry assembly, and strip the "<namespace>.resources" part from the resource names.
+			foreach (String name in Assembly.GetEntryAssembly().GetManifestResourceNames()) {
+				Int32 index = name.ToLower().IndexOf(".resources.");
+				String name1 = name.Substring(index + 11);
+				if ((index > -1) && (keys.Contains(name1) == false)) {
+					keys.Add(name1);
 				}
 			}
 
@@ -1068,8 +1125,32 @@ namespace NDK.Framework {
 				// Log.
 				this.Logger.LogDebug("Resource: Reading resource '{0}' as text.", key);
 
-				// Find the resource with the name matching the key.
+				// Find the resource with the name matching the key in the calling assembly.
 				foreach (String name in Assembly.GetCallingAssembly().GetManifestResourceNames()) {
+					Int32 index = name.ToLower().IndexOf(".resources.");
+					if ((index > -1) && (name.ToLower().Substring(index + 11).Equals(key.ToLower()) == true)) {
+						using (Stream stream = Assembly.GetCallingAssembly().GetManifestResourceStream(name)) {
+							using (TextReader text = new StreamReader(stream, Encoding.Default)) {
+								return text.ReadToEnd();
+							}
+						}
+					}
+				}
+
+				// Find the resource with the name matching the key in the executing assembly.
+				foreach (String name in Assembly.GetExecutingAssembly().GetManifestResourceNames()) {
+					Int32 index = name.ToLower().IndexOf(".resources.");
+					if ((index > -1) && (name.ToLower().Substring(index + 11).Equals(key.ToLower()) == true)) {
+						using (Stream stream = Assembly.GetCallingAssembly().GetManifestResourceStream(name)) {
+							using (TextReader text = new StreamReader(stream, Encoding.Default)) {
+								return text.ReadToEnd();
+							}
+						}
+					}
+				}
+
+				// Find the resource with the name matching the key in the entry assembly.
+				foreach (String name in Assembly.GetEntryAssembly().GetManifestResourceNames()) {
 					Int32 index = name.ToLower().IndexOf(".resources.");
 					if ((index > -1) && (name.ToLower().Substring(index + 11).Equals(key.ToLower()) == true)) {
 						using (Stream stream = Assembly.GetCallingAssembly().GetManifestResourceStream(name)) {
@@ -1107,11 +1188,27 @@ namespace NDK.Framework {
 				// Log.
 				this.Logger.LogDebug("Resource: Reading resource '{0}' as image.", key);
 
-				// Find the resource with the name matching the key.
+				// Find the resource with the name matching the key in the calling assembly.
 				foreach (String name in Assembly.GetCallingAssembly().GetManifestResourceNames()) {
 					Int32 index = name.ToLower().IndexOf(".resources.");
 					if ((index > -1) && (name.ToLower().Substring(index + 11).Equals(key.ToLower()) == true)) {
 						return new Bitmap(Assembly.GetCallingAssembly().GetManifestResourceStream(name));
+					}
+				}
+
+				// Find the resource with the name matching the key in the executing assembly.
+				foreach (String name in Assembly.GetExecutingAssembly().GetManifestResourceNames()) {
+					Int32 index = name.ToLower().IndexOf(".resources.");
+					if ((index > -1) && (name.ToLower().Substring(index + 11).Equals(key.ToLower()) == true)) {
+						return new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream(name));
+					}
+				}
+
+				// Find the resource with the name matching the key in the entry assembly.
+				foreach (String name in Assembly.GetEntryAssembly().GetManifestResourceNames()) {
+					Int32 index = name.ToLower().IndexOf(".resources.");
+					if ((index > -1) && (name.ToLower().Substring(index + 11).Equals(key.ToLower()) == true)) {
+						return new Bitmap(Assembly.GetEntryAssembly().GetManifestResourceStream(name));
 					}
 				}
 
@@ -1353,10 +1450,58 @@ namespace NDK.Framework {
 		public Boolean IsUserMemberOfGroup(Person user, GroupPrincipal group, Boolean recursive = true) {
 			return this.ActiveDirectory.IsUserMemberOfGroup(user, group, recursive);
 		} // IsUserMemberOfGroup
+
+		/// <summary>
+		/// Gets if the user is member of one or all the groups.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		/// <param name="recursive">True to search recursive.</param>
+		/// <param name="all">True if the user must be member of all the groups.</param>
+		/// <param name="groups">The groups.</param>
+		/// <returns>True if the user is member of one or all the groups as specified.</returns>
+		public Boolean IsUserMemberOfGroups(Person user, Boolean recursive, Boolean all, params GroupPrincipal[] groups) {
+			return this.ActiveDirectory.IsUserMemberOfGroups(user, recursive, all, groups);
+		} // IsUserMemberOfGroups
 		#endregion
 
 		#region SOFD methods.
+		/// <summary>
+		/// Gets the employee identified by the employee id.
+		/// The employee id can be MaNummer, OpusBrugerNavn, AdBrugerNavn, CprNummer, Epost, Uuid.
+		/// </summary>
+		/// <param name="employeeId">The employee id to find.</param>
+		/// <returns>The matching employee or null.</returns>
+		public SofdEmployee GetEmployee(String employeeId) {
+			return this.SofdDirectory.GetEmployee(employeeId);
+		} // GetEmployee
 
+		/// <summary>
+		/// Gets all employees or filtered employees.
+		/// </summary>
+		/// <param name="employeeFilters">Sql WHERE filters.</param>
+		/// <returns>All matching employees.</returns>
+		public List<SofdEmployee> GetAllEmployees(params SqlWhereFilterBase[] employeeFilters) {
+			return this.SofdDirectory.GetAllEmployees(employeeFilters);
+		} // GetAllEmployees
+
+		/// <summary>
+		/// Gets the organization identified by the organization id.
+		/// The organization id can be OrganisationId, CvrNummer, SeNummer, EanNummer, PNummer, Uuid.
+		/// </summary>
+		/// <param name="organizationId">The organization id to find.</param>
+		/// <returns>The matching organization or null.</returns>
+		public SofdOrganization GetOrganization(String organizationId) {
+			return this.SofdDirectory.GetOrganization(organizationId);
+		} // GetOrganization
+
+		/// <summary>
+		/// Gets all organizations or filtered organizations.
+		/// </summary>
+		/// <param name="organizationFilters">Sql WHERE filters.</param>
+		/// <returns>All matching organizations.</returns>
+		public List<SofdOrganization> GetAllOrganisations(params SqlWhereFilterBase[] organizationFilters) {
+			return this.SofdDirectory.GetAllOrganisations(organizationFilters);
+		} // GetAllOrganisations
 		#endregion
 
 		#region Event methods.

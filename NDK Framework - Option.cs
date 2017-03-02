@@ -312,9 +312,11 @@ namespace NDK.Framework {
 				this.logger.LogDebug("Option: Read system boolean value for key '{0}'.", key);
 
 				// Get data.
-				Object value = this.GetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, RegistryView.Registry64, new Boolean(), true);
+				Object value = this.GetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, RegistryView.Registry64, defaultValue, true);
 				if (value is Boolean) {
 					return (Boolean)value;
+				} else if (value is Int32) {
+					return ((Int32)value) == 1;
 				} else {
 					return Boolean.Parse(value.ToString());
 				}
@@ -343,7 +345,7 @@ namespace NDK.Framework {
 				this.logger.LogDebug("Option: Read system integer value for key '{0}'.", key);
 
 				// Get data.
-				Object value = this.GetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, RegistryView.Registry64, new Int32(), true);
+				Object value = this.GetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, RegistryView.Registry64, defaultValue, true);
 				if (value is Int32) {
 					return (Int32)value;
 				} else {
@@ -374,7 +376,7 @@ namespace NDK.Framework {
 				this.logger.LogDebug("Option: Read system datetime value for key '{0}'.", key);
 
 				// Get data.
-				Object value = this.GetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, RegistryView.Registry64, new DateTime(), true);
+				Object value = this.GetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, RegistryView.Registry64, defaultValue, true);
 				if (value is DateTime) {
 					return (DateTime)value;
 				} else {
@@ -405,7 +407,7 @@ namespace NDK.Framework {
 				this.logger.LogDebug("Option: Read system guid value for key '{0}'.", key);
 
 				// Get data.
-				Object value = this.GetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, RegistryView.Registry64, new Guid(), true);
+				Object value = this.GetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, RegistryView.Registry64, defaultValue, true);
 				if (value is Guid) {
 					return (Guid)value;
 				} else {
@@ -434,7 +436,7 @@ namespace NDK.Framework {
 				this.logger.LogDebug("Option: Read system string value for key '{0}'.", key);
 
 				// Get data.
-				Object value = this.GetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, RegistryView.Registry64, String.Empty, true);
+				Object value = this.GetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, RegistryView.Registry64, defaultValue, true);
 				if (value is String) {
 					return (String)value;
 				} else {
@@ -533,7 +535,7 @@ namespace NDK.Framework {
 				this.logger.LogDebug("Option: Write system datetime value for key '{0}'.", key);
 
 				// Set data.
-				this.SetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, value, RegistryValueKind.String, RegistryView.Registry64, true);
+				this.SetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, value.ToString("yyyy-MM-dd HH:mm:ss.fffffff"), RegistryValueKind.String, RegistryView.Registry64, true);
 			} catch (Exception exception) {
 				// Log exception.
 				this.logger.LogError(exception);
@@ -645,9 +647,11 @@ namespace NDK.Framework {
 				this.logger.LogDebug("Option: Read user boolean value for key '{1}' in guid '{0}'.", guid, key);
 
 				// Get data.
-				Object value = this.GetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, RegistryView.Registry64, new Boolean(), true);
+				Object value = this.GetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, RegistryView.Registry64, defaultValue, true);
 				if (value is Boolean) {
 					return (Boolean)value;
+				} else if (value is Int32) {
+					return ((Int32)value) == 1;
 				} else {
 					return Boolean.Parse(value.ToString());
 				}
@@ -677,7 +681,7 @@ namespace NDK.Framework {
 				this.logger.LogDebug("Option: Read user integer value for key '{1}' in guid '{0}'.", guid, key);
 
 				// Get data.
-				Object value = this.GetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, RegistryView.Registry64, new Int32(), true);
+				Object value = this.GetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, RegistryView.Registry64, defaultValue, true);
 				if (value is Int32) {
 					return (Int32)value;
 				} else {
@@ -709,7 +713,7 @@ namespace NDK.Framework {
 				this.logger.LogDebug("Option: Read user datetime value for key '{1}' in guid '{0}'.", guid, key);
 
 				// Get data.
-				Object value = this.GetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, RegistryView.Registry64, new DateTime(), true);
+				Object value = this.GetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, RegistryView.Registry64, defaultValue, true);
 				if (value is DateTime) {
 					return (DateTime)value;
 				} else {
@@ -741,7 +745,7 @@ namespace NDK.Framework {
 				this.logger.LogDebug("Option: Read user guid value for key '{1}' in guid '{0}'.", guid, key);
 
 				// Get data.
-				Object value = this.GetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, RegistryView.Registry64, new Guid(), true);
+				Object value = this.GetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, RegistryView.Registry64, defaultValue, true);
 				if (value is Guid) {
 					return (Guid)value;
 				} else {
@@ -771,9 +775,11 @@ namespace NDK.Framework {
 				this.logger.LogDebug("Option: Read user string value for key '{1}' in guid '{0}'.", guid, key);
 
 				// Get data.
-				Object value = this.GetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, RegistryView.Registry64, String.Empty, true);
+				Object value = this.GetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, RegistryView.Registry64, defaultValue, true);
 				if (value is String) {
 					return (String)value;
+				} else if (value is String[]) {
+					return ((String[])value)[0];
 				} else {
 					return value.ToString();
 				}
@@ -874,7 +880,7 @@ namespace NDK.Framework {
 				this.logger.LogDebug("Option: Write user datetime value for key '{1}' in guid '{0}'.", guid, key);
 
 				// Set data.
-				this.SetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, value, RegistryValueKind.String, RegistryView.Registry64, true);
+				this.SetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, value.ToString("yyyy-MM-dd HH:mm:ss.fffffff"), RegistryValueKind.String, RegistryView.Registry64, true);
 			} catch (Exception exception) {
 				// Log exception.
 				this.logger.LogError(exception);

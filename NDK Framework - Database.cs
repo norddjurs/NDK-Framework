@@ -514,37 +514,51 @@ namespace NDK.Framework {
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <returns>The part of the sql WHERE filter that compares the field to the value.</returns>
 		protected override String GetFilterString(String filterName, SqlWhereFilterValueOperator filterValueOperator) {
-			// Escape single quotes.
-			this.filterValue = this.filterValue.Replace("'", "''");
+			if (this.filterValue != null) {
+				// Escape single quotes.
+				this.filterValue = this.filterValue.Replace("'", "''");
 
-			switch (filterValueOperator) {
-				case SqlWhereFilterValueOperator.Equals:
-					return String.Format(" \"{0}\" = '{1}'", filterName, this.filterValue);
-					break;
-				case SqlWhereFilterValueOperator.GreaterThan:
-					return String.Format(" \"{0}\" > '{1}'", filterName, this.filterValue);
-					break;
-				case SqlWhereFilterValueOperator.GreaterThanOrEquals:
-					return String.Format(" \"{0}\" >= '{1}'", filterName, this.filterValue);
-					break;
-				case SqlWhereFilterValueOperator.LessThan:
-					return String.Format(" \"{0}\" < '{1}'", filterName, this.filterValue);
-					break;
-				case SqlWhereFilterValueOperator.LessThanOrEquals:
-					return String.Format(" \"{0}\" <= '{1}'", filterName, this.filterValue);
-					break;
-				case SqlWhereFilterValueOperator.NotEquals:
-					return String.Format(" \"{0}\" <> '{1}'", filterName, this.filterValue);
-					break;
-				case SqlWhereFilterValueOperator.Like:
-				default:
-					// Escape underscore and percent.
-					this.filterValue = this.filterValue.Replace("_", "[_]");
-					this.filterValue = this.filterValue.Replace("%", "[%]");
-					this.filterValue = this.filterValue.Replace("*", "%");
-					this.filterValue = this.filterValue.Replace("?", "_");
-					return String.Format(" \"{0}\" LIKE '{1}'", filterName, this.filterValue);
-					break;
+				switch (filterValueOperator) {
+					case SqlWhereFilterValueOperator.Equals:
+						return String.Format(" \"{0}\" = '{1}'", filterName, this.filterValue);
+						break;
+					case SqlWhereFilterValueOperator.GreaterThan:
+						return String.Format(" \"{0}\" > '{1}'", filterName, this.filterValue);
+						break;
+					case SqlWhereFilterValueOperator.GreaterThanOrEquals:
+						return String.Format(" \"{0}\" >= '{1}'", filterName, this.filterValue);
+						break;
+					case SqlWhereFilterValueOperator.LessThan:
+						return String.Format(" \"{0}\" < '{1}'", filterName, this.filterValue);
+						break;
+					case SqlWhereFilterValueOperator.LessThanOrEquals:
+						return String.Format(" \"{0}\" <= '{1}'", filterName, this.filterValue);
+						break;
+					case SqlWhereFilterValueOperator.NotEquals:
+						return String.Format(" \"{0}\" <> '{1}'", filterName, this.filterValue);
+						break;
+					case SqlWhereFilterValueOperator.Like:
+					default:
+						// Escape underscore and percent.
+						this.filterValue = this.filterValue.Replace("_", "[_]");
+						this.filterValue = this.filterValue.Replace("%", "[%]");
+						this.filterValue = this.filterValue.Replace("*", "%");
+						this.filterValue = this.filterValue.Replace("?", "_");
+						return String.Format(" \"{0}\" LIKE '{1}'", filterName, this.filterValue);
+						break;
+				}
+			} else {
+				switch (filterValueOperator) {
+					case SqlWhereFilterValueOperator.Equals:
+						return String.Format(" \"{0}\" IS NULL", filterName);
+						break;
+					case SqlWhereFilterValueOperator.NotEquals:
+						return String.Format(" \"{0}\" IS NOT NULL", filterName);
+						break;
+					default:
+						throw new NotSupportedException(String.Format("The sql WHERE filter class '{0}' does not support the '{1}' value operator with the NULL value.", this.GetType().Name, filterValueOperator));
+						break;
+				}
 			}
 		} // GetFilterString
 

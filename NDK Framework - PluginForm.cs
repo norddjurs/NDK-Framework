@@ -702,10 +702,58 @@ namespace NDK.Framework {
 		public Boolean IsUserMemberOfGroup(Person user, GroupPrincipal group, Boolean recursive = true) {
 			return this.framework.IsUserMemberOfGroup(user, group, recursive);
 		} // IsUserMemberOfGroup
+
+		/// <summary>
+		/// Gets if the user is member of one or all the groups.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		/// <param name="recursive">True to search recursive.</param>
+		/// <param name="all">True if the user must be member of all the groups.</param>
+		/// <param name="groups">The groups.</param>
+		/// <returns>True if the user is member of one or all the groups as specified.</returns>
+		public Boolean IsUserMemberOfGroups(Person user, Boolean recursive, Boolean all, params GroupPrincipal[] groups) {
+			return this.framework.IsUserMemberOfGroups(user, recursive, all, groups);
+		} // IsUserMemberOfGroups
 		#endregion
 
 		#region SOFD methods.
+		/// <summary>
+		/// Gets the employee identified by the employee id.
+		/// The employee id can be MaNummer, OpusBrugerNavn, AdBrugerNavn, CprNummer, Epost, Uuid.
+		/// </summary>
+		/// <param name="employeeId">The employee id to find.</param>
+		/// <returns>The matching employee or null.</returns>
+		public SofdEmployee GetEmployee(String employeeId) {
+			return this.framework.GetEmployee(employeeId);
+		} // GetEmployee
 
+		/// <summary>
+		/// Gets all employees or filtered employees.
+		/// </summary>
+		/// <param name="employeeFilters">Sql WHERE filters.</param>
+		/// <returns>All matching employees.</returns>
+		public List<SofdEmployee> GetAllEmployees(params SqlWhereFilterBase[] employeeFilters) {
+			return this.framework.GetAllEmployees(employeeFilters);
+		} // GetAllEmployees
+
+		/// <summary>
+		/// Gets the organization identified by the organization id.
+		/// The organization id can be OrganisationId, CvrNummer, SeNummer, EanNummer, PNummer, Uuid.
+		/// </summary>
+		/// <param name="organizationId">The organization id to find.</param>
+		/// <returns>The matching organization or null.</returns>
+		public SofdOrganization GetOrganization(String organizationId) {
+			return this.framework.GetOrganization(organizationId);
+		} // GetOrganization
+
+		/// <summary>
+		/// Gets all organizations or filtered organizations.
+		/// </summary>
+		/// <param name="organizationFilters">Sql WHERE filters.</param>
+		/// <returns>All matching organizations.</returns>
+		public List<SofdOrganization> GetAllOrganisations(params SqlWhereFilterBase[] organizationFilters) {
+			return this.framework.GetAllOrganisations(organizationFilters);
+		} // GetAllOrganisations
 		#endregion
 
 		#region Event methods.

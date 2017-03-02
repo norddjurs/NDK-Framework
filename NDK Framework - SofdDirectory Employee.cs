@@ -36,7 +36,7 @@ namespace NDK.Framework {
 		public const String FIELD_KALDE_NAVN = "Kaldenavn";
 		public const String FIELD_ADRESSE = "Adresse";
 		public const String FIELD_STED_NAVN = "Stednavn";
-		public const String FIELD_POST_NUMMER = "PostNrString";
+		public const String FIELD_POST_NUMMER = "PostNr";
 		public const String FIELD_BY = "By";
 		public const String FIELD_LAND = "Land";
 		public const String FIELD_ADRESSE_BESKYTTET = "AdresseBeskyttet";
@@ -225,30 +225,30 @@ namespace NDK.Framework {
 		#region Compare and Equal methods.
 		/// <summary>
 		/// Gets true if the two instances are equal.
-		/// The MaNummer is used for comparison.
+		/// The medarbejderHistorikId is used for comparison.
 		/// </summary>
 		/// <param name="x">The X instance.</param>
 		/// <param name="y">The Y instance.</param>
 		/// <returns>True if equal.</returns>
 		public Boolean Equals(SofdEmployee x, SofdEmployee y) {
-			return x.maNummer.Equals(y.maNummer);
+			return x.medarbejderHistorikId.Equals(y.medarbejderHistorikId);
 		} // Equals
 
 		/// <summary>
 		/// Gets true if the given instance is equal to this instance.
-		/// The MaNummer is used for comparison.
+		/// The medarbejderHistorikId is used for comparison.
 		/// </summary>
 		/// <param name="other">The other instance.</param>
 		/// <returns>True if equal.</returns>
 		public Boolean Equals(SofdEmployee other) {
-			return this.maNummer.Equals(other.maNummer);
+			return this.medarbejderHistorikId.Equals(other.medarbejderHistorikId);
 		} // Equals
 
 		/// <summary>
 		/// Compares the current instance with another object of the same type and returns an integer that indicates
 		/// whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
 		/// 
-		/// The MaNummer is used for comparison.
+		/// The medarbejderHistorikId is used for comparison.
 		/// </summary>
 		/// <param name="obj">The object to compare with.</param>
 		/// <returns>Less then zero, zero or more then zero to indicate sort order.</returns>
@@ -258,13 +258,13 @@ namespace NDK.Framework {
 				return 1;
 			} else {
 				// Compare.
-				return this.maNummer.CompareTo(((SofdEmployee)obj).maNummer);
+				return this.medarbejderHistorikId.CompareTo(((SofdEmployee)obj).medarbejderHistorikId);
 			}
 		} // CompareTo
 
 		/// <summary>
 		/// Gets true if the given instance is equal to this instance.
-		/// The MaNummer is used for comparison.
+		/// The medarbejderHistorikId is used for comparison.
 		/// </summary>
 		/// <param name="other">The other instance.</param>
 		/// <returns>True if equal.</returns>
@@ -273,7 +273,7 @@ namespace NDK.Framework {
 				return false;
 			} else {
 				// Compare.
-				return this.maNummer.Equals(((SofdEmployee)obj).maNummer);
+				return this.medarbejderHistorikId.Equals(((SofdEmployee)obj).medarbejderHistorikId);
 			}
 		} // Equals
 
@@ -283,16 +283,16 @@ namespace NDK.Framework {
 		/// <param name="obj"></param>
 		/// <returns>The hash code.</returns>
 		public Int32 GetHashCode(SofdEmployee obj) {
-			return obj.maNummer.GetHashCode();
+			return obj.medarbejderHistorikId.GetHashCode();
 		} // GetHashCode
 
 		/// <summary>
-		/// Gets the hash code from the MaNummer.
+		/// Gets the hash code from the medarbejderHistorikId.
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <returns>The hash code.</returns>
 		public override Int32 GetHashCode() {
-			return this.maNummer.GetHashCode();
+			return this.medarbejderHistorikId.GetHashCode();
 		} // GetHashCode
 		#endregion
 
@@ -428,6 +428,29 @@ namespace NDK.Framework {
 				return this.kaldeNavn;
 			}
 		} // KaldeNavn
+
+		public String AdresseText {
+			get {
+				String resultAddress = this.adresse ?? String.Empty;
+				String resultPlace = this.stedNavn ?? String.Empty;
+				String resultPostNumber = this.postNummer ?? String.Empty;
+				String resultCity = this.by ?? String.Empty;
+				String resultCountry = this.land ?? String.Empty;
+
+				// First line: Address, Place
+				String result1 = resultAddress + ", " + resultPlace;
+				result1.Trim(',');
+				result1.Trim();
+
+				// Second line: Country PostNumber City
+				String result2 = resultCountry + "-" + resultPostNumber + "  " + resultCity;
+				result1.Trim('-');
+				result1.Trim();
+
+				// Return the address text.
+				return result1 + Environment.NewLine + result2;
+			}
+		} // AdresseText
 
 		public String Adresse {
 			get {
@@ -836,6 +859,24 @@ namespace NDK.Framework {
 	} // SofdEmployeeFilter_MaNummer
 	#endregion
 
+	#region SofdEmployeeFilter_SidstAendret class
+	/// <summary>
+	/// Employee filter on SidstAendret.
+	/// </summary>
+	public class SofdEmployeeFilter_SidstAendret : SqlWhereFilterDateTime {
+
+		/// <summary>
+		/// Employee filter on SidstAendret.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_SidstAendret(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, DateTime filterValue) : base(filterOperator, SofdEmployee.FIELD_SIDST_AENDRET, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_SidstAendret
+
+	} // SofdEmployeeFilter_SidstAendret
+	#endregion
+
 	#region SofdEmployeeFilter_OpusBrugerNavn class
 	/// <summary>
 	/// Employee filter on OpusBrugerNavn.
@@ -848,7 +889,7 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdEmployeeFilter_OpusBrugerNavn(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_OPUS_BRUGER_NAVN, filterValueOperator, filterValue.Trim()) {
+		public SofdEmployeeFilter_OpusBrugerNavn(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_OPUS_BRUGER_NAVN, filterValueOperator, filterValue) {
 		} // SofdEmployeeFilter_OpusBrugerNavn
 
 	} // SofdEmployeeFilter_OpusBrugerNavn
@@ -866,7 +907,7 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdEmployeeFilter_AdBrugerNavn(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_AD_BRUGER_NAVN, filterValueOperator, filterValue.Trim()) {
+		public SofdEmployeeFilter_AdBrugerNavn(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_AD_BRUGER_NAVN, filterValueOperator, filterValue) {
 		} // SofdEmployeeFilter_AdBrugerNavn
 
 	} // SofdEmployeeFilter_AdBrugerNavn
@@ -884,10 +925,82 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdEmployeeFilter_CprNummer(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_CPR_NUMMER, filterValueOperator, filterValue.Trim().Replace("-", "")) {
+		public SofdEmployeeFilter_CprNummer(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_CPR_NUMMER, filterValueOperator, (filterValue == null) ? null : filterValue.Trim().Replace("-", "")) {
 		} // SofdEmployeeFilter_CprNummer
 
 	} // SofdEmployeeFilter_CprNummer
+	#endregion
+
+	#region SofdEmployeeFilter_Navn class
+	/// <summary>
+	/// Employee filter on Navn.
+	/// </summary>
+	public class SofdEmployeeFilter_Navn : SqlWhereFilterString {
+
+		/// <summary>
+		/// Employee filter on Navn.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_Navn(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_NAVN, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_Navn
+
+	} // SofdEmployeeFilter_Navn
+	#endregion
+
+	#region SofdEmployeeFilter_ForNavn class
+	/// <summary>
+	/// Employee filter on ForNavn.
+	/// </summary>
+	public class SofdEmployeeFilter_ForNavn : SqlWhereFilterString {
+
+		/// <summary>
+		/// Employee filter on ForNavn.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_ForNavn(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_FOR_NAVN, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_ForNavn
+
+	} // SofdEmployeeFilter_ForNavn
+	#endregion
+
+	#region SofdEmployeeFilter_EfterNavn class
+	/// <summary>
+	/// Employee filter on EfterNavn.
+	/// </summary>
+	public class SofdEmployeeFilter_EfterNavn : SqlWhereFilterString {
+
+		/// <summary>
+		/// Employee filter on EfterNavn.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_EfterNavn(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_EFTER_NAVN, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_EfterNavn
+
+	} // SofdEmployeeFilter_EfterNavn
+	#endregion
+
+	#region SofdEmployeeFilter_KaldeNavn class
+	/// <summary>
+	/// Employee filter on KaldeNavn.
+	/// </summary>
+	public class SofdEmployeeFilter_KaldeNavn : SqlWhereFilterString {
+
+		/// <summary>
+		/// Employee filter on KaldeNavn.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_KaldeNavn(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_KALDE_NAVN, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_KaldeNavn
+
+	} // SofdEmployeeFilter_KaldeNavn
 	#endregion
 
 	#region SofdEmployeeFilter_Epost class
@@ -902,7 +1015,7 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdEmployeeFilter_Epost(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_EPOST, filterValueOperator, filterValue.Trim()) {
+		public SofdEmployeeFilter_Epost(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_EPOST, filterValueOperator, filterValue) {
 		} // SofdEmployeeFilter_Epost
 
 	} // SofdEmployeeFilter_Epost
@@ -938,7 +1051,7 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdEmployeeFilter_MifareId(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_MIFARE_ID, filterValueOperator, filterValue.Trim()) {
+		public SofdEmployeeFilter_MifareId(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_MIFARE_ID, filterValueOperator, filterValue) {
 		} // SofdEmployeeFilter_MifareId
 
 	} // SofdEmployeeFilter_MifareId
@@ -987,7 +1100,7 @@ namespace NDK.Framework {
 	/// <summary>
 	/// Employee filter on NaermesteLederCprNummer.
 	/// </summary>
-	public class SofdEmployeeFilter_NaermesteLederCprNummer : SqlWhereFilterInt32 {
+	public class SofdEmployeeFilter_NaermesteLederCprNummer : SqlWhereFilterString {
 
 		/// <summary>
 		/// Employee filter on NaermesteLederCprNummer.
@@ -995,7 +1108,7 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdEmployeeFilter_NaermesteLederCprNummer(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdEmployee.FIELD_NAERMESTE_LEDER_CPR_NUMMER, filterValueOperator, filterValue) {
+		public SofdEmployeeFilter_NaermesteLederCprNummer(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_NAERMESTE_LEDER_CPR_NUMMER, filterValueOperator, (filterValue == null) ? null : filterValue.Trim().Replace("-", "")) {
 		} // SofdEmployeeFilter_NaermesteLederCprNummer
 
 	} // SofdEmployeeFilter_NaermesteLederCprNummer

@@ -103,6 +103,7 @@ namespace NDK.Framework {
 			// Convert the domain name to the distinguished name.
 			String domainName = this.DomainName;    // Environment.UserDomainName
 			String distinguishedName = "DC=" + domainName.Replace(".", ",DC=");    // "DC=intern,DC=norddjurs,DC=dk"
+			distinguishedName = this.config.GetSystemValue("ActiveDirectoryBindDN", distinguishedName);
 
 			// Connect to the Active Directory.
 			// The distinguished name is given as the container (root conainer) to avoid
@@ -166,114 +167,118 @@ namespace NDK.Framework {
 		/// <param name="userId">The user id to find.</param>
 		/// <returns>The matching user or null.</returns>
 		public Person GetUser(String userId) {
-			Person user = null;
+			try {
+				Person user = null;
 
-			// Search cpr number.
-			// TODO: Add check for numeric userId.
-			if (userId.Trim().Replace("-", String.Empty).Length == 10) {
-				try {
-					// Get which attribute stores the cpr number.
-					String userCprAttribute = this.config.GetSystemValue("ActiveDirectoryCprAttribute", "EmployeeId");
+				// Search cpr number.
+				// TODO: Add check for numeric userId.
+				if (userId.Trim().Replace("-", String.Empty).Length == 10) {
+					try {
+						// Get which attribute stores the cpr number.
+						String userCprAttribute = this.config.GetSystemValue("ActiveDirectoryCprAttribute", "EmployeeId");
 
-					// Initialize the query.
-					Person userQueryFilter = new Person(this.context);
-					switch (userCprAttribute.ToLower()) {
-						case "extensionattribute1":
-							userQueryFilter.ExtensionAttribute1 = userId;
-							break;
-						case "extensionattribute2":
-							userQueryFilter.ExtensionAttribute2 = userId;
-							break;
-						case "extensionattribute3":
-							userQueryFilter.ExtensionAttribute3 = userId;
-							break;
-						case "extensionattribute4":
-							userQueryFilter.ExtensionAttribute4 = userId;
-							break;
-						case "extensionattribute5":
-							userQueryFilter.ExtensionAttribute5 = userId;
-							break;
-						case "extensionattribute6":
-							userQueryFilter.ExtensionAttribute6 = userId;
-							break;
-						case "extensionattribute7":
-							userQueryFilter.ExtensionAttribute7 = userId;
-							break;
-						case "extensionattribute8":
-							userQueryFilter.ExtensionAttribute8 = userId;
-							break;
-						case "extensionattribute9":
-							userQueryFilter.ExtensionAttribute9 = userId;
-							break;
-						case "extensionattribute10":
-							userQueryFilter.ExtensionAttribute10 = userId;
-							break;
-						case "extensionattribute11":
-							userQueryFilter.ExtensionAttribute11 = userId;
-							break;
-						case "extensionattribute12":
-							userQueryFilter.ExtensionAttribute12 = userId;
-							break;
-						case "extensionattribute13":
-							userQueryFilter.ExtensionAttribute13 = userId;
-							break;
-						case "extensionattribute14":
-							userQueryFilter.ExtensionAttribute14 = userId;
-							break;
-						case "extensionattribute15":
-							userQueryFilter.ExtensionAttribute15 = userId;
-							break;
-						case "employeeid":
-						default:
-							userQueryFilter.EmployeeId = userId;
-							break;
-					}
-					PrincipalSearcher searcher = new PrincipalSearcher();
-					searcher.QueryFilter = userQueryFilter;
-					user = (Person)searcher.FindOne();
-				} catch { }
-			}
+						// Initialize the query.
+						Person userQueryFilter = new Person(this.context);
+						switch (userCprAttribute.ToLower()) {
+							case "extensionattribute1":
+								userQueryFilter.ExtensionAttribute1 = userId;
+								break;
+							case "extensionattribute2":
+								userQueryFilter.ExtensionAttribute2 = userId;
+								break;
+							case "extensionattribute3":
+								userQueryFilter.ExtensionAttribute3 = userId;
+								break;
+							case "extensionattribute4":
+								userQueryFilter.ExtensionAttribute4 = userId;
+								break;
+							case "extensionattribute5":
+								userQueryFilter.ExtensionAttribute5 = userId;
+								break;
+							case "extensionattribute6":
+								userQueryFilter.ExtensionAttribute6 = userId;
+								break;
+							case "extensionattribute7":
+								userQueryFilter.ExtensionAttribute7 = userId;
+								break;
+							case "extensionattribute8":
+								userQueryFilter.ExtensionAttribute8 = userId;
+								break;
+							case "extensionattribute9":
+								userQueryFilter.ExtensionAttribute9 = userId;
+								break;
+							case "extensionattribute10":
+								userQueryFilter.ExtensionAttribute10 = userId;
+								break;
+							case "extensionattribute11":
+								userQueryFilter.ExtensionAttribute11 = userId;
+								break;
+							case "extensionattribute12":
+								userQueryFilter.ExtensionAttribute12 = userId;
+								break;
+							case "extensionattribute13":
+								userQueryFilter.ExtensionAttribute13 = userId;
+								break;
+							case "extensionattribute14":
+								userQueryFilter.ExtensionAttribute14 = userId;
+								break;
+							case "extensionattribute15":
+								userQueryFilter.ExtensionAttribute15 = userId;
+								break;
+							case "employeeid":
+							default:
+								userQueryFilter.EmployeeId = userId;
+								break;
+						}
+						PrincipalSearcher searcher = new PrincipalSearcher();
+						searcher.QueryFilter = userQueryFilter;
+						user = (Person)searcher.FindOne();
+					} catch { }
+				}
 
-			// Search guid.
-			Guid userGuid = Guid.Empty;
-			if ((user == null) && (Guid.TryParse(userId, out userGuid) == true)) {
-				try {
-					user = Person.FindByIdentity(this.context, IdentityType.Guid, userId);
-				} catch { }
-			}
+				// Search guid.
+				Guid userGuid = Guid.Empty;
+				if ((user == null) && (Guid.TryParse(userId, out userGuid) == true)) {
+					try {
+						user = Person.FindByIdentity(this.context, IdentityType.Guid, userId);
+					} catch { }
+				}
 
-			// Search distinguished name.
-			if (user == null) {
-				try {
-					user = Person.FindByIdentity(this.context, IdentityType.DistinguishedName, userId);
-				} catch { }
-			}
+				// Search distinguished name.
+				if (user == null) {
+					try {
+						user = Person.FindByIdentity(this.context, IdentityType.DistinguishedName, userId);
+					} catch { }
+				}
 
-			// Search sam account name.
-			if (user == null) {
-				try {
-					user = Person.FindByIdentity(this.context, IdentityType.SamAccountName, userId);
-				} catch { }
-			}
+				// Search sam account name.
+				if (user == null) {
+					try {
+						user = Person.FindByIdentity(this.context, IdentityType.SamAccountName, userId);
+					} catch { }
+				}
 
-			// Search user principal name.
-			if (user == null) {
-				try {
-					user = Person.FindByIdentity(this.context, IdentityType.UserPrincipalName, userId);
-				} catch { }
-			}
+				// Search user principal name.
+				if (user == null) {
+					try {
+						user = Person.FindByIdentity(this.context, IdentityType.UserPrincipalName, userId);
+					} catch { }
+				}
 
-			// Search security identifier.
-			if (user == null) {
-				try {
-					user = Person.FindByIdentity(this.context, IdentityType.Sid, userId);
-				} catch { }
-			}
+				// Search security identifier.
+				if (user == null) {
+					try {
+						user = Person.FindByIdentity(this.context, IdentityType.Sid, userId);
+					} catch { }
+				}
 
-			// Return the user or null.
-			if ((user != null) && (user.StructuralObjectClass == "user")) {
-				return user;
-			} else {
+				// Return the user or null.
+				if ((user != null) && (user.StructuralObjectClass == "user")) {
+					return user;
+				} else {
+					return null;
+				}
+			} catch {
 				return null;
 			}
 		} // GetUser
@@ -398,49 +403,53 @@ namespace NDK.Framework {
 		/// Gets the group identified by the group id.
 		/// The group id can be Guid, Distinguished Name, Sam Account Name, User Principal Name or Security Identifier.
 		/// </summary>
-		/// <param name="userId">The group id to find.</param>
+		/// <param name="groupId">The group id to find.</param>
 		/// <returns>The matching group or null.</returns>
 		public GroupPrincipal GetGroup(String groupId) {
-			GroupPrincipal group = null;
+			try {
+				GroupPrincipal group = null;
 
-			// Search guid.
-			Guid groupGuid = Guid.Empty;
-			if ((group == null) && (Guid.TryParse(groupId, out groupGuid) == true)) {
-				try {
-					group = GroupPrincipal.FindByIdentity(this.context, IdentityType.Guid, groupId);
-				} catch { }
+				// Search guid.
+				Guid groupGuid = Guid.Empty;
+				if ((group == null) && (Guid.TryParse(groupId, out groupGuid) == true)) {
+					try {
+						group = GroupPrincipal.FindByIdentity(this.context, IdentityType.Guid, groupId);
+					} catch { }
+				}
+
+				// Search distinguished name.
+				if (group == null) {
+					try {
+						group = GroupPrincipal.FindByIdentity(this.context, IdentityType.DistinguishedName, groupId);
+					} catch { }
+				}
+
+				// Search sam account name.
+				if (group == null) {
+					try {
+						group = GroupPrincipal.FindByIdentity(this.context, IdentityType.SamAccountName, groupId);
+					} catch { }
+				}
+
+				// Search user principal name.
+				if (group == null) {
+					try {
+						group = GroupPrincipal.FindByIdentity(this.context, IdentityType.UserPrincipalName, groupId);
+					} catch { }
+				}
+
+				// Search security identifier.
+				if (group == null) {
+					try {
+						group = GroupPrincipal.FindByIdentity(this.context, IdentityType.Sid, groupId);
+					} catch { }
+				}
+
+				// Return the group or null.
+				return group;
+			} catch {
+				return null;
 			}
-
-			// Search distinguished name.
-			if (group == null) {
-				try {
-					group = GroupPrincipal.FindByIdentity(this.context, IdentityType.DistinguishedName, groupId);
-				} catch { }
-			}
-
-			// Search sam account name.
-			if (group == null) {
-				try {
-					group = GroupPrincipal.FindByIdentity(this.context, IdentityType.SamAccountName, groupId);
-				} catch { }
-			}
-
-			// Search user principal name.
-			if (group == null) {
-				try {
-					group = GroupPrincipal.FindByIdentity(this.context, IdentityType.UserPrincipalName, groupId);
-				} catch { }
-			}
-
-			// Search security identifier.
-			if (group == null) {
-				try {
-					group = GroupPrincipal.FindByIdentity(this.context, IdentityType.Sid, groupId);
-				} catch { }
-			}
-
-			// Return the group or null.
-			return group;
 		} // GetGroup
 
 		/// <summary>
@@ -520,6 +529,45 @@ namespace NDK.Framework {
 			// Return false.
 			return false;
 		} // IsUserMemberOfGroup
+
+		/// <summary>
+		/// Gets if the user is member of one or all the groups.
+		/// This method return false if the groups array is empty.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		/// <param name="recursive">True to search recursive.</param>
+		/// <param name="all">True if the user must be member of all the groups.</param>
+		/// <param name="groups">The groups.</param>
+		/// <returns>True if the user is member of one or all the groups as specified.</returns>
+		public Boolean IsUserMemberOfGroups(Person user, Boolean recursive, Boolean all, params GroupPrincipal[] groups) {
+			Int32 isMemberCount = 0;
+			foreach (GroupPrincipal group in groups) {
+				Boolean isMember = this.IsUserMemberOfGroup(user, group, recursive);
+
+				// Count the number of member groups.
+				if (isMember == true) {
+					isMemberCount++;
+				}
+
+				// Return false if the user is not member of the group, when the user must be member of all the groups.
+				if ((all == true) && (isMember == false)) {
+					return false;
+				}
+
+				// Return true if the user is member of the group, when the user must be member of one of the groups.
+				if ((all == false) && (isMember == true)) {
+					return true;
+				}
+			}
+
+			// Return true if the user is member of all the groups, when the user must be member of all the groups.
+			if (all == true) {
+				return groups.Length == isMemberCount;
+			} else {
+				// Return false.
+				return false;
+			}
+		} // IsUserMemberOfGroups
 		#endregion
 
 	} // ActiveDirectory

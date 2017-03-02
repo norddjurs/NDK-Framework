@@ -73,6 +73,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NDK Framework - ActiveDirectory Validators.cs" />
     <Compile Include="NDK Framework - ActiveDirectory.cs" />
     <Compile Include="NDK Framework - AssemblyInfo.cs" />
     <Compile Include="NDK Framework - Extensions.cs" />
