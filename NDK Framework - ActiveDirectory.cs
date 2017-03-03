@@ -585,17 +585,28 @@ namespace NDK.Framework {
 		public Person(PrincipalContext context, String samAccountName, String password, Boolean enabled) : base(context, samAccountName, password, enabled) {
 		} // Person
 
-// TODO: This custom filter don't work - should be removed or fixed.
-//		public new PersonSearchFilter AdvancedSearchFilter {
-//			get {
-//				if (searchFilter == null) {
-//					searchFilter = new PersonSearchFilter(this);
-//				}
-//				return searchFilter;
-//			}
-//		} // AdvancedSearchFilter
+		// TODO: This custom filter don't work - should be removed or fixed.
+		//		public new PersonSearchFilter AdvancedSearchFilter {
+		//			get {
+		//				if (searchFilter == null) {
+		//					searchFilter = new PersonSearchFilter(this);
+		//				}
+		//				return searchFilter;
+		//			}
+		//		} // AdvancedSearchFilter
 
 		#region Implement directory object class "inetOrgPerson".
+		[DirectoryProperty("whenChanged")]
+		public DateTime? Modified {
+			get {
+				if (ExtensionGet("whenChanged").Length != 1) {
+					return null;
+				} else {
+					return (DateTime)ExtensionGet("whenChanged")[0];
+				}
+			}
+		} // Modified
+
 		[DirectoryProperty("mobile")]
 		public String MobilePhone {
 			get {
@@ -652,6 +663,30 @@ namespace NDK.Framework {
 				ExtensionSet("info", value);
 			}
 		} // Info
+
+		/// <summary>
+		/// Inserts the info text at the beginning of the info, followed by a new line.
+		/// The info text is preceeded with the current date and succeeded with the current username.
+		/// Null and empty info text, is ignored.
+		/// 
+		/// You should invoke the save method after this.
+		/// </summary>
+		/// <param name="infoText">The info text.</param>
+		public void InsertInfo(String infoText) {
+			if ((infoText != null) && (infoText.Trim().Length > 0)) {
+				if ((this.Info == null) || (this.Info.Trim().Length == 0)) {
+					// First and only line.
+					this.Info = String.Format("{0:yyyy-MM-dd}: {1} ({2})", DateTime.Now, infoText.Trim(), Environment.UserName);
+				} else {
+					// Insert before existing text.
+					this.Info = String.Format("{0:yyyy-MM-dd}: {1} ({3}){4}{2}", DateTime.Now, infoText.Trim(), this.Info.Trim(), Environment.UserName, Environment.NewLine);
+				}
+			}
+		} // InsertInfo
+
+		public Boolean IsAccountExpired() {
+			return ((this.AccountExpirationDate != null) && (this.AccountExpirationDate.Value.CompareTo(DateTime.Now) < 0));
+		} // IsAccountExpired
 		#endregion
 
 		#region Implement directory object class "person" (ExtensionAttribute1 to 15).

@@ -859,6 +859,114 @@ namespace NDK.Framework {
 	} // SofdEmployeeFilter_MaNummer
 	#endregion
 
+	#region SofdEmployeeFilter_AktivFra class
+	/// <summary>
+	/// Employee filter on AktivFra.
+	/// </summary>
+	public class SofdEmployeeFilter_AktivFra : SqlWhereFilterDateTime {
+
+		/// <summary>
+		/// Employee filter on AktivFra.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_AktivFra(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, DateTime filterValue) : base(filterOperator, SofdEmployee.FIELD_AKTIV_FRA, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_AktivFra
+
+	} // SofdEmployeeFilter_AktivFra
+	#endregion
+
+	#region SofdEmployeeFilter_AktivTil class
+	/// <summary>
+	/// Employee filter on AktivTil.
+	/// </summary>
+	public class SofdEmployeeFilter_AktivTil : SqlWhereFilterDateTime {
+
+		/// <summary>
+		/// Employee filter on AktivTil.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_AktivTil(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, DateTime filterValue) : base(filterOperator, SofdEmployee.FIELD_AKTIV_TIL, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_AktivTil
+
+	} // SofdEmployeeFilter_AktivTil
+	#endregion
+
+	#region SofdEmployeeFilter_FoersteAnsaettelsesDato class
+	/// <summary>
+	/// Employee filter on FoersteAnsaettelsesDato.
+	/// </summary>
+	public class SofdEmployeeFilter_FoersteAnsaettelsesDato : SqlWhereFilterDateTime {
+
+		/// <summary>
+		/// Employee filter on FoersteAnsaettelsesDato.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_FoersteAnsaettelsesDato(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, DateTime filterValue) : base(filterOperator, SofdEmployee.FIELD_FOERSTE_ANSAETTELSES_DATO, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_FoersteAnsaettelsesDato
+
+	} // SofdEmployeeFilter_FoersteAnsaettelsesDato
+	#endregion
+
+	#region SofdEmployeeFilter_AnsaettelsesDato class
+	/// <summary>
+	/// Employee filter on AnsaettelsesDato.
+	/// </summary>
+	public class SofdEmployeeFilter_AnsaettelsesDato : SqlWhereFilterDateTime {
+
+		/// <summary>
+		/// Employee filter on AnsaettelsesDato.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_AnsaettelsesDato(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, DateTime filterValue) : base(filterOperator, SofdEmployee.FIELD_ANSAETTELSES_DATO, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_AnsaettelsesDato
+
+	} // SofdEmployeeFilter_AnsaettelsesDato
+	#endregion
+
+	#region SofdEmployeeFilter_AnsaettelsesOphoersDato class
+	/// <summary>
+	/// Employee filter on AnsaettelsesOphoersDato.
+	/// </summary>
+	public class SofdEmployeeFilter_AnsaettelsesOphoersDato : SqlWhereFilterDateTime {
+
+		/// <summary>
+		/// Employee filter on AnsaettelsesOphoersDato.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_AnsaettelsesOphoersDato(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, DateTime filterValue) : base(filterOperator, SofdEmployee.FIELD_ANSAETTELSES_OPHOERS_DATO, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_AnsaettelsesOphoersDato
+
+	} // SofdEmployeeFilter_AnsaettelsesOphoersDato
+	#endregion
+
+	#region SofdEmployeeFilter_JubilaeumsAncinnitetsDato class
+	/// <summary>
+	/// Employee filter on JubilaeumsAncinnitetsDato.
+	/// </summary>
+	public class SofdEmployeeFilter_JubilaeumsAncinnitetsDato : SqlWhereFilterDateTime {
+
+		/// <summary>
+		/// Employee filter on JubilaeumsAncinnitetsDato.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_JubilaeumsAncinnitetsDato(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, DateTime filterValue) : base(filterOperator, SofdEmployee.FIELD_JUBILAEUMS_ANCIENNITETS_DATO, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_JubilaeumsAncinnitetsDato
+
+	} // SofdEmployeeFilter_JubilaeumsAncinnitetsDato
+	#endregion
+
 	#region SofdEmployeeFilter_SidstAendret class
 	/// <summary>
 	/// Employee filter on SidstAendret.
@@ -1001,6 +1109,60 @@ namespace NDK.Framework {
 		} // SofdEmployeeFilter_KaldeNavn
 
 	} // SofdEmployeeFilter_KaldeNavn
+	#endregion
+
+	#region SofdEmployeeFilter_TelefonNummer class
+	/// <summary>
+	/// Employee filter on TelefonNummer.
+	/// </summary>
+	public class SofdEmployeeFilter_TelefonNummer : SqlWhereFilterString {
+
+		/// <summary>
+		/// Employee filter on TelefonNummer.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_TelefonNummer(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_TELEFON_NUMMER, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_TelefonNummer
+
+	} // SofdEmployeeFilter_Epost
+	#endregion
+
+	#region SofdEmployeeFilter_MobilNummer class
+	/// <summary>
+	/// Employee filter on MobilNummer.
+	/// </summary>
+	public class SofdEmployeeFilter_MobilNummer : SqlWhereFilterString {
+
+		/// <summary>
+		/// Employee filter on MobilNummer.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_MobilNummer(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_MOBIL_NUMMER, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_MobilNummer
+
+	} // SofdEmployeeFilter_MobilNummer
+	#endregion
+
+	#region SofdEmployeeFilter_MobilNummer2 class
+	/// <summary>
+	/// Employee filter on MobilNummer2.
+	/// </summary>
+	public class SofdEmployeeFilter_MobilNummer2 : SqlWhereFilterString {
+
+		/// <summary>
+		/// Employee filter on MobilNummer2.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_MobilNummer2(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_MOBIL_NUMMER2, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_MobilNummer2
+
+	} // SofdEmployeeFilter_MobilNummer2
 	#endregion
 
 	#region SofdEmployeeFilter_Epost class
