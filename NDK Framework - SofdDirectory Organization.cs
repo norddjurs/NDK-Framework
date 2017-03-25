@@ -7,7 +7,7 @@ namespace NDK.Framework {
 
 	#region SofdOrganization class.
 	public class SofdOrganization : IEqualityComparer<SofdOrganization>, IEquatable<SofdOrganization>, IComparable {
-		private SofdDirectory sofdDirectory;
+		private IFramework framework;
 
 		#region Field name constants.
 		public const String SCHEMA_NAME = "etl";
@@ -84,8 +84,8 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <param name="dbReader">The data reader.</param>
 		/// <param name="sofdDirectory">The SOFD directory.</param>
-		public SofdOrganization(SofdDirectory sofdDirectory, IDataReader dbReader) {
-			this.sofdDirectory = sofdDirectory;
+		public SofdOrganization(IFramework framework, IDataReader dbReader) {
+			this.framework = framework;
 
 			this.organisationHistorikId = dbReader.GetInt32(SofdOrganization.FIELD_ORGANISATION_HISTORIK_ID);
 			this.organisationId = dbReader.GetInt32(SofdOrganization.FIELD_ORGANISATION_ID);
@@ -383,7 +383,7 @@ namespace NDK.Framework {
 		/// <returns>The matching organisation.</returns>
 		public SofdOrganization GetParentOrganisation() {
 			// Get all matching organisations.
-			List<SofdOrganization> organisations = this.sofdDirectory.GetAllOrganisations(
+			List<SofdOrganization> organisations = this.framework.GetAllOrganizations(
 				new SofdOrganizationFilter_LosOrganisationId(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.losForaelderOrganisationId),
 				new SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
 			);
@@ -404,7 +404,7 @@ namespace NDK.Framework {
 		/// <returns>The matching organisation.</returns>
 		public List<SofdOrganization> GetSiblingOrganisations(Boolean removeThisOrganisation = false) {
 			// Get all matching organisations.
-			List<SofdOrganization> organisations = this.sofdDirectory.GetAllOrganisations(
+			List<SofdOrganization> organisations = this.framework.GetAllOrganizations(
 				new SofdOrganizationFilter_LosForaelderOrganisationId(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.losForaelderOrganisationId),
 				new SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
 			);
@@ -425,7 +425,7 @@ namespace NDK.Framework {
 		  /// <returns>The matching employee.</returns>
 		public SofdEmployee GetLeader() {
 			// Get all matching employees.
-			List<SofdEmployee> employees = this.sofdDirectory.GetAllEmployees(
+			List<SofdEmployee> employees = this.framework.GetAllEmployees(
 				new SofdEmployeeFilter_MaNummer(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.LederMaNummer),
 				new SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
 			);
@@ -445,7 +445,7 @@ namespace NDK.Framework {
 		/// <returns>The matching employees.</returns>
 		public List<SofdEmployee> GetEmployees() {
 			// Get all matching employees.
-			List<SofdEmployee> employees = this.sofdDirectory.GetAllEmployees(
+			List<SofdEmployee> employees = this.framework.GetAllEmployees(
 				new SofdEmployeeFilter_OrganisationId(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.organisationId),
 				new SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
 			);

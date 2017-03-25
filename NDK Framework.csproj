@@ -64,34 +64,78 @@
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NDK Framework - ActiveDirectory Validators.cs" />
+    <Compile Include="Framework\NDK Framework - Framework - Arguments.cs" />
+    <Compile Include="Framework\NDK Framework - Framework - Cpr.cs" />
+    <Compile Include="Framework\NDK Framework - Framework - Event.cs" />
+    <Compile Include="Framework\NDK Framework - Framework - Plugin.cs" />
+    <Compile Include="Framework\NDK Framework - IFramework - Arguments.cs" />
+    <Compile Include="Framework\NDK Framework - IFramework - Cpr.cs" />
+    <Compile Include="Framework\NDK Framework - IFramework - Event.cs" />
+    <Compile Include="Framework\NDK Framework - IFramework - Plugin.cs" />
     <Compile Include="NDK Framework - ActiveDirectory.cs" />
+    <Compile Include="NDK Framework - BaseClass.cs" />
+    <Compile Include="NDK Framework - BasePlugin.cs" />
+    <Compile Include="Framework\NDK Framework - Framework - Config.cs" />
+    <Compile Include="Framework\NDK Framework - Framework - Database.cs" />
+    <Compile Include="Framework\NDK Framework - Framework - Log.cs" />
+    <Compile Include="Framework\NDK Framework - Framework - Mail.cs" />
+    <Compile Include="Framework\NDK Framework - Framework - Option.cs" />
+    <Compile Include="Framework\NDK Framework - Framework - Resource.cs" />
+    <Compile Include="Framework\NDK Framework - Framework.cs" />
+    <Compile Include="Framework\NDK Framework - IFramework - Config.cs" />
+    <Compile Include="Framework\NDK Framework - IFramework - Database.cs" />
+    <Compile Include="Framework\NDK Framework - IFramework - Log.cs" />
+    <Compile Include="Framework\NDK Framework - IFramework - Mail.cs" />
+    <Compile Include="Framework\NDK Framework - IFramework - Option.cs" />
+    <Compile Include="Framework\NDK Framework - IFramework - Resource.cs" />
+    <Compile Include="Framework\NDK Framework - IFramework.cs" />
+    <Compile Include="NDK Framework - ActiveDirectory Validators.cs" />
     <Compile Include="NDK Framework - AssemblyInfo.cs" />
+    <Compile Include="NDK Framework - Cpr.cs" />
     <Compile Include="NDK Framework - Extensions.cs" />
-    <Compile Include="NDK Framework - Framework.cs" />
-    <Compile Include="NDK Framework - PluginForm.cs">
+    <Compile Include="Framework\NDK Framework - Framework - ActiveDirectory.cs" />
+    <Compile Include="Framework\NDK Framework - Framework - SofdDirectory.cs" />
+    <Compile Include="Framework\NDK Framework - IFramework - ActiveDirectory.cs" />
+    <Compile Include="Framework\NDK Framework - IFramework - SofdDirectory.cs" />
+    <Compile Include="NDK Framework - HtmlBuilder.cs" />
+    <Compile Include="NDK Framework - IPlugin.cs" />
+    <Compile Include="NDK Framework - BaseForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NDK Framework - Plugin.cs" />
-    <Compile Include="NDK Framework - Option.cs" />
+    <Compile Include="NDK Framework - Logger.cs" />
     <Compile Include="NDK Framework - Service.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="NDK Framework - Configuration.cs" />
-    <Compile Include="NDK Framework - Logger.cs" />
     <Compile Include="NDK Framework - SofdDirectory Employee.cs" />
     <Compile Include="NDK Framework - SofdDirectory Organization.cs" />
-    <Compile Include="NDK Framework - SofdDirectory.cs" />
     <Compile Include="NDK Framework - Database.cs" />
+    <Compile Include="Service References\CprBroker.Admin\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\CprBroker.Part\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\Kombit.CprService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -116,7 +160,167 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CprBroker.Admin\Admin.wsdl" />
+    <None Include="Service References\CprBroker.Admin\NDK.Framework.CprBroker.Admin.ApproveAppRegistrationResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Admin\NDK.Framework.CprBroker.Admin.BasicOutputTypeOfApplicationType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Admin\NDK.Framework.CprBroker.Admin.BasicOutputTypeOfArrayOfApplicationType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Admin\NDK.Framework.CprBroker.Admin.BasicOutputTypeOfArrayOfDataProviderType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Admin\NDK.Framework.CprBroker.Admin.BasicOutputTypeOfArrayOfServiceVersionType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Admin\NDK.Framework.CprBroker.Admin.BasicOutputTypeOfBoolean.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Admin\NDK.Framework.CprBroker.Admin.GetCapabilitiesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Admin\NDK.Framework.CprBroker.Admin.GetDataProviderListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Admin\NDK.Framework.CprBroker.Admin.IsImplementingResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Admin\NDK.Framework.CprBroker.Admin.ListAppRegistrationsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Admin\NDK.Framework.CprBroker.Admin.LogResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Admin\NDK.Framework.CprBroker.Admin.SetDataProviderListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Admin\NDK.Framework.CprBroker.Admin.UnregisterAppResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.BasicOutputTypeOfBoolean.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.GetUuidArrayOutputType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.GetUuidArrayResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.GetUuidOutputType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.GetUuidResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.LaesOutputType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.ListOutputType1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.ListPeriodResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.ListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.ListSnapshotResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.PutSubscriptionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.QualityHeader.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.ReadPeriodResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.ReadResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.ReadSnapshotResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.RefreshReadResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.SearchListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.SearchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.SoegListOutputType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\NDK.Framework.CprBroker.Part.SoegOutputType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CprBroker.Part\Part.wsdl" />
+    <None Include="Service References\Kombit.CprService\CprLookupService.wsdl" />
+    <None Include="Service References\Kombit.CprService\CprLookupServiceMsg.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Kombit.CprService\CprLookupServiceTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Kombit.CprService\InvocationContext_201210091.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Kombit.CprService\NDK.Framework.Kombit.CprService.callGctpServiceResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Kombit.CprService\NDK.Framework.Kombit.CprService.GCTPLookupResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\CprBroker.Admin\" />
+    <WCFMetadataStorage Include="Service References\CprBroker.Part\" />
+    <WCFMetadataStorage Include="Service References\Kombit.CprService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CprBroker.Admin\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CprBroker.Admin\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CprBroker.Admin\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CprBroker.Part\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CprBroker.Part\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CprBroker.Part\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Kombit.CprService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Kombit.CprService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Kombit.CprService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

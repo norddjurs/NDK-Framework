@@ -7,7 +7,7 @@ using System.Text;
 
 namespace NDK.Framework {
 
-	#region ActiveDirectory class.
+	#region ActiveDirectoryUserValidator class.
 	/// <summary>
 	/// This class can be used to validate a user, according to the configured values.
 	/// </summary>
@@ -39,12 +39,12 @@ namespace NDK.Framework {
 				keySufflix = String.Empty;
 			}
 
-			this.configFailOnGroupNotFound = this.framework.GetConfigValue("FailOnGroupNotFound", true);
+			this.configFailOnGroupNotFound = this.framework.GetLocalValue("FailOnGroupNotFound", true);
 
-			this.configWhiteGroupOneStrings = this.framework.GetConfigValues("WhiteGroupsOne" + keySufflix);
-			this.configWhiteGroupAllStrings = this.framework.GetConfigValues("WhiteGroupsAll" + keySufflix);
-			this.configBlackGroupOneStrings = this.framework.GetConfigValues("BlackGroupsOne" + keySufflix);
-			this.configBlackGroupAllStrings = this.framework.GetConfigValues("BlackGroupsAll" + keySufflix);
+			this.configWhiteGroupOneStrings = this.framework.GetLocalValues("WhiteGroupsOne" + keySufflix);
+			this.configWhiteGroupAllStrings = this.framework.GetLocalValues("WhiteGroupsAll" + keySufflix);
+			this.configBlackGroupOneStrings = this.framework.GetLocalValues("BlackGroupsOne" + keySufflix);
+			this.configBlackGroupAllStrings = this.framework.GetLocalValues("BlackGroupsAll" + keySufflix);
 
 			this.configWhiteGroupOneGroups = new List<GroupPrincipal>();
 			this.configWhiteGroupAllGroups = new List<GroupPrincipal>();
@@ -159,7 +159,7 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <param name="user">The user.</param>
 		/// <returns>True if the user is member of or not member of the configured groups.</returns>
-		public Boolean ValidateUser(Person user) {
+		public Boolean ValidateUser(AdUser user) {
 			Int32 validWhiteGroupOneCount = 0;
 			Int32 validWhiteGroupAllCount = 0;
 			Int32 validBlackGroupOneCount = 0;

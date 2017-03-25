@@ -1,302 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
+using System.Net.Mail;
 using System.Security;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using System.Text;
 using Microsoft.Win32;
 
 namespace NDK.Framework {
 
-	#region IOption interface.
+	#region Framework
 	/// <summary>
-	/// Option interface.
-	/// System options are global for the system and not identified by a guid.
-	/// User options are for each individual user on the system, and multiple user options can be stored and identified by a guid.
+	/// This partial part of the class, implements option storage.
 	/// </summary>
-	public interface IOption {
-
-		#region System option methods.
-		/// <summary>
-		/// Gets the system option keys associated with the empty guid.
-		/// </summary>
-		/// <returns>All the keys associated with the empty guid.</returns>
-		String[] GetSystemKeys();
-
-		/// <summary>
-		/// Gets the system option value associated with the empty guid and key.
-		/// If more then one value is associated with the empty guid and key, the first value is returned.
-		/// If no value is associated with the empty guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a Boolean. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value.</param>
-		/// <returns>The value.</returns>
-		Boolean GetSystemValue(String key, Boolean defaultValue);
-
-		/// <summary>
-		/// Gets the system option value associated with the empty guid and key.
-		/// If more then one value is associated with the empty guid and key, the first value is returned.
-		/// If no value is associated with the empty guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a Int32. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value.</param>
-		/// <returns>The value.</returns>
-		Int32 GetSystemValue(String key, Int32 defaultValue);
-
-		/// <summary>
-		/// Gets the system option value associated with the empty guid and key.
-		/// If more then one value is associated with the empty guid and key, the first value is returned.
-		/// If no value is associated with the empty guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a DateTime. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value.</param>
-		/// <returns>The value.</returns>
-		DateTime GetSystemValue(String key, DateTime defaultValue);
-
-		/// <summary>
-		/// Gets the system option value associated with the empty guid and key.
-		/// If more then one value is associated with the empty guid and key, the first value is returned.
-		/// If no value is associated with the empty guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a Guid. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value.</param>
-		/// <returns>The value.</returns>
-		Guid GetSystemValue(String key, Guid defaultValue);
-
-		/// <summary>
-		/// Gets the system option value associated with the empty guid and key.
-		/// If more then one value is associated with the empty guid and key, the first value is returned.
-		/// If no value is associated with the empty guid and key, the default value is returned.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value.</param>
-		/// <returns>The value.</returns>
-		String GetSystemValue(String key, String defaultValue = null);
-
-		/// <summary>
-		/// Gets the system option values associated with the empty guid and key.
-		/// If no value is associated with the empty guid and key, an empty list is returned.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <returns>The value list.</returns>
-		List<String> GetSystemValues(String key);
-
-		/// <summary>
-		/// Sets the system option value associated with the empty guid and key.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="value">The value</param>
-		void SetSystemValue(String key, Boolean value);
-
-		/// <summary>
-		/// Sets the system option value associated with the empty guid and key.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="value">The value</param>
-		void SetSystemValue(String key, Int32 value);
-
-		/// <summary>
-		/// Sets the system option value associated with the empty guid and key.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="value">The value</param>
-		void SetSystemValue(String key, DateTime value);
-
-		/// <summary>
-		/// Sets the system option value associated with the empty guid and key.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="value">The value</param>
-		void SetSystemValue(String key, Guid value);
-
-		/// <summary>
-		/// Sets the system option values associated with the empty guid and key.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="values">The values</param>
-		void SetSystemValues(String key, params String[] values);
-		#endregion
-
-		#region User option methods.
-		/// <summary>
-		/// Gets the user option guids.
-		/// </summary>
-		/// <returns>All the guids.</returns>
-		Guid[] GetUserGuids();
-
-		/// <summary>
-		/// Gets the user option keys associated with the guid.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <returns>All the keys associated with the guid.</returns>
-		String[] GetUserKeys(Guid guid);
-
-		/// <summary>
-		/// Gets the user option value associated with the guid and key.
-		/// If more then one value is associated with the guid and key, the first value is returned.
-		/// If no value is associated with the guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a Boolean. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value.</param>
-		/// <returns>The value.</returns>
-		Boolean GetUserValue(Guid guid, String key, Boolean defaultValue);
-
-		/// <summary>
-		/// Gets the user option value associated with the guid and key.
-		/// If more then one value is associated with the guid and key, the first value is returned.
-		/// If no value is associated with the guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a Int32. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value.</param>
-		/// <returns>The value.</returns>
-		Int32 GetUserValue(Guid guid, String key, Int32 defaultValue);
-
-		/// <summary>
-		/// Gets the user option value associated with the guid and key.
-		/// If more then one value is associated with the guid and key, the first value is returned.
-		/// If no value is associated with the guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a DateTime. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value.</param>
-		/// <returns>The value.</returns>
-		DateTime GetUserValue(Guid guid, String key, DateTime defaultValue);
-
-		/// <summary>
-		/// Gets the user option value associated with the guid and key.
-		/// If more then one value is associated with the guid and key, the first value is returned.
-		/// If no value is associated with the guid and key, the default value is returned.
-		/// 
-		/// The value is parsed as a Guid. The default value is returned on parse errors.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value.</param>
-		/// <returns>The value.</returns>
-		Guid GetUserValue(Guid guid, String key, Guid defaultValue);
-
-		/// <summary>
-		/// Gets the user option value associated with the guid and key.
-		/// If more then one value is associated with the guid and key, the first value is returned.
-		/// If no value is associated with the guid and key, the default value is returned.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <param name="defaultValue">The optional default value.</param>
-		/// <returns>The value.</returns>
-		String GetUserValue(Guid guid, String key, String defaultValue = null);
-
-		/// <summary>
-		/// Gets the user option values associated with the guid and key.
-		/// If no value is associated with the key, an empty list is returned.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <returns>The value list.</returns>
-		List<String> GetUserValues(Guid guid, String key);
-
-		/// <summary>
-		/// Sets the user option value associated with the guid and key.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <param name="value">The value</param>
-		void SetUserValue(Guid guid, String key, Boolean value);
-
-		/// <summary>
-		/// Sets the user option value associated with the guid and key.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <param name="value">The value</param>
-		void SetUserValue(Guid guid, String key, Int32 value);
-
-		/// <summary>
-		/// Sets the user option value associated with the guid and key.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <param name="value">The value</param>
-		void SetUserValue(Guid guid, String key, DateTime value);
-
-		/// <summary>
-		/// Sets the user option value associated with the guid and key.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <param name="value">The value</param>
-		void SetUserValue(Guid guid, String key, Guid value);
-
-		/// <summary>
-		/// Sets the user option values associated with the guid and key.
-		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <param name="key">The key.</param>
-		/// <param name="values">The values</param>
-		void SetUserValues(Guid guid, String key, params String[] values);
-		#endregion
-
-	} // IOption
-	#endregion
-
-	#region Option class.
-	/// <summary>
-	/// Default option class, that stores the data in the Windows Registry.
-	/// 
-	/// User options are identified by a guid.
-	/// </summary>
-	public class Option : IOption {
-		private IConfiguration config = null;
-		private ILogger logger = null;
+	public abstract partial class Framework : IFramework {
 		private String defaultRegistryUserKey = null;
 
-		#region Constructor methods.
-		public Option(IConfiguration config, ILogger logger) {
-			this.config = config;
-			this.logger = logger;
-			this.defaultRegistryUserKey = this.config.GetSystemValue("RegistryUserKey", "\\Software\\NDK Framework").TrimEnd('\\');
-		} // Option
+		#region Private option initialization
+		private void OptionInitialize() {
+			this.defaultRegistryUserKey = this.GetSystemValue("RegistryUserKey", "\\Software\\NDK Framework").TrimEnd('\\');
+		} // OptionInitialize
 		#endregion
 
-		#region System option methods.
+		#region Public option methods.
 		/// <summary>
-		/// Gets the system option keys associated with the empty guid.
+		/// Gets the user option keys associated with the framework class guid.
 		/// </summary>
-		/// <param name="guid">The guid.</param>
-		/// <returns>All the keys associated with the empty guid.</returns>
-		public String[] GetSystemKeys() {
-			try {
-				// Log.
-				this.logger.LogDebug("Option: Read system keys");
-
-				// Get data.
-				return this.GetNames(RegistryHive.LocalMachine, this.defaultRegistryUserKey, RegistryView.Registry64, true);
-			} catch (Exception exception) {
-				// Log exception.
-				this.logger.LogError(exception);
-
-				// Return default value.
-				return new String[0];
-			}
-		}// GetSystemKeys
+		/// <returns>All the keys associated with the framework class guid.</returns>
+		public String[] GetOptionKeys() {
+			return this.GetOptionKeys(RegistryHive.CurrentUser, this.defaultRegistryUserKey, this.GetGuid());
+		} // GetOptionKeys
 
 		/// <summary>
-		/// Gets the system option value associated with the empty guid and key.
+		/// Gets the user option value associated with the empty guid and key.
 		/// If more then one value is associated with the empty guid and key, the first value is returned.
 		/// If no value is associated with the empty guid and key, the default value is returned.
 		/// 
@@ -306,31 +45,12 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value.</param>
 		/// <returns>The value.</returns>
-		public Boolean GetSystemValue(String key, Boolean defaultValue) {
-			try {
-				// Log.
-				this.logger.LogDebug("Option: Read system boolean value for key '{0}'.", key);
-
-				// Get data.
-				Object value = this.GetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, RegistryView.Registry64, defaultValue, true);
-				if (value is Boolean) {
-					return (Boolean)value;
-				} else if (value is Int32) {
-					return ((Int32)value) == 1;
-				} else {
-					return Boolean.Parse(value.ToString());
-				}
-			} catch (Exception exception) {
-				// Log exception.
-				this.logger.LogError(exception);
-
-				// Return default value.
-				return defaultValue;
-			}
-		} // GetSystemValue
+		public Boolean GetOptionValue(String key, Boolean defaultValue) {
+			return this.GetOptionValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey, this.GetGuid(), key, defaultValue);
+		} // GetOptionValue
 
 		/// <summary>
-		/// Gets the system option value associated with the empty guid and key.
+		/// Gets the user option value associated with the empty guid and key.
 		/// If more then one value is associated with the empty guid and key, the first value is returned.
 		/// If no value is associated with the empty guid and key, the default value is returned.
 		/// 
@@ -339,29 +59,12 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value.</param>
 		/// <returns>The value.</returns>
-		public Int32 GetSystemValue(String key, Int32 defaultValue) {
-			try {
-				// Log.
-				this.logger.LogDebug("Option: Read system integer value for key '{0}'.", key);
-
-				// Get data.
-				Object value = this.GetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, RegistryView.Registry64, defaultValue, true);
-				if (value is Int32) {
-					return (Int32)value;
-				} else {
-					return Int32.Parse(value.ToString());
-				}
-			} catch (Exception exception) {
-				// Log exception.
-				this.logger.LogError(exception);
-
-				// Return default value.
-				return defaultValue;
-			}
-		} // GetSystemValue
+		public Int32 GetOptionValue(String key, Int32 defaultValue) {
+			return this.GetOptionValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey, this.GetGuid(), key, defaultValue);
+		} // GetOptionValue
 
 		/// <summary>
-		/// Gets the system option value associated with the empty guid and key.
+		/// Gets the user option value associated with the empty guid and key.
 		/// If more then one value is associated with the empty guid and key, the first value is returned.
 		/// If no value is associated with the empty guid and key, the default value is returned.
 		/// 
@@ -370,29 +73,12 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value.</param>
 		/// <returns>The value.</returns>
-		public DateTime GetSystemValue(String key, DateTime defaultValue) {
-			try {
-				// Log.
-				this.logger.LogDebug("Option: Read system datetime value for key '{0}'.", key);
-
-				// Get data.
-				Object value = this.GetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, RegistryView.Registry64, defaultValue, true);
-				if (value is DateTime) {
-					return (DateTime)value;
-				} else {
-					return DateTime.Parse(value.ToString());
-				}
-			} catch (Exception exception) {
-				// Log exception.
-				this.logger.LogError(exception);
-
-				// Return default value.
-				return defaultValue;
-			}
-		} // GetSystemValue
+		public DateTime GetOptionValue(String key, DateTime defaultValue) {
+			return this.GetOptionValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey, this.GetGuid(), key, defaultValue);
+		} // GetOptionValue
 
 		/// <summary>
-		/// Gets the system option value associated with the empty guid and key.
+		/// Gets the user option value associated with the empty guid and key.
 		/// If more then one value is associated with the empty guid and key, the first value is returned.
 		/// If no value is associated with the empty guid and key, the default value is returned.
 		/// 
@@ -401,197 +87,93 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value.</param>
 		/// <returns>The value.</returns>
-		public Guid GetSystemValue(String key, Guid defaultValue) {
-			try {
-				// Log.
-				this.logger.LogDebug("Option: Read system guid value for key '{0}'.", key);
-
-				// Get data.
-				Object value = this.GetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, RegistryView.Registry64, defaultValue, true);
-				if (value is Guid) {
-					return (Guid)value;
-				} else {
-					return Guid.Parse(value.ToString());
-				}
-			} catch (Exception exception) {
-				// Log exception.
-				this.logger.LogError(exception);
-
-				// Return default value.
-				return defaultValue;
-			}
-		} // GetSystemValue
+		public Guid GetOptionValue(String key, Guid defaultValue) {
+			return this.GetOptionValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey, this.GetGuid(), key, defaultValue);
+		} // GetOptionValue
 
 		/// <summary>
-		/// Gets the system option value associated with the empty guid and key.
-		/// If more then one value is associated with the empty guid and key, the first value is returned.
-		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// Gets the user option value associated with the framework class guid and the key.
+		/// If more then one value is associated with the framework class guid and the key, the first value is returned.
+		/// If no value is associated with the framework class guid and the key, the default value is returned.
 		/// </summary>
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value.</param>
 		/// <returns>The value.</returns>
-		public String GetSystemValue(String key, String defaultValue = null) {
-			try {
-				// Log.
-				this.logger.LogDebug("Option: Read system string value for key '{0}'.", key);
-
-				// Get data.
-				Object value = this.GetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, RegistryView.Registry64, defaultValue, true);
-				if (value is String) {
-					return (String)value;
-				} else {
-					return value.ToString();
-				}
-			} catch (Exception exception) {
-				// Log exception.
-				this.logger.LogError(exception);
-
-				// Return default value.
-				return defaultValue;
-			}
-		} // GetSystemValue
+		public String GetOptionValue(String key, String defaultValue = null) {
+			return this.GetOptionValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey, this.GetGuid(), key, defaultValue);
+		} // GetOptionValue
 
 		/// <summary>
-		/// Gets the system option values associated with the empty guid and key.
-		/// If no value is associated with the empty guid and key, an empty list is returned.
+		/// Gets the user option values associated with the framework class guid and the key.
+		/// If no value is associated with the framework class guid and the key, an empty list is returned.
 		/// </summary>
 		/// <param name="key">The key.</param>
 		/// <returns>The value list.</returns>
-		public List<String> GetSystemValues(String key) {
-			try {
-				// Log.
-				this.logger.LogDebug("Option: Read system string values for key '{0}'.", key);
-
-				// Get data.
-				List<String> result = new List<String>();
-				Object value = this.GetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, RegistryView.Registry64, new String[0], true);
-				if (value is String[]) {
-					result.AddRange((String[])value);
-				} else if (value is Array) {
-					foreach (Object valueObj in (Array)value) {
-						result.Add(valueObj.ToString());
-					}
-				} else {
-					result.Add(value.ToString());
-				}
-				return result;
-			} catch (Exception exception) {
-				// Log exception.
-				this.logger.LogError(exception);
-
-				// Return default value.
-				return new List<String>();
-			}
-		} // GetSystemValues
+		public List<String> GetOptionValues(String key) {
+			return this.GetOptionValues(RegistryHive.CurrentUser, this.defaultRegistryUserKey, this.GetGuid(), key);
+		} // GetOptionValues
 
 		/// <summary>
-		/// Sets the system option value associated with the empty guid and key.
+		/// Sets the user option value associated with the framework class guid and the key.
 		/// </summary>
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
-		public void SetSystemValue(String key, Boolean value) {
-			try {
-				// Log.
-				this.logger.LogDebug("Option: Write system boolean value for key '{0}'.", key);
-
-				// Set data.
-				this.SetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, value, RegistryValueKind.DWord, RegistryView.Registry64, true);
-			} catch (Exception exception) {
-				// Log exception.
-				this.logger.LogError(exception);
-			}
-		} // SetSystemValue
+		public void SetOptionValue(String key, Boolean value) {
+			this.SetOptionValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey, this.GetGuid(), key, value);
+		} // SetOptionValue
 
 		/// <summary>
-		/// Sets the system option value associated with the empty guid and key.
+		/// Sets the user option value associated with the framework class guid and the key.
 		/// </summary>
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
-		public void SetSystemValue(String key, Int32 value) {
-			try {
-				// Log.
-				this.logger.LogDebug("Option: Write system integer value for key '{0}'.", key);
-
-				// Set data.
-				if (value >= 0) {
-					this.SetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, value, RegistryValueKind.DWord, RegistryView.Registry64, true);
-				} else {
-					this.SetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, value, RegistryValueKind.String, RegistryView.Registry64, true);
-				}
-			} catch (Exception exception) {
-				// Log exception.
-				this.logger.LogError(exception);
-			}
-		} // SetSystemValue
+		public void SetOptionValue(String key, Int32 value) {
+			this.SetOptionValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey, this.GetGuid(), key, value);
+		} // SetOptionValue
 
 		/// <summary>
-		/// Sets the system option value associated with the empty guid and key.
+		/// Sets the user option value associated with the framework class guid and the key.
 		/// </summary>
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
-		public void SetSystemValue(String key, DateTime value) {
-			try {
-				// Log.
-				this.logger.LogDebug("Option: Write system datetime value for key '{0}'.", key);
-
-				// Set data.
-				this.SetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, value.ToString("yyyy-MM-dd HH:mm:ss.fffffff"), RegistryValueKind.String, RegistryView.Registry64, true);
-			} catch (Exception exception) {
-				// Log exception.
-				this.logger.LogError(exception);
-			}
-		} // SetSystemValue
+		public void SetOptionValue(String key, DateTime value) {
+			this.SetOptionValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey, this.GetGuid(), key, value);
+		} // SetOptionValue
 
 		/// <summary>
-		/// Sets the system option value associated with the empty guid and key.
+		/// Sets the user option value associated with the framework class guid and the key.
 		/// </summary>
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
-		public void SetSystemValue(String key, Guid value) {
-			try {
-				// Log.
-				this.logger.LogDebug("Option: Write system guid value for key '{0}'.", key);
-
-				// Set data.
-				this.SetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, value, RegistryValueKind.String, RegistryView.Registry64, true);
-			} catch (Exception exception) {
-				// Log exception.
-				this.logger.LogError(exception);
-			}
-		} // SetSystemValue
+		public void SetOptionValue(String key, Guid value) {
+			this.SetOptionValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey, this.GetGuid(), key, value);
+		} // SetOptionValue
 
 		/// <summary>
-		/// Sets the system option values associated with the empty guid and key.
+		/// Sets the user option values associated with the framework class guid and the key.
 		/// </summary>
 		/// <param name="key">The key.</param>
 		/// <param name="values">The values</param>
-		public void SetSystemValues(String key, params String[] values) {
-			try {
-				// Log.
-				this.logger.LogDebug("Option: Write system string values for key '{0}'.", key);
-
-				// Set data.
-				this.SetValue(RegistryHive.LocalMachine, this.defaultRegistryUserKey, key, values, RegistryValueKind.MultiString, RegistryView.Registry64, true);
-			} catch (Exception exception) {
-				// Log exception.
-				this.logger.LogError(exception);
-			}
-		} // SetSystemValues
+		public void SetOptionValues(String key, params String[] values) {
+			this.SetOptionValues(RegistryHive.CurrentUser, this.defaultRegistryUserKey, this.GetGuid(), key, values);
+		} // SetOptionValues
 		#endregion
 
-		#region User option methods.
+		#region Private option methods.
 		/// <summary>
-		/// Gets the user option guids.
+		/// Gets the option guids.
 		/// </summary>
+		/// <param name="registryHive">The registry hive.</param>
+		/// <param name="registryKey">The registry key.</param>
 		/// <returns>All the guids.</returns>
-		public Guid[] GetUserGuids() {
+		private Guid[] GetOptionGuids(RegistryHive registryHive, String registryKey) {
 			try {
 				// Log.
-				this.logger.LogDebug("Option: Read user guids");
+				this.LogInternal("Option: Read guids");
 
 				// Get data.
 				List<Guid> result = new List<Guid>();
-				foreach (String key in this.GetKeys(RegistryHive.CurrentUser, this.defaultRegistryUserKey, RegistryView.Registry64, true)) {
+				foreach (String key in this.GetKeys(registryHive, registryKey, RegistryView.Registry64, true)) {
 					try {
 						result.Add(Guid.Parse(key));
 					} catch { }
@@ -601,33 +183,35 @@ namespace NDK.Framework {
 				return result.ToArray();
 			} catch (Exception exception) {
 				// Log exception.
-				this.logger.LogError(exception);
+				this.LogError(exception);
 
 				// Return default value.
 				return new Guid[0];
 			}
-		} // GetUserGuids
+		} // GetOptionGuids
 
 		/// <summary>
-		/// Gets the user option keys associated with the guid.
+		/// Gets the option keys associated with the guid.
 		/// </summary>
+		/// <param name="registryHive">The registry hive.</param>
+		/// <param name="registryKey">The registry key.</param>
 		/// <param name="guid">The guid.</param>
 		/// <returns>All the keys associated with the guid.</returns>
-		public String[] GetUserKeys(Guid guid) {
+		private String[] GetOptionKeys(RegistryHive registryHive, String registryKey, Guid guid) {
 			try {
 				// Log.
-				this.logger.LogDebug("Option: Read user keys in guid '{0}'.", guid);
+				this.LogInternal("Option: Read keys in guid '{0}'.", guid);
 
 				// Get data.
-				return this.GetNames(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), RegistryView.Registry64, true);
+				return this.GetNames(RegistryHive.CurrentUser, registryKey + "\\" + guid.ToString(), RegistryView.Registry64, true);
 			} catch (Exception exception) {
 				// Log exception.
-				this.logger.LogError(exception);
+				this.LogError(exception);
 
 				// Return default value.
 				return new String[0];
 			}
-		} // GetUserKeys
+		} // GetOptionKeys
 
 		/// <summary>
 		/// Gets the user option value associated with the guid and key.
@@ -637,17 +221,19 @@ namespace NDK.Framework {
 		/// The value is parsed as a Boolean. The default value is returned on parse errors.
 		/// True values are "true", "yes" and "1" in any case.
 		/// </summary>
+		/// <param name="registryHive">The registry hive.</param>
+		/// <param name="registryKey">The registry key.</param>
 		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value.</param>
 		/// <returns>The value.</returns>
-		public Boolean GetUserValue(Guid guid, String key, Boolean defaultValue) {
+		private Boolean GetOptionValue(RegistryHive registryHive, String registryKey, Guid guid, String key, Boolean defaultValue) {
 			try {
 				// Log.
-				this.logger.LogDebug("Option: Read user boolean value for key '{1}' in guid '{0}'.", guid, key);
+				this.LogInternal("Option: Read boolean value for key '{1}' in guid '{0}'.", guid, key);
 
 				// Get data.
-				Object value = this.GetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, RegistryView.Registry64, defaultValue, true);
+				Object value = this.GetValue(RegistryHive.CurrentUser, registryKey + "\\" + guid.ToString(), key, RegistryView.Registry64, defaultValue, true);
 				if (value is Boolean) {
 					return (Boolean)value;
 				} else if (value is Int32) {
@@ -657,12 +243,12 @@ namespace NDK.Framework {
 				}
 			} catch (Exception exception) {
 				// Log exception.
-				this.logger.LogError(exception);
+				this.LogError(exception);
 
 				// Return default value.
 				return defaultValue;
 			}
-		} // GetUserValue
+		} // GetOptionValue
 
 		/// <summary>
 		/// Gets the user option value associated with the guid and key.
@@ -671,17 +257,19 @@ namespace NDK.Framework {
 		/// 
 		/// The value is parsed as a Int32. The default value is returned on parse errors.
 		/// </summary>
+		/// <param name="registryHive">The registry hive.</param>
+		/// <param name="registryKey">The registry key.</param>
 		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value.</param>
 		/// <returns>The value.</returns>
-		public Int32 GetUserValue(Guid guid, String key, Int32 defaultValue) {
+		private Int32 GetOptionValue(RegistryHive registryHive, String registryKey, Guid guid, String key, Int32 defaultValue) {
 			try {
 				// Log.
-				this.logger.LogDebug("Option: Read user integer value for key '{1}' in guid '{0}'.", guid, key);
+				this.LogInternal("Option: Read integer value for key '{1}' in guid '{0}'.", guid, key);
 
 				// Get data.
-				Object value = this.GetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, RegistryView.Registry64, defaultValue, true);
+				Object value = this.GetValue(RegistryHive.CurrentUser, registryKey + "\\" + guid.ToString(), key, RegistryView.Registry64, defaultValue, true);
 				if (value is Int32) {
 					return (Int32)value;
 				} else {
@@ -689,12 +277,12 @@ namespace NDK.Framework {
 				}
 			} catch (Exception exception) {
 				// Log exception.
-				this.logger.LogError(exception);
+				this.LogError(exception);
 
 				// Return default value.
 				return defaultValue;
 			}
-		} // GetUserValue
+		} // GetOptionValue
 
 		/// <summary>
 		/// Gets the user option value associated with the guid and key.
@@ -703,17 +291,19 @@ namespace NDK.Framework {
 		/// 
 		/// The value is parsed as a DateTime. The default value is returned on parse errors.
 		/// </summary>
+		/// <param name="registryHive">The registry hive.</param>
+		/// <param name="registryKey">The registry key.</param>
 		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value.</param>
 		/// <returns>The value.</returns>
-		public DateTime GetUserValue(Guid guid, String key, DateTime defaultValue) {
+		private DateTime GetOptionValue(RegistryHive registryHive, String registryKey, Guid guid, String key, DateTime defaultValue) {
 			try {
 				// Log.
-				this.logger.LogDebug("Option: Read user datetime value for key '{1}' in guid '{0}'.", guid, key);
+				this.LogInternal("Option: Read datetime value for key '{1}' in guid '{0}'.", guid, key);
 
 				// Get data.
-				Object value = this.GetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, RegistryView.Registry64, defaultValue, true);
+				Object value = this.GetValue(RegistryHive.CurrentUser, registryKey + "\\" + guid.ToString(), key, RegistryView.Registry64, defaultValue, true);
 				if (value is DateTime) {
 					return (DateTime)value;
 				} else {
@@ -721,12 +311,12 @@ namespace NDK.Framework {
 				}
 			} catch (Exception exception) {
 				// Log exception.
-				this.logger.LogError(exception);
+				this.LogError(exception);
 
 				// Return default value.
 				return defaultValue;
 			}
-		} // GetUserValue
+		} // GetOptionValue
 
 		/// <summary>
 		/// Gets the user option value associated with the guid and key.
@@ -735,17 +325,19 @@ namespace NDK.Framework {
 		/// 
 		/// The value is parsed as a Guid. The default value is returned on parse errors.
 		/// </summary>
+		/// <param name="registryHive">The registry hive.</param>
+		/// <param name="registryKey">The registry key.</param>
 		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value.</param>
 		/// <returns>The value.</returns>
-		public Guid GetUserValue(Guid guid, String key, Guid defaultValue) {
+		private Guid GetOptionValue(RegistryHive registryHive, String registryKey, Guid guid, String key, Guid defaultValue) {
 			try {
 				// Log.
-				this.logger.LogDebug("Option: Read user guid value for key '{1}' in guid '{0}'.", guid, key);
+				this.LogInternal("Option: Read guid value for key '{1}' in guid '{0}'.", guid, key);
 
 				// Get data.
-				Object value = this.GetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, RegistryView.Registry64, defaultValue, true);
+				Object value = this.GetValue(RegistryHive.CurrentUser, registryKey + "\\" + guid.ToString(), key, RegistryView.Registry64, defaultValue, true);
 				if (value is Guid) {
 					return (Guid)value;
 				} else {
@@ -753,29 +345,31 @@ namespace NDK.Framework {
 				}
 			} catch (Exception exception) {
 				// Log exception.
-				this.logger.LogError(exception);
+				this.LogError(exception);
 
 				// Return default value.
 				return defaultValue;
 			}
-		} // GetUserValue
+		} // GetOptionValue
 
 		/// <summary>
 		/// Gets the user option value associated with the guid and key.
 		/// If more then one value is associated with the guid and key, the first value is returned.
 		/// If no value is associated with the guid and key, the default value is returned.
 		/// </summary>
+		/// <param name="registryHive">The registry hive.</param>
+		/// <param name="registryKey">The registry key.</param>
 		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value.</param>
 		/// <returns>The value.</returns>
-		public String GetUserValue(Guid guid, String key, String defaultValue = null) {
+		private String GetOptionValue(RegistryHive registryHive, String registryKey, Guid guid, String key, String defaultValue = null) {
 			try {
 				// Log.
-				this.logger.LogDebug("Option: Read user string value for key '{1}' in guid '{0}'.", guid, key);
+				this.LogInternal("Option: Read string value for key '{1}' in guid '{0}'.", guid, key);
 
 				// Get data.
-				Object value = this.GetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, RegistryView.Registry64, defaultValue, true);
+				Object value = this.GetValue(RegistryHive.CurrentUser, registryKey + "\\" + guid.ToString(), key, RegistryView.Registry64, defaultValue, true);
 				if (value is String) {
 					return (String)value;
 				} else if (value is String[]) {
@@ -785,28 +379,30 @@ namespace NDK.Framework {
 				}
 			} catch (Exception exception) {
 				// Log exception.
-				this.logger.LogError(exception);
+				this.LogError(exception);
 
 				// Return default value.
 				return defaultValue;
 			}
-		} // GetUserValue
+		} // GetOptionValue
 
 		/// <summary>
 		/// Gets the user option values associated with the guid and key.
 		/// If no value is associated with the guid and key, an empty list is returned.
 		/// </summary>
+		/// <param name="registryHive">The registry hive.</param>
+		/// <param name="registryKey">The registry key.</param>
 		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
 		/// <returns>The value list.</returns>
-		public List<String> GetUserValues(Guid guid, String key) {
+		private List<String> GetOptionValues(RegistryHive registryHive, String registryKey, Guid guid, String key) {
 			try {
 				// Log.
-				this.logger.LogDebug("Option: Read user string values for key '{1}' in guid '{0}'.", guid, key);
+				this.LogInternal("Option: Read string values for key '{1}' in guid '{0}'.", guid, key);
 
 				// Get data.
 				List<String> result = new List<String>();
-				Object value = this.GetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, RegistryView.Registry64, new String[0], true);
+				Object value = this.GetValue(RegistryHive.CurrentUser, registryKey + "\\" + guid.ToString(), key, RegistryView.Registry64, new String[0], true);
 				if (value is String[]) {
 					result.AddRange((String[])value);
 				} else if (value is Array) {
@@ -819,114 +415,124 @@ namespace NDK.Framework {
 				return result;
 			} catch (Exception exception) {
 				// Log exception.
-				this.logger.LogError(exception);
+				this.LogError(exception);
 
 				// Return default value.
 				return new List<String>();
 			}
-		} // GetUserValues
+		} // GetOptionValues
 
 		/// <summary>
 		/// Sets the user option value associated with the guid and key.
 		/// </summary>
+		/// <param name="registryHive">The registry hive.</param>
+		/// <param name="registryKey">The registry key.</param>
 		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
-		public void SetUserValue(Guid guid, String key, Boolean value) {
+		private void SetOptionValue(RegistryHive registryHive, String registryKey, Guid guid, String key, Boolean value) {
 			try {
 				// Log.
-				this.logger.LogDebug("Option: Write user boolean value for key '{1}' in guid '{0}'.", guid, key);
+				this.LogInternal("Option: Write boolean value for key '{1}' in guid '{0}'.", guid, key);
 
 				// Set data.
-				this.SetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, value, RegistryValueKind.DWord, RegistryView.Registry64, true);
+				this.SetValue(RegistryHive.CurrentUser, registryKey + "\\" + guid.ToString(), key, value, RegistryValueKind.DWord, RegistryView.Registry64, true);
 			} catch (Exception exception) {
 				// Log exception.
-				this.logger.LogError(exception);
+				this.LogError(exception);
 			}
-		} // SetUserValue
+		} // SetOptionValue
 
 		/// <summary>
 		/// Sets the user option value associated with the guid and key.
 		/// </summary>
+		/// <param name="registryHive">The registry hive.</param>
+		/// <param name="registryKey">The registry key.</param>
 		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
-		public void SetUserValue(Guid guid, String key, Int32 value) {
+		private void SetOptionValue(RegistryHive registryHive, String registryKey, Guid guid, String key, Int32 value) {
 			try {
 				// Log.
-				this.logger.LogDebug("Option: Write user integer value for key '{1}' in guid '{0}'.", guid, key);
+				this.LogInternal("Option: Write integer value for key '{1}' in guid '{0}'.", guid, key);
 
 				// Set data.
 				if (value >= 0) {
-					this.SetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, value, RegistryValueKind.DWord, RegistryView.Registry64, true);
+					this.SetValue(RegistryHive.CurrentUser, registryKey + "\\" + guid.ToString(), key, value, RegistryValueKind.DWord, RegistryView.Registry64, true);
 				} else {
-					this.SetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, value, RegistryValueKind.String, RegistryView.Registry64, true);
+					this.SetValue(RegistryHive.CurrentUser, registryKey + "\\" + guid.ToString(), key, value, RegistryValueKind.String, RegistryView.Registry64, true);
 				}
 			} catch (Exception exception) {
 				// Log exception.
-				this.logger.LogError(exception);
+				this.LogError(exception);
 			}
-		} // SetUserValue
+		} // SetOptionValue
 
 		/// <summary>
 		/// Sets the user option value associated with the guid and key.
 		/// </summary>
+		/// <param name="registryHive">The registry hive.</param>
+		/// <param name="registryKey">The registry key.</param>
 		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
-		public void SetUserValue(Guid guid, String key, DateTime value) {
+		private void SetOptionValue(RegistryHive registryHive, String registryKey, Guid guid, String key, DateTime value) {
 			try {
 				// Log.
-				this.logger.LogDebug("Option: Write user datetime value for key '{1}' in guid '{0}'.", guid, key);
+				this.LogInternal("Option: Write datetime value for key '{1}' in guid '{0}'.", guid, key);
 
 				// Set data.
-				this.SetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, value.ToString("yyyy-MM-dd HH:mm:ss.fffffff"), RegistryValueKind.String, RegistryView.Registry64, true);
+				this.SetValue(RegistryHive.CurrentUser, registryKey + "\\" + guid.ToString(), key, value.ToString("yyyy-MM-dd HH:mm:ss.fffffff"), RegistryValueKind.String, RegistryView.Registry64, true);
 			} catch (Exception exception) {
 				// Log exception.
-				this.logger.LogError(exception);
+				this.LogError(exception);
 			}
-		} // SetUserValue
+		} // SetOptionValue
 
 		/// <summary>
 		/// Sets the user option value associated with the guid and key.
 		/// </summary>
+		/// <param name="registryHive">The registry hive.</param>
+		/// <param name="registryKey">The registry key.</param>
 		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
-		public void SetUserValue(Guid guid, String key, Guid value) {
+		private void SetOptionValue(RegistryHive registryHive, String registryKey, Guid guid, String key, Guid value) {
 			try {
 				// Log.
-				this.logger.LogDebug("Option: Write user guid value for key '{1}' in guid '{0}'.", guid, key);
+				this.LogInternal("Option: Write guid value for key '{1}' in guid '{0}'.", guid, key);
 
 				// Set data.
-				this.SetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, value, RegistryValueKind.String, RegistryView.Registry64, true);
+				this.SetValue(RegistryHive.CurrentUser, registryKey + "\\" + guid.ToString(), key, value, RegistryValueKind.String, RegistryView.Registry64, true);
 			} catch (Exception exception) {
 				// Log exception.
-				this.logger.LogError(exception);
+				this.LogError(exception);
 			}
-		} // SetUserValue
+		} // SetOptionValue
 
 		/// <summary>
 		/// Sets the user option values associated with the guid and key.
 		/// </summary>
+		/// <param name="registryHive">The registry hive.</param>
+		/// <param name="registryKey">The registry key.</param>
 		/// <param name="guid">The guid.</param>
 		/// <param name="key">The key.</param>
 		/// <param name="values">The values</param>
-		public void SetUserValues(Guid guid, String key, params String[] values) {
+		private void SetOptionValues(RegistryHive registryHive, String registryKey, Guid guid, String key, params String[] values) {
 			try {
 				// Log.
-				this.logger.LogDebug("Option: Write user string values for key '{1}' in guid '{0}'.", guid, key);
+				this.LogInternal("Option: Write string values for key '{1}' in guid '{0}'.", guid, key);
 
 				// Set data.
-				this.SetValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey + "\\" + guid.ToString(), key, values, RegistryValueKind.MultiString, RegistryView.Registry64, true);
+				this.SetValue(RegistryHive.CurrentUser, registryKey + "\\" + guid.ToString(), key, values, RegistryValueKind.MultiString, RegistryView.Registry64, true);
 			} catch (Exception exception) {
 				// Log exception.
-				this.logger.LogError(exception);
+				this.LogError(exception);
 			}
-		} // SetUserValues
+		} // SetOptionValues
 		#endregion
 
-		#region Registry methods.
+		#region Private registry methods.
 		/// <summary>
 		/// Deletes the specified key and all sub-keys in the registry, using the specified registry view.
 		/// </summary>
@@ -1419,7 +1025,7 @@ namespace NDK.Framework {
 		} // GetRegistryKeys
 		#endregion
 
-	} // Option
+	} // Framework
 	#endregion
 
 } // NDK.Framework

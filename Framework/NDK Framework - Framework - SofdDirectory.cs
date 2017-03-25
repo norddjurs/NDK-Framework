@@ -1,32 +1,27 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Text;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
+using System.Net.Mail;
+using System.Text;
 
 namespace NDK.Framework {
 
-	#region SofdDirectory class.
-	public class SofdDirectory {
-		private IFramework framework = null;
-		private IConfiguration config = null;
-		private ILogger logger = null;
+	#region Framework
+	/// <summary>
+	/// This partial part of the class, implements Sofd Directory access.
+	/// </summary>
+	public abstract partial class Framework : IFramework {
 		private String sofdDatabaseKey = null;
 
-		#region Constructor methods.
-		/// <summary>
-		/// Connect to the SOFD database.
-		/// </summary>
-		public SofdDirectory(IFramework framework) {
-			this.framework = framework;
-			this.config = this.framework.Config;
-			this.logger = this.framework.Logger;
-			this.sofdDatabaseKey = this.config.GetSystemValue("SofdDirectoryDatabaseKey", "MDM-PROD");
-		} // SofdDirectory
+		#region Private Sofd Directory initialization
+		private void SofdDirectoryInitialize() {
+			this.sofdDatabaseKey = this.GetSystemValue("SofdDirectoryDatabaseKey", "MDM-PROD");
+		} // SofdDirectoryInitialize
 		#endregion
 
-		#region Employee methods.
+		#region Public Sofd Directory employee methods.
 		/// <summary>
 		/// Gets the employee identified by the employee id.
 		/// The employee id can be MaNummer, OpusBrugerNavn, AdBrugerNavn, CprNummer, Epost, Uuid.
@@ -36,7 +31,7 @@ namespace NDK.Framework {
 		public SofdEmployee GetEmployee(String employeeId) {
 			try {
 				// Log.
-				this.logger.Log("SOFD: Getting employee identified by '{0}'.", employeeId);
+				this.Log("SOFD: Getting employee identified by '{0}'.", employeeId);
 
 				// Add filters.
 				// MedarbejderId is not included, because it conflicts with MaNummer.
@@ -81,7 +76,7 @@ namespace NDK.Framework {
 				}
 			} catch (Exception exception) {
 				// Log error.
-				this.logger.LogError(exception);
+				this.LogError(exception);
 
 				// Return null;
 				return null;
@@ -98,12 +93,12 @@ namespace NDK.Framework {
 				List<SofdEmployee> employees = new List<SofdEmployee>();
 
 				// Log.
-				this.logger.Log("SOFD: Getting all employees identified by {0} filters.", employeeFilters.Length);
+				this.Log("SOFD: Getting all employees identified by {0} filters.", employeeFilters.Length);
 
 				// Connect to the database.
-				using (IDbConnection dataConnection = this.framework.GetSqlConnection(this.sofdDatabaseKey)) {
+				using (IDbConnection dataConnection = this.GetDatabaseConnection(this.sofdDatabaseKey)) {
 					// Execute the query.
-					using (IDataReader dataReader = this.framework.ExecuteSql(dataConnection, SofdEmployee.SCHEMA_NAME, SofdEmployee.TABLE_NAME, employeeFilters)) {
+					using (IDataReader dataReader = this.ExecuteSql(dataConnection, SofdEmployee.SCHEMA_NAME, SofdEmployee.TABLE_NAME, employeeFilters)) {
 						// Read all employees.
 						while (dataReader.Read() == true) {
 							SofdEmployee employee = new SofdEmployee(this, dataReader);
@@ -116,7 +111,7 @@ namespace NDK.Framework {
 				return employees;
 			} catch (Exception exception) {
 				// Log error.
-				this.logger.LogError(exception);
+				this.LogError(exception);
 
 				// Return empty list;
 				return new List<SofdEmployee>();
@@ -124,7 +119,7 @@ namespace NDK.Framework {
 		} // GetAllEmployees
 		#endregion
 
-		#region Organization methods.
+		#region Public Sofd Directory organization methods.
 		/// <summary>
 		/// Gets the organization identified by the organization id.
 		/// The organization id can be OrganisationId, CvrNummer, SeNummer, EanNummer, PNummer, Uuid.
@@ -134,7 +129,7 @@ namespace NDK.Framework {
 		public SofdOrganization GetOrganization(String organizationId) {
 			try {
 				// Log.
-				this.logger.Log("SOFD: Getting organization identified by '{0}'.", organizationId);
+				this.Log("SOFD: Getting organization identified by '{0}'.", organizationId);
 
 				// Add filters.
 				Int32 parsedNumber;
@@ -184,7 +179,7 @@ namespace NDK.Framework {
 				organizationFilters.Add(new SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true));
 
 				// Get all matching organizations.
-				List<SofdOrganization> organizations = this.GetAllOrganisations(organizationFilters.ToArray());
+				List<SofdOrganization> organizations = this.GetAllOrganizations(organizationFilters.ToArray());
 				if (organizations.Count == 1) {
 					// Return the organization.
 					return organizations[0];
@@ -194,7 +189,7 @@ namespace NDK.Framework {
 				}
 			} catch (Exception exception) {
 				// Log error.
-				this.logger.LogError(exception);
+				this.LogError(exception);
 
 				// Return null;
 				return null;
@@ -206,17 +201,17 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <param name="organizationFilters">Sql WHERE filters.</param>
 		/// <returns>All matching organizations.</returns>
-		public List<SofdOrganization> GetAllOrganisations(params SqlWhereFilterBase[] organizationFilters) {
+		public List<SofdOrganization> GetAllOrganizations(params SqlWhereFilterBase[] organizationFilters) {
 			try {
 				List<SofdOrganization> organizations = new List<SofdOrganization>();
 
 				// Log.
-				this.logger.Log("SOFD: Getting all organizations identified by {0} filters.", organizationFilters.Length);
+				this.Log("SOFD: Getting all organizations identified by {0} filters.", organizationFilters.Length);
 
 				// Connect to the database.
-				using (IDbConnection dataConnection = this.framework.GetSqlConnection(this.sofdDatabaseKey)) {
+				using (IDbConnection dataConnection = this.GetDatabaseConnection(this.sofdDatabaseKey)) {
 					// Execute the query.
-					using (IDataReader dataReader = this.framework.ExecuteSql(dataConnection, SofdOrganization.SCHEMA_NAME, SofdOrganization.TABLE_NAME, organizationFilters)) {
+					using (IDataReader dataReader = this.ExecuteSql(dataConnection, SofdOrganization.SCHEMA_NAME, SofdOrganization.TABLE_NAME, organizationFilters)) {
 						// Read all organizations.
 						while (dataReader.Read() == true) {
 							SofdOrganization organization = new SofdOrganization(this, dataReader);
@@ -229,15 +224,15 @@ namespace NDK.Framework {
 				return organizations;
 			} catch (Exception exception) {
 				// Log error.
-				this.logger.LogError(exception);
+				this.LogError(exception);
 
 				// Return empty list;
 				return new List<SofdOrganization>();
 			}
-		} // GetAllOrganisations
+		} // GetAllOrganizations
 		#endregion
 
-	} // SofdDirectory
+	} // Framework
 	#endregion
 
 } // NDK.Framework

@@ -3,34 +3,27 @@ using System.Collections.Generic;
 using System.Data;
 using System.DirectoryServices.AccountManagement;
 using System.Drawing;
-using System.Reflection;
 using System.Windows.Forms;
+using NDK.Framework.CprBroker;
 
 namespace NDK.Framework {
 
-	#region PluginForm class.
+	#region BaseForm class.
 	/// <summary>
-	/// Extend this class and implement abstract methods to create a Windows Form.
+	/// Inherit this class and implement abstract methods to create a NDK Framework Windows Form, that
+	/// provides all the functionality from the framework.
 	/// 
 	/// Because the WinForms designer in VisualStudio need to create an instance of this class, it can not be abstract.
-	/// 
-	/// Note that the NDK Framework implementations of IConfig and ILogger are awailable, but it is recommended
-	/// to use the configuration and logging methods inherited from this class, because they automatically
-	/// use the guid etc.
 	/// </summary>
-	public class PluginForm : Form, IFramework {
+	public class BaseForm : Form, IFramework {
 
 		#region Override methods.
 		/// <summary>
 		/// Initialize the framework and the form.
 		/// </summary>
 		protected override void OnLoad(EventArgs e) {
-			// Load the plugins.
-			PluginList<IPlugin> plugins = new PluginList<IPlugin>();
-
 			// Initialize the framework.
-			this.framework = new FrameworkBase();
-			this.framework.Initialize(this.GetGuid(), plugins);
+			this.framework = new BaseClass(this.GetGuid(), this.GetName());
 
 			// Initialize the form.
 			base.Text = this.GetName();
@@ -45,135 +38,6 @@ namespace NDK.Framework {
 		// All those methods simply invoke the same method on the framework object.
 		// The methods are implemented here to make it easier for the developper to use the framework.
 		private IFramework framework = null;
-
-		#region Properties.
-		/// <summary>
-		/// Gets the initialized logger class.
-		/// </summary>
-		public ILogger Logger {
-			get {
-				return this.framework.Logger;
-			}
-		} // Logger
-
-		/// <summary>
-		/// The initialized configuration class.
-		/// </summary>
-		public IConfiguration Config {
-			get {
-				return this.framework.Config;
-			}
-		} // Config
-
-		/// <summary>
-		/// The initialized option class.
-		/// </summary>
-		public IOption Option {
-			get {
-				return this.framework.Option;
-			}
-		} // Option
-
-		/// <summary>
-		/// Gets the initialized arguments.
-		/// </summary>
-		public String[] Arguments {
-			get {
-				return this.framework.Arguments;
-			}
-		} // Arguments
-
-		/// <summary>
-		/// Gets the initialized plugins.
-		/// </summary>
-		public PluginList<IPlugin> Plugins {
-			get {
-				return this.framework.Plugins;
-			}
-		} // Plugins
-
-		/// <summary>
-		/// Gets the initialized database manager.
-		/// </summary>
-		public Database Database {
-			get {
-				return this.framework.Database;
-			}
-		} // Database
-
-		/// <summary>
-		/// Gets the initialized active directory.
-		/// </summary>
-		public ActiveDirectory ActiveDirectory {
-			get {
-				return this.framework.ActiveDirectory;
-			}
-		} // ActiveDirectory
-
-		/// <summary>
-		/// Gets the initialized sofd directory.
-		/// </summary>
-		public SofdDirectory SofdDirectory {
-			get {
-				return this.framework.SofdDirectory;
-			}
-		} // SofdDirectory
-
-		/// <summary>
-		/// Gets the initialized guid used when referencing resources.
-		/// </summary>
-		public Guid Guid {
-			get {
-				return this.framework.Guid;
-			}
-		} // Guid
-
-		/// <summary>
-		/// Gets if the object is initialized.
-		/// </summary>
-		public Boolean IsInitialized {
-			get {
-				return this.framework.IsInitialized;
-			}
-		} // IsInitialized
-
-		// The Tag property is inherited from the Form class.
-		/// <summary>
-		/// Gets or sets the tagged object.
-		/// </summary>
-		//public new Object Tag {
-		//	get {
-		//		return this.framework.Tag;
-		//	}
-		//	set {
-		//		this.framework.Tag = value;
-		//	}
-		//} // Tag
-		#endregion
-
-		#region Initialize methods.
-		/// <summary>
-		/// Initialize the framework, with defaults.
-		/// </summary>
-		/// <param name="guid">The guid used when referencing resources.</param>
-		/// <param name="plugins">The loaded plugins.</param>
-		/// <param name="arguments">The arguments.</param>
-		public void Initialize(Guid guid, PluginList<IPlugin> plugins, params String[] arguments) {
-			this.framework.Initialize(guid, plugins, arguments);
-		} // Initialize
-
-		/// <summary>
-		/// Initialize the framework.
-		/// </summary>
-		/// <param name="guid">The guid used when referencing resources.</param>
-		/// <param name="plugins">The loaded plugins.</param>
-		/// <param name="config">The configuration.</param>
-		/// <param name="logger">The logger.</param>
-		/// <param name="arguments">The arguments.</param>
-		public void Initialize(Guid guid, PluginList<IPlugin> plugins, IConfiguration config, ILogger logger, params String[] arguments) {
-			this.framework.Initialize(guid, plugins, config, logger, arguments);
-		} // Initialize
-		#endregion
 
 		#region Logging events.
 		/// <summary>
@@ -229,14 +93,14 @@ namespace NDK.Framework {
 		} // LogError
 		#endregion
 
-		#region Configuration methods.
+		#region System configuration methods.
 		/// <summary>
 		/// Gets the local configuration keys associated with the initialized guid.
 		/// </summary>
 		/// <returns>All the keys associated with the initialized guid.</returns>
-		public String[] GetConfigKeys() {
-			return this.framework.GetConfigKeys();
-		} // GetConfigKeys
+		public String[] GetSystemKeys() {
+			return this.framework.GetSystemKeys();
+		} // GetSystemKeys
 
 		/// <summary>
 		/// Gets the local configuration value associated with the empty guid and key.
@@ -249,9 +113,9 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value.</param>
 		/// <returns>The value.</returns>
-		public Boolean GetConfigValue(String key, Boolean defaultValue) {
-			return this.framework.GetConfigValue(key, defaultValue);
-		} // GetConfigValue
+		public Boolean GetSystemValue(String key, Boolean defaultValue) {
+			return this.framework.GetSystemValue(key, defaultValue);
+		} // GetSystemValue
 
 		/// <summary>
 		/// Gets the local configuration value associated with the empty guid and key.
@@ -263,9 +127,9 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value.</param>
 		/// <returns>The value.</returns>
-		public Int32 GetConfigValue(String key, Int32 defaultValue) {
-			return this.framework.GetConfigValue(key, defaultValue);
-		} // GetConfigValue
+		public Int32 GetSystemValue(String key, Int32 defaultValue) {
+			return this.framework.GetSystemValue(key, defaultValue);
+		} // GetSystemValue
 
 		/// <summary>
 		/// Gets the local configuration value associated with the empty guid and key.
@@ -277,9 +141,9 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value.</param>
 		/// <returns>The value.</returns>
-		public DateTime GetConfigValue(String key, DateTime defaultValue) {
-			return this.framework.GetConfigValue(key, defaultValue);
-		} // GetConfigValue
+		public DateTime GetSystemValue(String key, DateTime defaultValue) {
+			return this.framework.GetSystemValue(key, defaultValue);
+		} // GetSystemValue
 
 		/// <summary>
 		/// Gets the local configuration value associated with the empty guid and key.
@@ -291,9 +155,9 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value.</param>
 		/// <returns>The value.</returns>
-		public Guid GetConfigValue(String key, Guid defaultValue) {
-			return this.framework.GetConfigValue(key, defaultValue);
-		} // GetConfigValue
+		public Guid GetSystemValue(String key, Guid defaultValue) {
+			return this.framework.GetSystemValue(key, defaultValue);
+		} // GetSystemValue
 
 		/// <summary>
 		/// Gets the local configuration value associated with the initialized guid and the key.
@@ -303,9 +167,9 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="defaultValue">The optional default value.</param>
 		/// <returns>The value.</returns>
-		public String GetConfigValue(String key, String defaultValue = null) {
-			return this.framework.GetConfigValue(key, defaultValue);
-		} // GetConfigValue
+		public String GetSystemValue(String key, String defaultValue = null) {
+			return this.framework.GetSystemValue(key, defaultValue);
+		} // GetSystemValue
 
 		/// <summary>
 		/// Gets the local configuration values associated with the initialized guid and the key.
@@ -313,53 +177,341 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <param name="key">The key.</param>
 		/// <returns>The value list.</returns>
-		public List<String> GetConfigValues(String key) {
-			return this.framework.GetConfigValues(key);
-		} // GetConfigValues
+		public List<String> GetSystemValues(String key) {
+			return this.framework.GetSystemValues(key);
+		} // GetSystemValues
 
 		/// <summary>
 		/// Sets the local configuration value associated with the initialized guid and the key.
 		/// </summary>
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
-		public void SetConfigValue(String key, Boolean value) {
-			this.framework.SetConfigValue(key, value);
-		} // SetConfigValue
+		public void SetSystemValue(String key, Boolean value) {
+			this.framework.SetSystemValue(key, value);
+		} // SetSystemValue
 
 		/// <summary>
 		/// Sets the local configuration value associated with the initialized guid and the key.
 		/// </summary>
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
-		public void SetConfigValue(String key, Int32 value) {
-			this.framework.SetConfigValue(key, value);
-		} // SetConfigValue
+		public void SetSystemValue(String key, Int32 value) {
+			this.framework.SetSystemValue(key, value);
+		} // SetSystemValue
 
 		/// <summary>
 		/// Sets the local configuration value associated with the initialized guid and the key.
 		/// </summary>
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
-		public void SetConfigValue(String key, DateTime value) {
-			this.framework.SetConfigValue(key, value);
-		} // SetConfigValue
+		public void SetSystemValue(String key, DateTime value) {
+			this.framework.SetSystemValue(key, value);
+		} // SetSystemValue
 
 		/// <summary>
 		/// Sets the local configuration value associated with the initialized guid and the key.
 		/// </summary>
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
-		public void SetConfigValue(String key, Guid value) {
-			this.framework.SetConfigValue(key, value);
-		} // SetConfigValue
+		public void SetSystemValue(String key, Guid value) {
+			this.framework.SetSystemValue(key, value);
+		} // SetSystemValue
 
 		/// <summary>
 		/// Sets the local configuration values associated with the initialized guid and the key.
 		/// </summary>
 		/// <param name="key">The key.</param>
 		/// <param name="values">The values</param>
-		public void SetConfigValues(String key, params String[] values) {
-			this.framework.SetConfigValues(key, values);
+		public void SetSystemValues(String key, params String[] values) {
+			this.framework.SetSystemValues(key, values);
+		} // SetSystemValues
+		#endregion
+
+		#region Local configuration methods.
+		/// <summary>
+		/// Gets the local configuration keys associated with the initialized guid.
+		/// </summary>
+		/// <returns>All the keys associated with the initialized guid.</returns>
+		public String[] GetLocalKeys() {
+			return this.framework.GetLocalKeys();
+		} // GetLocalKeys
+
+		/// <summary>
+		/// Gets the local configuration value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Boolean. The default value is returned on parse errors.
+		/// True values are "true", "yes" and "1" in any case.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value.</param>
+		/// <returns>The value.</returns>
+		public Boolean GetLocalValue(String key, Boolean defaultValue) {
+			return this.framework.GetLocalValue(key, defaultValue);
+		} // GetLocalValue
+
+		/// <summary>
+		/// Gets the local configuration value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Int32. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value.</param>
+		/// <returns>The value.</returns>
+		public Int32 GetLocalValue(String key, Int32 defaultValue) {
+			return this.framework.GetLocalValue(key, defaultValue);
+		} // GetLocalValue
+
+		/// <summary>
+		/// Gets the local configuration value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a DateTime. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value.</param>
+		/// <returns>The value.</returns>
+		public DateTime GetLocalValue(String key, DateTime defaultValue) {
+			return this.framework.GetLocalValue(key, defaultValue);
+		} // GetLocalValue
+
+		/// <summary>
+		/// Gets the local configuration value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Guid. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value.</param>
+		/// <returns>The value.</returns>
+		public Guid GetLocalValue(String key, Guid defaultValue) {
+			return this.framework.GetLocalValue(key, defaultValue);
+		} // GetLocalValue
+
+		/// <summary>
+		/// Gets the local configuration value associated with the initialized guid and the key.
+		/// If more then one value is associated with the initialized guid and the key, the first value is returned.
+		/// If no value is associated with the initialized guid and the key, the default value is returned.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value.</param>
+		/// <returns>The value.</returns>
+		public String GetLocalValue(String key, String defaultValue = null) {
+			return this.framework.GetLocalValue(key, defaultValue);
+		} // GetLocalValue
+
+		/// <summary>
+		/// Gets the local configuration values associated with the initialized guid and the key.
+		/// If no value is associated with the initialized guid and the key, an empty list is returned.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <returns>The value list.</returns>
+		public List<String> GetLocalValues(String key) {
+			return this.framework.GetLocalValues(key);
+		} // GetLocalValues
+
+		/// <summary>
+		/// Sets the local configuration value associated with the initialized guid and the key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetLocalValue(String key, Boolean value) {
+			this.framework.SetLocalValue(key, value);
+		} // SetLocalValue
+
+		/// <summary>
+		/// Sets the local configuration value associated with the initialized guid and the key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetLocalValue(String key, Int32 value) {
+			this.framework.SetLocalValue(key, value);
+		} // SetLocalValue
+
+		/// <summary>
+		/// Sets the local configuration value associated with the initialized guid and the key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetLocalValue(String key, DateTime value) {
+			this.framework.SetLocalValue(key, value);
+		} // SetLocalValue
+
+		/// <summary>
+		/// Sets the local configuration value associated with the initialized guid and the key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetLocalValue(String key, Guid value) {
+			this.framework.SetLocalValue(key, value);
+		} // SetLocalValue
+
+		/// <summary>
+		/// Sets the local configuration values associated with the initialized guid and the key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="values">The values</param>
+		public void SetLocalValues(String key, params String[] values) {
+			this.framework.SetLocalValues(key, values);
+		} // SetLocalValues
+		#endregion
+
+		#region Configuration methods.
+		/// <summary>
+		/// Gets the configuration guids.
+		/// </summary>
+		/// <returns>All the guids.</returns>
+		public Guid[] GetConfigGuids() {
+			return this.framework.GetConfigGuids();
+		} // GetConfigGuids
+
+		/// <summary>
+		/// Gets the configuration keys associated with the guid.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <returns>All the keys associated with the guid.</returns>
+		public String[] GetConfigKeys(Guid guid) {
+			return this.framework.GetConfigKeys(guid);
+		} // GetConfigKeys
+
+		/// <summary>
+		/// Gets the configuration value associated with the guid and key.
+		/// If more then one value is associated with the guid and key, the first value is returned.
+		/// If no value is associated with the guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Boolean. The default value is returned on parse errors.
+		/// True values are "true", "yes" and "1" in any case.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		public Boolean GetConfigValue(Guid guid, String key, Boolean defaultValue) {
+			return this.framework.GetConfigValue(guid, key, defaultValue);
+		} // GetConfigValue
+
+		/// <summary>
+		/// Gets the configuration value associated with the guid and key.
+		/// If more then one value is associated with the guid and key, the first value is returned.
+		/// If no value is associated with the guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Int32. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		public Int32 GetConfigValue(Guid guid, String key, Int32 defaultValue) {
+			return this.framework.GetConfigValue(guid, key, defaultValue);
+		} // GetConfigValue
+
+		/// <summary>
+		/// Gets the configuration value associated with the guid and key.
+		/// If more then one value is associated with the guid and key, the first value is returned.
+		/// If no value is associated with the guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a DateTime. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		public DateTime GetConfigValue(Guid guid, String key, DateTime defaultValue) {
+			return this.framework.GetConfigValue(guid, key, defaultValue);
+		} // GetConfigValue
+
+		/// <summary>
+		/// Gets the configuration value associated with the guid and key.
+		/// If more then one value is associated with the guid and key, the first value is returned.
+		/// If no value is associated with the guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Guid. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		public Guid GetConfigValue(Guid guid, String key, Guid defaultValue) {
+			return this.framework.GetConfigValue(guid, key, defaultValue);
+		} // GetConfigValue
+
+		/// <summary>
+		/// Gets the configuration value associated with the guid and key.
+		/// If more then one value is associated with the guid and key, the first value is returned.
+		/// If no value is associated with the guid and key, the default value is returned.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		public String GetConfigValue(Guid guid, String key, String defaultValue = null) {
+			return this.framework.GetConfigValue(guid, key, defaultValue);
+		} // GetConfigValue
+
+		/// <summary>
+		/// Gets the configuration values associated with the guid and key.
+		/// If no value is associated with the guid and key, an empty list is returned.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <returns>The value list.</returns>
+		public List<String> GetConfigValues(Guid guid, String key) {
+			return this.framework.GetConfigValues(guid, key);
+		} // GetConfigValues
+
+		/// <summary>
+		/// Sets the configuration value associated with the guid and key.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetConfigValue(Guid guid, String key, Boolean value) {
+			this.framework.SetConfigValue(guid, key, value);
+		} // SetConfigValue
+
+		/// <summary>
+		/// Sets the configuration value associated with the guid and key.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetConfigValue(Guid guid, String key, Int32 value) {
+			this.framework.SetConfigValue(guid, key, value);
+		} // SetConfigValue
+
+		/// <summary>
+		/// Sets the local configuration value associated with the guid and key.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetConfigValue(Guid guid, String key, DateTime value) {
+			this.framework.SetConfigValue(guid, key, value);
+		} // SetConfigValue
+
+		/// <summary>
+		/// Sets the configuration value associated with the guid and key.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetConfigValue(Guid guid, String key, Guid value) {
+			this.framework.SetConfigValue(guid, key, value);
+		} // SetConfigValue
+
+		/// <summary>
+		/// Sets the configuration values associated with the guid and key.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="values">The values</param>
+		public void SetConfigValues(Guid guid, String key, params String[] values) {
+			this.framework.SetConfigValues(guid, key, values);
 		} // SetConfigValues
 		#endregion
 
@@ -497,6 +649,107 @@ namespace NDK.Framework {
 		} // SetOptionValues
 		#endregion
 
+		#region Arguments methods.
+		/// <summary>
+		/// Gets the arguments passed to the executing process.
+		/// </summary>
+		/// <returns></returns>
+		public String[] GetArguments() {
+			return this.framework.GetArguments();
+		} // GetArguments
+		#endregion
+
+		#region Plugin methods.
+		/// <summary>
+		/// Gets the plugins loaded.
+		/// The plugins are objects implementing the IPlugin interface.
+		/// The assemblies (DLL and EXE) in the same directory as the "NDK Framework.dll" assembly, are scanned.
+		/// </summary>
+		/// <param name="reload">Reload new instances of the plugins.</param>
+		/// <returns>The loaded plugins.</returns>
+		public IPlugin[] GetPlugins(Boolean reload = false) {
+			return this.framework.GetPlugins(reload);
+		} // GetPlugins
+		#endregion
+
+		#region Send event methods.
+		/// <summary>
+		/// Executes the RunEvent method on all the loaded plugins.
+		/// Exceptions are caught and logged.
+		/// 
+		/// Only event id lover then 1000 is allowed to be send to all loaded plugins, because you don't know
+		/// which plugins might be loaded and available.
+		/// 
+		/// The keyValuesPairs object must be an anonymous object containing key/value pairs, like this:
+		///		new { Key1 = valueObject1, Key2 = valueObject2 }
+		/// </summary>
+		/// <param name="eventId">The event identifier.</param>
+		/// <param name="keyValuePairs">The anonymous object containing key/value pairs.</param>
+		public void TrySendEvent(PluginEvents eventId, Object keyValuePairs = null) {
+			this.framework.TrySendEvent(eventId, keyValuePairs);
+		} // TrySendEvent
+
+		/// <summary>
+		/// Executes the RunEvent method on the plugin identified by the guid.
+		/// Exceptions are caught and logged.
+		/// 
+		/// The keyValuesPairs object must be an anonymous object containing key/value pairs, like this:
+		///		new { Key1 = valueObject1, Key2 = valueObject2 }
+		/// </summary>
+		/// <param name="pluginGuid">The plugin guid</param>
+		/// <param name="eventId">The event identifier.</param>
+		/// <param name="keyValuePairs">The anonymous object containing key/value pairs.</param>
+		public void TrySendEvent(Guid pluginGuid, Int32 eventId, Object keyValuePairs = null) {
+			this.framework.TrySendEvent(pluginGuid, eventId, keyValuePairs);
+		} // TrySendEvent
+
+		/// <summary>
+		/// Executes the RunEvent method on all the loaded plugins.
+		/// Exceptions are thrown from the RunEvent method.
+		/// 
+		/// Only event id lover then 1000 is allowed to be send to all loaded plugins, because you don't know
+		/// which plugins might be loaded and available.
+		/// 
+		/// The keyValuesPairs object must be an anonymous object containing key/value pairs, like this:
+		///		new { Key1 = valueObject1, Key2 = valueObject2 }
+		/// </summary>
+		/// <param name="eventId">The event identifier.</param>
+		/// <param name="keyValuePairs">The anonymous object containing key/value pairs.</param>
+		public void SendEvent(PluginEvents eventId, Object keyValuePairs = null) {
+			this.framework.SendEvent(eventId, keyValuePairs);
+		} // SendEvent
+
+		/// <summary>
+		/// Executes the RunEvent method on the plugin identified by the guid.
+		/// Exceptions are thrown, when the plugin isn't available or from the RunEvent method.
+		/// 
+		/// The keyValuesPairs object must be an anonymous object containing key/value pairs, like this:
+		///		new { Key1 = valueObject1, Key2 = valueObject2 }
+		/// </summary>
+		/// <param name="pluginGuid">The plugin guid</param>
+		/// <param name="eventId">The event identifier.</param>
+		/// <param name="keyValuePairs">The anonymous object containing key/value pairs.</param>
+		public void SendEvent(Guid pluginGuid, Int32 eventId, Object keyValuePairs = null) {
+			this.framework.SendEvent(pluginGuid, eventId, keyValuePairs);
+		} // SendEvent
+		#endregion
+
+		#region Virtual run event methods.
+		/// <summary>
+		/// Handle events.
+		/// This method is invoked by another framework class.
+		/// 
+		/// When implementing a framework class, only use your own event id greater then 1000. Event id less then 1000 is reserved
+		/// for global events. They will be declared in the PluginEvents enum.
+		/// </summary>
+		/// <param name="sender">The event sender.</param>
+		/// <param name="eventId">The event identifier.</param>
+		/// <param name="eventObjects">The event objects.</param>
+		public virtual void RunEvent(Guid sender, Int32 eventId, IDictionary<String, Object> eventObjects) {
+			this.framework.RunEvent(sender, eventId, eventObjects);
+		} // Event
+		#endregion
+
 		#region Resource methods.
 		/// <summary>
 		/// Gets the resource keys, to the resources embedded in the calling assembly.
@@ -595,9 +848,9 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <param name="key">The database connection identifier.</param>
 		/// <returns>The database connection or null.</returns>
-		public IDbConnection GetSqlConnection(String key) {
-			return this.framework.GetSqlConnection(key);
-		} // GetSqlConnection
+		public IDbConnection GetDatabaseConnection(String key) {
+			return this.framework.GetDatabaseConnection(key);
+		} // GetDatabaseConnection
 
 		/// <summary>
 		/// Executes the sql.
@@ -631,7 +884,7 @@ namespace NDK.Framework {
 		/// Gets the current user.
 		/// </summary>
 		/// <returns>The current user.</returns>
-		public Person GetCurrentUser() {
+		public AdUser GetCurrentUser() {
 			return this.framework.GetCurrentUser();
 		} // GetCurrentUser
 
@@ -641,7 +894,7 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <param name="userId">The user id to find.</param>
 		/// <returns>The matching user or null.</returns>
-		public Person GetUser(String userId) {
+		public AdUser GetUser(String userId) {
 			return this.framework.GetUser(userId);
 		} // GetUser
 
@@ -650,7 +903,7 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <param name="userFilter">Filter which users to query.</param>
 		/// <returns>All users.</returns>
-		public List<Person> GetAllUsers(UserQuery userFilter = UserQuery.ALL) {
+		public List<AdUser> GetAllUsers(UserQuery userFilter = UserQuery.ALL) {
 			return this.framework.GetAllUsers(userFilter);
 		} // GetAllUsers
 
@@ -660,8 +913,19 @@ namespace NDK.Framework {
 		/// <param name="userFilter">Filter which users to query.</param>
 		/// <param name="advancedUserFilterDays">Days added/substracted when using advanced user filters.</param>
 		/// <returns>All users.</returns>
-		public List<Person> GetAllUsers(UserQuery userFilter, Int32 advancedUserFilterDays = 0) {
+		public List<AdUser> GetAllUsers(UserQuery userFilter, Int32 advancedUserFilterDays = 0) {
 			return this.framework.GetAllUsers(userFilter, advancedUserFilterDays);
+		} // GetAllUsers
+
+		/// <summary>
+		/// Gets all users that are member of the group.
+		/// </summary>
+		/// <param name="group">The group.</param>
+		/// <param name="recursive">True to search recursive.</param>
+		/// <returns></returns>
+		public List<AdUser> GetAllUsers(AdGroup group, Boolean recursive = true) {
+			return this.framework.GetAllUsers(group, recursive);
+			;
 		} // GetAllUsers
 
 		/// <summary>
@@ -670,7 +934,7 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <param name="userId">The group id to find.</param>
 		/// <returns>The matching group or null.</returns>
-		public GroupPrincipal GetGroup(String groupId) {
+		public AdGroup GetGroup(String groupId) {
 			return this.framework.GetGroup(groupId);
 		} // GetGroup
 
@@ -678,7 +942,7 @@ namespace NDK.Framework {
 		/// Gets all groups.
 		/// </summary>
 		/// <returns>All groups.</returns>
-		public List<GroupPrincipal> GetAllGroups() {
+		public List<AdGroup> GetAllGroups() {
 			return this.framework.GetAllGroups();
 		} // GetAllGroups
 
@@ -699,7 +963,7 @@ namespace NDK.Framework {
 		/// <param name="group">The group.</param>
 		/// <param name="recursive">True to search recursive.</param>
 		/// <returns>True if the user is member of the group.</returns>
-		public Boolean IsUserMemberOfGroup(Person user, GroupPrincipal group, Boolean recursive = true) {
+		public Boolean IsUserMemberOfGroup(AdUser user, GroupPrincipal group, Boolean recursive = true) {
 			return this.framework.IsUserMemberOfGroup(user, group, recursive);
 		} // IsUserMemberOfGroup
 
@@ -711,7 +975,7 @@ namespace NDK.Framework {
 		/// <param name="all">True if the user must be member of all the groups.</param>
 		/// <param name="groups">The groups.</param>
 		/// <returns>True if the user is member of one or all the groups as specified.</returns>
-		public Boolean IsUserMemberOfGroups(Person user, Boolean recursive, Boolean all, params GroupPrincipal[] groups) {
+		public Boolean IsUserMemberOfGroups(AdUser user, Boolean recursive, Boolean all, params GroupPrincipal[] groups) {
 			return this.framework.IsUserMemberOfGroups(user, recursive, all, groups);
 		} // IsUserMemberOfGroups
 		#endregion
@@ -751,114 +1015,18 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <param name="organizationFilters">Sql WHERE filters.</param>
 		/// <returns>All matching organizations.</returns>
-		public List<SofdOrganization> GetAllOrganisations(params SqlWhereFilterBase[] organizationFilters) {
-			return this.framework.GetAllOrganisations(organizationFilters);
-		} // GetAllOrganisations
+		public List<SofdOrganization> GetAllOrganizations(params SqlWhereFilterBase[] organizationFilters) {
+			return this.framework.GetAllOrganizations(organizationFilters);
+		} // GetAllOrganizations
 		#endregion
 
-		#region Event methods.
-		/// <summary>
-		/// Executes the RunEvent method on all the loaded plugins.
-		/// Exceptions are caught and logged.
-		/// 
-		/// Only event id lover then 1000 is allowed to be send to all loaded plugins, because you don't know
-		/// which plugins might be loaded and available.
-		/// 
-		/// The keyValuesPairs object must be an anonymous object containing key/value pairs, like this:
-		///		new { Key1 = valueObject1, Key2 = valueObject2 }
-		/// </summary>
-		/// <param name="eventId">The event identifier.</param>
-		/// <param name="keyValuePairs">The anonymous object containing key/value pairs.</param>
-		public void TrySendEvent(PluginEvents eventId, Object keyValuePairs = null) {
-			this.framework.TrySendEvent(eventId, keyValuePairs);
-		} // TrySendEvent
-
-		/// <summary>
-		/// Executes the RunEvent method on the plugin identified by the guid.
-		/// Exceptions are caught and logged.
-		/// 
-		/// The keyValuesPairs object must be an anonymous object containing key/value pairs, like this:
-		///		new { Key1 = valueObject1, Key2 = valueObject2 }
-		/// </summary>
-		/// <param name="pluginGuid">The plugin guid</param>
-		/// <param name="eventId">The event identifier.</param>
-		/// <param name="keyValuePairs">The anonymous object containing key/value pairs.</param>
-		public void TrySendEvent(Guid pluginGuid, Int32 eventId, Object keyValuePairs = null) {
-			this.framework.TrySendEvent(pluginGuid, eventId, keyValuePairs);
-		} // TrySendEvent
-
-		/// <summary>
-		/// Executes the RunEvent method on all the loaded plugins.
-		/// Exceptions are thrown from the RunEvent method.
-		/// 
-		/// Only event id lover then 1000 is allowed to be send to all loaded plugins, because you don't know
-		/// which plugins might be loaded and available.
-		/// 
-		/// The keyValuesPairs object must be an anonymous object containing key/value pairs, like this:
-		///		new { Key1 = valueObject1, Key2 = valueObject2 }
-		/// </summary>
-		/// <param name="eventId">The event identifier.</param>
-		/// <param name="keyValuePairs">The anonymous object containing key/value pairs.</param>
-		public void SendEvent(PluginEvents eventId, Object keyValuePairs = null) {
-			// Initialize a dictionary from the anonymous object
-			IDictionary<String, Object> eventObjects = new Dictionary<String, Object>();
-			if (keyValuePairs != null) {
-				PropertyInfo[] properties = keyValuePairs.GetType().GetProperties();
-				foreach (PropertyInfo prop in properties) {
-					eventObjects.Add(prop.Name, prop.GetValue(keyValuePairs, null));
-				}
-			}
-
-			// Execute the RunEvent methods.
-			foreach (IPlugin plugin in this.Plugins) {
-				// Log.
-				this.Logger.LogDebug("Event: Triggering event id {0} in plugin {1}   {2}.", eventId, plugin.GetGuid(), plugin.GetName());
-
-				// Call the RunEvent method.
-				plugin.RunEvent(this.Guid, (Int32)eventId, eventObjects);
-			}
-		} // SendEvent
-
-		/// <summary>
-		/// Executes the RunEvent method on the plugin identified by the guid.
-		/// Exceptions are thrown, when the plugin isn't available or from the RunEvent method.
-		/// 
-		/// The keyValuesPairs object must be an anonymous object containing key/value pairs, like this:
-		///		new { Key1 = valueObject1, Key2 = valueObject2 }
-		/// </summary>
-		/// <param name="pluginGuid">The plugin guid</param>
-		/// <param name="eventId">The event identifier.</param>
-		/// <param name="keyValuePairs">The anonymous object containing key/value pairs.</param>
-		public void SendEvent(Guid pluginGuid, Int32 eventId, Object keyValuePairs = null) {
-			// Initialize a dictionary from the anonymous object
-			IDictionary<String, Object> eventObjects = new Dictionary<String, Object>();
-			if (keyValuePairs != null) {
-				PropertyInfo[] properties = keyValuePairs.GetType().GetProperties();
-				foreach (PropertyInfo prop in properties) {
-					eventObjects.Add(prop.Name, prop.GetValue(keyValuePairs, null));
-				}
-			}
-
-			// Find plugin and execute the RunEvent method.
-			foreach (IPlugin plugin in this.Plugins) {
-				if (plugin.GetGuid().Equals(pluginGuid) == true) {
-					// Log.
-					this.Logger.LogDebug("Event: Triggering event id {0} in plugin {1}   {2}.", eventId, plugin.GetGuid(), plugin.GetName());
-
-					// Call the RunEvent method.
-					plugin.RunEvent(this.Guid, eventId, eventObjects);
-
-					// Exit.
-					return;
-				}
-			}
-
-			// The plugin was not found.
-			throw new Exception(String.Format("Unable to trigger event in {0} in plugin {1}. No plugin with this guid is loaded.", eventId, pluginGuid));
-		} // SendEvent
+		#region CPR methods.
+		public CprSearchResult CprSearch(String cprNumber) {
+			return this.framework.CprSearch(cprNumber);
+		} // CprSearch
 		#endregion
 
-		#region Abstract and Virtual methods.
+		#region Virtual methods.
 		/// <summary>
 		/// Gets the unique form guid used when referencing resources.
 		/// When implementing a form, this method should return the same unique guid every time. 
@@ -888,7 +1056,7 @@ namespace NDK.Framework {
 		} // GetName
 		#endregion
 
-	} // PluginForm
+	} // BaseForm
 	#endregion
 
 } // NDK.Framework

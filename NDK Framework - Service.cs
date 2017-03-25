@@ -12,8 +12,7 @@ namespace NDK.Framework {
 	#region ServiceManager class.
 	public class ServiceManager : ServiceBase {
 		public static String SERVICE_NAME = "NDK Framework Service";
-		private ILogger logger = null;
-		private IConfiguration config = null;
+		private IFramework framework = null;
 		private String[] serviceArguments = null;
 		private ManualResetEvent threadShutdownEvent = null;
 		private Thread thread = null;
@@ -21,23 +20,20 @@ namespace NDK.Framework {
 		/// <summary>
 		/// Create a new instance of the service object, and start the service.
 		/// </summary>
-		/// <param name="config">The configuration.</param>
-		/// <param name="log">The logger.</param>
+		/// <param name="framework">The framework.</param>
 		/// <param name="args">The arguments.</param>
-		public static void Run(IConfiguration config, ILogger log, String[] args) {
-			ServiceBase.Run(new ServiceManager(config, log, args));
+		public static void Run(IFramework framework, String[] args) {
+			ServiceBase.Run(new ServiceManager(framework, args));
 		} // Run
 
 		/// <summary>
 		/// Create a new instance of the service object.
 		/// </summary>
-		/// <param name="config">The configuration.</param>
-		/// <param name="log">The logger.</param>
+		/// <param name="framework">The framework.</param>
 		/// <param name="args">The arguments.</param>
-		public ServiceManager(IConfiguration config, ILogger log, String[] args) {
+		public ServiceManager(IFramework framework, String[] args) {
 			// Save the arguments.
-			this.config = config;
-			this.logger = log;
+			this.framework = framework;
 			this.serviceArguments = args;
 			this.threadShutdownEvent = new ManualResetEvent(false);
 
@@ -149,19 +145,19 @@ namespace NDK.Framework {
 					this.thread.Name = "NDK Framework Service Main Thread";
 					this.thread.IsBackground = false;
 					this.thread.Start();
-					this.logger.Log("Service: Thread is started.");
+					this.framework.Log("Service: Thread is started.");
 				}
 			} catch (Exception exception) {
-				this.logger.LogError("Service: Thread start error.");
-				this.logger.LogError(exception);
+				this.framework.LogError("Service: Thread start error.");
+				this.framework.LogError(exception);
 			}
 		} // StartThread
 
 		private void PauseThread() {
 			try {
 			} catch (Exception exception) {
-				this.logger.LogError("Service: Thread pause error.");
-				this.logger.LogError(exception);
+				this.framework.LogError("Service: Thread pause error.");
+				this.framework.LogError(exception);
 			}
 		} // PauseThread
 
@@ -172,14 +168,14 @@ namespace NDK.Framework {
 					this.threadShutdownEvent.Set();
 					if (this.thread.Join(30000)) {      // give the thread 30 seconds to stop.
 						this.thread.Abort();
-						this.logger.Log("Service: Thread has stopped.");
+						this.framework.Log("Service: Thread has stopped.");
 					} else {
-						this.logger.Log("Service: Thread did not stop as requested within the 30 second time limit.");
+						this.framework.Log("Service: Thread did not stop as requested within the 30 second time limit.");
 					}
 				}
 			} catch (Exception exception) {
-				this.logger.LogError("Service: Thread stop error.");
-				this.logger.LogError(exception);
+				this.framework.LogError("Service: Thread stop error.");
+				this.framework.LogError(exception);
 			}
 		} // StopThread
 
@@ -189,26 +185,27 @@ namespace NDK.Framework {
 				Int32 pluginsReloadIntervalConfig = 60;
 				DateTime pluginsLastLoadTime = DateTime.MinValue;
 				List<String> pluginsEnabledGuidStr = new List<String>();
-				PluginList<IPlugin> plugins = null;
+				List<IPlugin> plugins = null;
 
 				// Loop until the service is stopped.
 				while (this.threadShutdownEvent.WaitOne(0) == false) {
 					// Read plugin reload interval from the configuration.
 					// This is done every 30 minutes as default.
-					if (Int32.TryParse(this.config.GetSystemValue("ServicePluginReloadInterval", "30"), out pluginsReloadIntervalConfig) == true) {
+					if (Int32.TryParse(this.framework.GetSystemValue("ServicePluginReloadInterval", "30"), out pluginsReloadIntervalConfig) == true) {
 						if ((pluginsReloadInterval != pluginsReloadIntervalConfig) && (pluginsReloadIntervalConfig > 0)) {
 							pluginsReloadInterval = pluginsReloadIntervalConfig;
-							logger.LogDebug("Service: Loading plugins every {0} minute(s).", pluginsReloadInterval);
+							this.framework.LogDebug("Service: Loading plugins every {0} minute(s).", pluginsReloadInterval);
 						}
 					}
 
 					// Loading plugins.
 					if (pluginsLastLoadTime.AddMinutes(pluginsReloadInterval).CompareTo(DateTime.Now) < 0) {
-						logger.LogDebug("Service: Loading plugins.");
-						plugins = new PluginList<IPlugin>();
-						pluginsEnabledGuidStr = this.config.GetSystemValues("ServicePluginEnabled");
+						this.framework.LogDebug("Service: Loading plugins.");
+						plugins = new List<IPlugin>();
+						plugins.AddRange(this.framework.GetPlugins(true));
+						pluginsEnabledGuidStr = this.framework.GetSystemValues("ServicePluginEnabled");
 						pluginsLastLoadTime = DateTime.Now;
-						logger.LogDebug("Service: {0} plugin(s) found.", plugins.Count);
+						this.framework.LogDebug("Service: {0} plugin(s) found.", plugins.Count);
 
 						// Initialize plugins that are enabled in the configuration, remove plugins, that are not enabled in the configuration.
 						for (Int32 pluginIndex = 0; pluginIndex < plugins.Count;) {
@@ -220,7 +217,6 @@ namespace NDK.Framework {
 							foreach (String pluginEnabledGuidStr in pluginsEnabledGuidStr) {
 								if ((Guid.TryParse(pluginEnabledGuidStr, out pluginEnabledGuid) == true) && (plugin.GetGuid().Equals(pluginEnabledGuid) == true)) {
 									pluginEnabled = true;
-									plugin.Initialize(plugins, this.config, this.logger, this.serviceArguments);
 									plugin.Tag = new PluginTag();
 								}
 							}
@@ -228,63 +224,63 @@ namespace NDK.Framework {
 							// Iterate.
 							if (pluginEnabled == true) {
 								pluginIndex++;
-								logger.LogDebug("Service:  {0}   {1}  (enabled)", plugin.GetGuid(), plugin.GetName());
+								this.framework.LogDebug("Service:  {0}   {1}  (enabled)", plugin.GetGuid(), plugin.GetName());
 							} else {
 								plugins.RemoveAt(pluginIndex);
-								logger.LogDebug("Service:  {0}   {1}", plugin.GetGuid(), plugin.GetName());
+								this.framework.LogDebug("Service:  {0}   {1}", plugin.GetGuid(), plugin.GetName());
 							}
 						}
 
 						// Read plugin schedule from the configurations.
-						foreach (PluginBase plugin in plugins) {
+						foreach (BasePlugin plugin in plugins) {
 							// Get the plugin tag.
 							PluginTag pluginTag = (PluginTag)plugin.Tag;
 
 							// Read plugin schedule from the configurations.
-							pluginTag.ScheduleMatchYear = this.config.GetLocalValues(plugin.GetGuid(), "ServiceScheduleMatchYear");
-							pluginTag.ScheduleMatchMonth = this.config.GetLocalValues(plugin.GetGuid(), "ServiceScheduleMatchMonth");
-							pluginTag.ScheduleMatchDate = this.config.GetLocalValues(plugin.GetGuid(), "ServiceScheduleMatchDate");
-							pluginTag.ScheduleMatchDay = this.config.GetLocalValues(plugin.GetGuid(), "ServiceScheduleMatchDay");
-							pluginTag.ScheduleMatchHour = this.config.GetLocalValues(plugin.GetGuid(), "ServiceScheduleMatchHour");
-							pluginTag.ScheduleMatchMinute = this.config.GetLocalValues(plugin.GetGuid(), "ServiceScheduleMatchMinute");
+							pluginTag.ScheduleMatchYear = this.framework.GetConfigValues(plugin.GetGuid(), "ServiceScheduleMatchYear");
+							pluginTag.ScheduleMatchMonth = this.framework.GetConfigValues(plugin.GetGuid(), "ServiceScheduleMatchMonth");
+							pluginTag.ScheduleMatchDate = this.framework.GetConfigValues(plugin.GetGuid(), "ServiceScheduleMatchDate");
+							pluginTag.ScheduleMatchDay = this.framework.GetConfigValues(plugin.GetGuid(), "ServiceScheduleMatchDay");
+							pluginTag.ScheduleMatchHour = this.framework.GetConfigValues(plugin.GetGuid(), "ServiceScheduleMatchHour");
+							pluginTag.ScheduleMatchMinute = this.framework.GetConfigValues(plugin.GetGuid(), "ServiceScheduleMatchMinute");
 
 							// Log.
-							logger.LogDebug("Service: Schedule for plugin  {0}   {1}", plugin.GetGuid(), plugin.GetName());
+							this.framework.LogDebug("Service: Schedule for plugin  {0}   {1}", plugin.GetGuid(), plugin.GetName());
 							if (pluginTag.ScheduleMatchYear.Count > 0) {
-								logger.LogDebug("Service:  Year(s): {0}", String.Join(", ", pluginTag.ScheduleMatchYear));
+								this.framework.LogDebug("Service:  Year(s): {0}", String.Join(", ", pluginTag.ScheduleMatchYear));
 							} else {
-								logger.LogDebug("Service:  Year(s): {0}", "Every year.");
+								this.framework.LogDebug("Service:  Year(s): {0}", "Every year.");
 							}
 							if (pluginTag.ScheduleMatchMonth.Count > 0) {
-								logger.LogDebug("Service:  Month(s): {0}", String.Join(", ", pluginTag.ScheduleMatchMonth));
+								this.framework.LogDebug("Service:  Month(s): {0}", String.Join(", ", pluginTag.ScheduleMatchMonth));
 							} else {
-								logger.LogDebug("Service:  Month(s): {0}", "Every month.");
+								this.framework.LogDebug("Service:  Month(s): {0}", "Every month.");
 							}
 							if (pluginTag.ScheduleMatchDate.Count > 0) {
-								logger.LogDebug("Service:  Date(s): {0}", String.Join(", ", pluginTag.ScheduleMatchDate));
+								this.framework.LogDebug("Service:  Date(s): {0}", String.Join(", ", pluginTag.ScheduleMatchDate));
 							} else {
-								logger.LogDebug("Service:  Date(s): {0}", "Every date.");
+								this.framework.LogDebug("Service:  Date(s): {0}", "Every date.");
 							}
 							if (pluginTag.ScheduleMatchDay.Count > 0) {
-								logger.LogDebug("Service:  Day(s): {0}  (Monday = 1, today = {1})", String.Join(", ", pluginTag.ScheduleMatchDay), ((Int32)DateTime.Now.DayOfWeek));
+								this.framework.LogDebug("Service:  Day(s): {0}  (Monday = 1, today = {1})", String.Join(", ", pluginTag.ScheduleMatchDay), ((Int32)DateTime.Now.DayOfWeek));
 							} else {
-								logger.LogDebug("Service:  Day(s): {0}  (Monday = 1, today = {1})", "Every day of the week.", ((Int32)DateTime.Now.DayOfWeek));
+								this.framework.LogDebug("Service:  Day(s): {0}  (Monday = 1, today = {1})", "Every day of the week.", ((Int32)DateTime.Now.DayOfWeek));
 							}
 							if (pluginTag.ScheduleMatchHour.Count > 0) {
-								logger.LogDebug("Service:  Hour(s): {0}", String.Join(", ", pluginTag.ScheduleMatchHour));
+								this.framework.LogDebug("Service:  Hour(s): {0}", String.Join(", ", pluginTag.ScheduleMatchHour));
 							} else {
-								logger.LogDebug("Service:  Hour(s): {0}", "Every hour.");
+								this.framework.LogDebug("Service:  Hour(s): {0}", "Every hour.");
 							}
 							if (pluginTag.ScheduleMatchMinute.Count > 0) {
-								logger.LogDebug("Service:  Minute(s): {0}", String.Join(", ", pluginTag.ScheduleMatchMinute));
+								this.framework.LogDebug("Service:  Minute(s): {0}", String.Join(", ", pluginTag.ScheduleMatchMinute));
 							} else {
-								logger.LogDebug("Service:  Minute(s): {0}", "Every minute.");
+								this.framework.LogDebug("Service:  Minute(s): {0}", "Every minute.");
 							}
 						}
 					}
 
 					// Process all enabled plugins.
-					foreach (PluginBase plugin in plugins) {
+					foreach (BasePlugin plugin in plugins) {
 						// Get the plugin tag.
 						PluginTag pluginTag = (PluginTag)plugin.Tag;
 
@@ -295,14 +291,14 @@ namespace NDK.Framework {
 								((pluginTag.ScheduleMatchMonth.Count == 0) || (pluginTag.ScheduleMatchMonthInt32.Contains(DateTime.Now.Month) == true)) &&
 								((pluginTag.ScheduleMatchDate.Count == 0) || (pluginTag.ScheduleMatchDateInt32.Contains(DateTime.Now.Day) == true)) &&
 								((pluginTag.ScheduleMatchDay.Count == 0) || (pluginTag.ScheduleMatchDayInt32.Contains(((Int32)(DateTime.Now.DayOfWeek))) == true)) &&
-								((pluginTag.ScheduleMatchHour.Count == 0) || (pluginTag.ScheduleMatchHourInt32.Contains(DateTime.Now.Hour) == true)) &&
-								((pluginTag.ScheduleMatchMinute.Count == 0) || (pluginTag.ScheduleMatchMinuteInt32.Contains(DateTime.Now.Minute) == true))) {
+								(((pluginTag.ScheduleMatchHour.Count == 0) && (pluginTag.ScheduleMatchMinute.Count > 0)) || (pluginTag.ScheduleMatchHourInt32.Contains(DateTime.Now.Hour) == true)) &&
+								(((pluginTag.ScheduleMatchMinute.Count == 0) && (pluginTag.ScheduleMatchHour.Count > 0)) || (pluginTag.ScheduleMatchMinuteInt32.Contains(DateTime.Now.Minute) == true))) {
 								// Remember when the plugin was last executed.
 								pluginTag.LastRunTime = DateTime.Now;
 
 								// Execute the plugin on its own thread.
 								(new Thread(new ThreadStart(delegate () {
-									logger.Log("Service: The plugin execution is starting.");
+									this.framework.Log("Service: The plugin execution is starting.");
 									try {
 										// Register the thread.
 										pluginTag.Thread = Thread.CurrentThread;
@@ -310,14 +306,14 @@ namespace NDK.Framework {
 										// Execute the plugin.
 										plugin.Run();
 									} catch (ThreadAbortException exception) {
-										this.logger.Log("Service: The plugin execution was aborted.");
+										this.framework.Log("Service: The plugin execution was aborted.");
 									} catch (Exception exception) {
-										logger.LogError(exception);
+										this.framework.LogError(exception);
 									} finally {
 										// Unregister the thread.
 										pluginTag.Thread = null;
 									}
-									logger.Log("Service: The plugin execution has ended.");
+									this.framework.Log("Service: The plugin execution has ended.");
 								}))).Start();
 							}
 						}
@@ -327,10 +323,10 @@ namespace NDK.Framework {
 					Thread.Sleep(15000);
 				}
 			} catch (ThreadAbortException exception) {
-				this.logger.Log("Service: Thread was aborted.");
+				this.framework.Log("Service: Thread was aborted.");
 			} catch (Exception exception) {
-				this.logger.LogError("Service: Thread run error.");
-				this.logger.LogError(exception);
+				this.framework.LogError("Service: Thread run error.");
+				this.framework.LogError(exception);
 			}
 		} // RunThread
 		#endregion
@@ -477,7 +473,6 @@ namespace NDK.Framework {
 					// Add the arguments.
 					if (args.Length > 0) {
 
-
 						Console.WriteLine("====>   " + installer.CommandLine);
 						// TODO: Set arguments.							
 					}
@@ -577,6 +572,7 @@ namespace NDK.Framework {
 			// ServiceName must equal those on ServiceBase derived classes.
 			serviceInstaller1.ServiceName = ServiceManager.SERVICE_NAME;
 			serviceInstaller1.DisplayName = ServiceManager.SERVICE_NAME;
+			serviceInstaller1.Description = "NDK Framework Service instance 0";
 
 			// Add installer to collection. Order is not important if more than one service.
 			Installers.Add(serviceInstaller1);

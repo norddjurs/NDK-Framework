@@ -7,7 +7,7 @@ namespace NDK.Framework {
 
 	#region SofdEmployee class.
 	public class SofdEmployee : IEqualityComparer<SofdEmployee>, IEquatable<SofdEmployee>, IComparable {
-		private SofdDirectory sofdDirectory;
+		private IFramework framework;
 
 		#region Field name constants.
 		public const String SCHEMA_NAME = "etl";
@@ -152,8 +152,8 @@ namespace NDK.Framework {
 		/// </summary>
 		/// <param name="dbReader">The data reader.</param>
 		/// <param name="sofdDirectory">The SOFD directory.</param>
-		public SofdEmployee(SofdDirectory sofdDirectory, IDataReader dbReader) {
-			this.sofdDirectory = sofdDirectory;
+		public SofdEmployee(IFramework framework, IDataReader dbReader) {
+			this.framework = framework;
 
 			this.medarbejderHistorikId = dbReader.GetInt32(SofdEmployee.FIELD_MEDARBEJDER_HISTORIK_ID);
 			this.medarbejderId = dbReader.GetInt32(SofdEmployee.FIELD_MEDARBEJDER_ID);
@@ -294,6 +294,283 @@ namespace NDK.Framework {
 		public override Int32 GetHashCode() {
 			return this.medarbejderHistorikId.GetHashCode();
 		} // GetHashCode
+		#endregion
+
+		#region ToString methods.
+		public override String ToString() {
+			return this.ToString(false, false);
+		} // ToString
+
+		public String ToString(Boolean addHeader, Boolean oneLine) {
+			// Only oneLine == true is implemented.
+			String textSeparator = "\t";
+			StringBuilder text = new StringBuilder();
+
+			// Add header.
+			if (addHeader == true) {
+
+				text.Append("medarbejderHistorikId");
+				text.Append(textSeparator);
+				text.Append("medarbejderId");
+				text.Append(textSeparator);
+				text.Append("aktiv");
+				text.Append(textSeparator);
+				text.Append("senestAktiv");
+				text.Append(textSeparator);
+				text.Append("aktivFra");
+				text.Append(textSeparator);
+				text.Append("aktivTil");
+				text.Append(textSeparator);
+				text.Append("foersteAnsaettelsesDato");
+				text.Append(textSeparator);
+				text.Append("ansaettelsesDato");
+				text.Append(textSeparator);
+				text.Append("ansaettelsesOphoersDato");
+				text.Append(textSeparator);
+				text.Append("jubilaeumsAnciennitetsDato");
+				text.Append(textSeparator);
+				text.Append("ansaettelseAktiv");
+				text.Append(textSeparator);
+				text.Append("sidstAendret");
+				text.Append(textSeparator);
+				text.Append("opusSidsstAendret");
+				text.Append(textSeparator);
+				text.Append("opusBrugerNavn");
+				text.Append(textSeparator);
+				text.Append("adBrugerNavn");
+				text.Append(textSeparator);
+				text.Append("maNummer");
+				text.Append(textSeparator);
+				text.Append("cprNummer");
+				text.Append(textSeparator);
+				text.Append("cprEkstraCiffer");
+				text.Append(textSeparator);
+				text.Append("forNavn");
+				text.Append(textSeparator);
+				text.Append("efterNavn");
+				text.Append(textSeparator);
+				text.Append("navn");
+				text.Append(textSeparator);
+				text.Append("kaldeNavn");
+				text.Append(textSeparator);
+				text.Append("adresse");
+				text.Append(textSeparator);
+				text.Append("stedNavn");
+				text.Append(textSeparator);
+				text.Append("postNummer");
+				text.Append(textSeparator);
+				text.Append("by");
+				text.Append(textSeparator);
+				text.Append("land");
+				text.Append(textSeparator);
+				text.Append("adresseBeskyttet");
+				text.Append(textSeparator);
+				text.Append("telefonNummer");
+				text.Append(textSeparator);
+				text.Append("mobilNummer");
+				text.Append(textSeparator);
+				text.Append("mobilNummer2");
+				text.Append(textSeparator);
+				text.Append("epost");
+				text.Append(textSeparator);
+				text.Append("afdelingsNummer");
+				text.Append(textSeparator);
+				text.Append("gruppeNummer");
+				text.Append(textSeparator);
+				text.Append("stillingsId");
+				text.Append(textSeparator);
+				text.Append("stillingsBetegnelse");
+				text.Append(textSeparator);
+				text.Append("losOrganisationId");
+				text.Append(textSeparator);
+				text.Append("organisationId");
+				text.Append(textSeparator);
+				text.Append("organisationKortNavn");
+				text.Append(textSeparator);
+				text.Append("organisationNavn");
+				text.Append(textSeparator);
+				text.Append("ansatForhold");
+				text.Append(textSeparator);
+				text.Append("ansatForholdText");
+				text.Append(textSeparator);
+				text.Append("loenKlasse");
+				text.Append(textSeparator);
+				text.Append("arbejdstidTaeller");
+				text.Append(textSeparator);
+				text.Append("arbejdstidNaevner");
+				text.Append(textSeparator);
+				text.Append("leder");
+				text.Append(textSeparator);
+				text.Append("sikkerhedsRepresentant");
+				text.Append(textSeparator);
+				text.Append("tillidsRepresentant");
+				text.Append(textSeparator);
+				text.Append("tillidsRepresentantSuppleant");
+				text.Append(textSeparator);
+				text.Append("medUdvalg");
+				text.Append(textSeparator);
+				text.Append("intern");
+				text.Append(textSeparator);
+				text.Append("ekstern");
+				text.Append(textSeparator);
+				text.Append("uuid");
+				text.Append(textSeparator);
+				text.Append("mifareId");
+				text.Append(textSeparator);
+				text.Append("pNummer");
+				text.Append(textSeparator);
+				text.Append("fakturaGodkender");
+				text.Append(textSeparator);
+				text.Append("fakturaGodkenderNiveau1");
+				text.Append(textSeparator);
+				text.Append("fakturaGodkenderNiveau1Beskrivelse");
+				text.Append(textSeparator);
+				text.Append("fakturaGodkenderNiveau2");
+				text.Append(textSeparator);
+				text.Append("fakturaGodkenderNiveau2Beskrivelse");
+				text.Append(textSeparator);
+				text.Append("naermesteLederMaNummer");
+				text.Append(textSeparator);
+				text.Append("naermesteLederCprNummer");
+				text.Append(textSeparator);
+				text.Append("naermesteLederNavn");
+				text.Append(textSeparator);
+				text.Append("naermesteLederAdBrugerNavn");
+				text.AppendLine();
+			}
+
+			// Add data.
+			text.Append(this.medarbejderHistorikId);
+			text.Append(textSeparator);
+			text.Append(this.medarbejderId);
+			text.Append(textSeparator);
+			text.Append(this.aktiv);
+			text.Append(textSeparator);
+			text.Append(this.senestAktiv);
+			text.Append(textSeparator);
+			text.Append(this.aktivFra);
+			text.Append(textSeparator);
+			text.Append(this.aktivTil);
+			text.Append(textSeparator);
+			text.Append(this.foersteAnsaettelsesDato);
+			text.Append(textSeparator);
+			text.Append(this.ansaettelsesDato);
+			text.Append(textSeparator);
+			text.Append(this.ansaettelsesOphoersDato);
+			text.Append(textSeparator);
+			text.Append(this.jubilaeumsAnciennitetsDato);
+			text.Append(textSeparator);
+			text.Append(this.ansaettelseAktiv);
+			text.Append(textSeparator);
+			text.Append(this.sidstAendret);
+			text.Append(textSeparator);
+			text.Append(this.opusSidsstAendret);
+			text.Append(textSeparator);
+			text.Append(this.opusBrugerNavn);
+			text.Append(textSeparator);
+			text.Append(this.adBrugerNavn);
+			text.Append(textSeparator);
+			text.Append(this.maNummer);
+			text.Append(textSeparator);
+			text.Append(this.cprNummer);
+			text.Append(textSeparator);
+			text.Append(this.cprEkstraCiffer);
+			text.Append(textSeparator);
+			text.Append(this.forNavn);
+			text.Append(textSeparator);
+			text.Append(this.efterNavn);
+			text.Append(textSeparator);
+			text.Append(this.navn);
+			text.Append(textSeparator);
+			text.Append(this.kaldeNavn);
+			text.Append(textSeparator);
+			text.Append(this.adresse);
+			text.Append(textSeparator);
+			text.Append(this.stedNavn);
+			text.Append(textSeparator);
+			text.Append(this.postNummer);
+			text.Append(textSeparator);
+			text.Append(this.by);
+			text.Append(textSeparator);
+			text.Append(this.land);
+			text.Append(textSeparator);
+			text.Append(this.adresseBeskyttet);
+			text.Append(textSeparator);
+			text.Append(this.telefonNummer);
+			text.Append(textSeparator);
+			text.Append(this.mobilNummer);
+			text.Append(textSeparator);
+			text.Append(this.mobilNummer2);
+			text.Append(textSeparator);
+			text.Append(this.epost);
+			text.Append(textSeparator);
+			text.Append(this.afdelingsNummer);
+			text.Append(textSeparator);
+			text.Append(this.gruppeNummer);
+			text.Append(textSeparator);
+			text.Append(this.stillingsId);
+			text.Append(textSeparator);
+			text.Append(this.stillingsBetegnelse);
+			text.Append(textSeparator);
+			text.Append(this.losOrganisationId);
+			text.Append(textSeparator);
+			text.Append(this.organisationId);
+			text.Append(textSeparator);
+			text.Append(this.organisationKortNavn);
+			text.Append(textSeparator);
+			text.Append(this.organisationNavn);
+			text.Append(textSeparator);
+			text.Append(this.ansatForhold);
+			text.Append(textSeparator);
+			text.Append(this.ansatForholdText);
+			text.Append(textSeparator);
+			text.Append(this.loenKlasse);
+			text.Append(textSeparator);
+			text.Append(this.arbejdstidTaeller);
+			text.Append(textSeparator);
+			text.Append(this.arbejdstidNaevner);
+			text.Append(textSeparator);
+			text.Append(this.leder);
+			text.Append(textSeparator);
+			text.Append(this.sikkerhedsRepresentant);
+			text.Append(textSeparator);
+			text.Append(this.tillidsRepresentant);
+			text.Append(textSeparator);
+			text.Append(this.tillidsRepresentantSuppleant);
+			text.Append(textSeparator);
+			text.Append(this.medUdvalg);
+			text.Append(textSeparator);
+			text.Append(this.intern);
+			text.Append(textSeparator);
+			text.Append(this.ekstern);
+			text.Append(textSeparator);
+			text.Append(this.uuid);
+			text.Append(textSeparator);
+			text.Append(this.mifareId);
+			text.Append(textSeparator);
+			text.Append(this.pNummer);
+			text.Append(textSeparator);
+			text.Append(this.fakturaGodkender);
+			text.Append(textSeparator);
+			text.Append(this.fakturaGodkenderNiveau1);
+			text.Append(textSeparator);
+			text.Append(this.fakturaGodkenderNiveau1Beskrivelse);
+			text.Append(textSeparator);
+			text.Append(this.fakturaGodkenderNiveau2);
+			text.Append(textSeparator);
+			text.Append(this.fakturaGodkenderNiveau2Beskrivelse);
+			text.Append(textSeparator);
+			text.Append(this.naermesteLederMaNummer);
+			text.Append(textSeparator);
+			text.Append(this.naermesteLederCprNummer);
+			text.Append(textSeparator);
+			text.Append(this.naermesteLederNavn);
+			text.Append(textSeparator);
+			text.Append(this.naermesteLederAdBrugerNavn);
+
+			// Return the text.
+			return text.ToString();
+		} // ToString
 		#endregion
 
 		#region Properties.
@@ -712,7 +989,7 @@ namespace NDK.Framework {
 		/// <returns>The matching employee.</returns>
 		public SofdEmployee GetNearestLeader() {
 			// Get all matching employees.
-			List<SofdEmployee> employees = this.sofdDirectory.GetAllEmployees(
+			List<SofdEmployee> employees = this.framework.GetAllEmployees(
 				new SofdEmployeeFilter_MaNummer(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.naermesteLederMaNummer),
 				new SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
 			);
@@ -732,7 +1009,7 @@ namespace NDK.Framework {
 		/// <returns>The matching employees.</returns>
 		public List<SofdEmployee> GetWorkers() {
 			// Get all matching employees.
-			List<SofdEmployee> employees = this.sofdDirectory.GetAllEmployees(
+			List<SofdEmployee> employees = this.framework.GetAllEmployees(
 				new SofdEmployeeFilter_NaermesteLederMaNummer(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.maNummer),
 				new SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
 			);
@@ -748,7 +1025,7 @@ namespace NDK.Framework {
 		/// <returns>The matching employees.</returns>
 		public List<SofdEmployee> GetEmployeeWithSameNearestLeader(Boolean removeThisEmployee = false) {
 			// Get all matching employees.
-			List<SofdEmployee> employees = this.sofdDirectory.GetAllEmployees(
+			List<SofdEmployee> employees = this.framework.GetAllEmployees(
 				new SofdEmployeeFilter_NaermesteLederMaNummer(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.NaermesteLederMaNummer),
 				new SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
 			);
@@ -769,7 +1046,7 @@ namespace NDK.Framework {
 		/// <returns>The matching organisation.</returns>
 		public SofdOrganization GetOrganisation() {
 			// Get all matching organisations.
-			List<SofdOrganization> organisations = this.sofdDirectory.GetAllOrganisations(
+			List<SofdOrganization> organisations = this.framework.GetAllOrganizations(
 				new SofdOrganizationFilter_OrganisationId(SqlWhereFilterOperator.OR, SqlWhereFilterValueOperator.Equals, this.organisationId),
 				new SofdOrganizationFilter_Aktiv(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, true)
 			);
@@ -1183,6 +1460,96 @@ namespace NDK.Framework {
 	} // SofdEmployeeFilter_Epost
 	#endregion
 
+	#region SofdEmployeeFilter_StillingsId class
+	/// <summary>
+	/// Employee filter on StillingsId.
+	/// </summary>
+	public class SofdEmployeeFilter_StillingsId : SqlWhereFilterInt32 {
+
+		/// <summary>
+		/// Employee filter on StillingsId.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_StillingsId(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdEmployee.FIELD_STILLINGS_ID, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_StillingsId
+
+	} // SofdEmployeeFilter_StillingsId
+	#endregion
+
+	#region SofdEmployeeFilter_StillingsBetegnelse class
+	/// <summary>
+	/// Employee filter on StillingsBetegnelse.
+	/// </summary>
+	public class SofdEmployeeFilter_StillingsBetegnelse : SqlWhereFilterString {
+
+		/// <summary>
+		/// Employee filter on StillingsBetegnelse.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_StillingsBetegnelse(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_STILLINGS_BETEGNELSE, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_StillingsBetegnelse
+
+	} // SofdEmployeeFilter_StillingsBetegnelse
+	#endregion
+
+	#region SofdEmployeeFilter_OrganisationId class
+	/// <summary>
+	/// Employee filter on OrganisationId.
+	/// </summary>
+	public class SofdEmployeeFilter_OrganisationId : SqlWhereFilterInt32 {
+
+		/// <summary>
+		/// Employee filter on OrganisationId.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_OrganisationId(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdEmployee.FIELD_ORGANISATION_ID, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_OrganisationId
+
+	} // SofdEmployeeFilter_OrganisationId
+	#endregion
+
+	#region SofdEmployeeFilter_OrganisationNavn class
+	/// <summary>
+	/// Employee filter on OrganisationNavn.
+	/// </summary>
+	public class SofdEmployeeFilter_OrganisationNavn : SqlWhereFilterString {
+
+		/// <summary>
+		/// Employee filter on OrganisationNavn.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_OrganisationNavn(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_ORGANISATION_NAVN, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_OrganisationNavn
+
+	} // SofdEmployeeFilter_OrganisationNavn
+	#endregion
+
+	#region SofdEmployeeFilter_LoenKlasse class
+	/// <summary>
+	/// Employee filter on LoenKlasse.
+	/// </summary>
+	public class SofdEmployeeFilter_LoenKlasse : SqlWhereFilterString {
+
+		/// <summary>
+		/// Employee filter on LoenKlasse.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_LoenKlasse(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_LOEN_KLASSE, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_LoenKlasse
+
+	} // SofdEmployeeFilter_LoenKlasse
+	#endregion
+
 	#region SofdEmployeeFilter_Uuid class
 	/// <summary>
 	/// Employee filter on Uuid.
@@ -1217,27 +1584,6 @@ namespace NDK.Framework {
 		} // SofdEmployeeFilter_MifareId
 
 	} // SofdEmployeeFilter_MifareId
-	#endregion
-
-
-
-
-	#region SofdEmployeeFilter_OrganisationId class
-	/// <summary>
-	/// Employee filter on OrganisationId.
-	/// </summary>
-	public class SofdEmployeeFilter_OrganisationId : SqlWhereFilterInt32 {
-
-		/// <summary>
-		/// Employee filter on OrganisationId.
-		/// </summary>
-		/// <param name="filterOperator">The filter operator.</param>
-		/// <param name="filterValueOperator">The filter value operator.</param>
-		/// <param name="filterValue">The filter value.</param>
-		public SofdEmployeeFilter_OrganisationId(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdEmployee.FIELD_ORGANISATION_ID, filterValueOperator, filterValue) {
-		} // SofdEmployeeFilter_OrganisationId
-
-	} // SofdEmployeeFilter_OrganisationId
 	#endregion
 
 	#region SofdEmployeeFilter_NaermesteLederMaNummer class
@@ -1293,6 +1639,5 @@ namespace NDK.Framework {
 
 	} // SofdEmployeeFilter_NaermesteLederAdBrugerNavn
 	#endregion
-
 
 } // NDK.Framework
