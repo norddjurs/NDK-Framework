@@ -216,16 +216,20 @@ namespace NDK.Framework {
 						if (table[rowIndex].Count > 0) {
 							this.html.AppendLine("<tr>");
 							this.html.AppendLine("<th>");
-							this.html.AppendLine(table[rowIndex][0]);
+							try {
+								this.html.AppendLine(table[rowIndex][0]);
+							} catch { }
 							this.html.AppendLine("</th>");
 							this.html.AppendLine("<td>");
-							for (Int32 columnIndex = 1; columnIndex < table[rowIndex].Count; columnIndex++) {
-								this.html.Append(table[rowIndex][columnIndex].Replace(Environment.NewLine, "<br>"));
-								if (columnIndex < table[rowIndex].Count - 1) {
-									this.html.Append("<br>");
+							try {
+								for (Int32 columnIndex = 1; columnIndex < table[rowIndex].Count; columnIndex++) {
+									this.html.Append(table[rowIndex][columnIndex].Replace(Environment.NewLine, "<br>"));
+									if (columnIndex < table[rowIndex].Count - 1) {
+										this.html.Append("<br>");
+									}
+									this.html.AppendLine();
 								}
-								this.html.AppendLine();
-							}
+							} catch { }
 							this.html.AppendLine("</td>");
 							this.html.AppendLine("</tr>");
 						}
