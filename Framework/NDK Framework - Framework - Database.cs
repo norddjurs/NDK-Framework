@@ -152,6 +152,114 @@ namespace NDK.Framework {
 			// Execute the sql.
 			return this.ExecuteSql(connection, sql);
 		} // ExecuteSql
+
+		/// <summary>
+		/// Executes a insert query on the schema and table.
+		/// The connection must be open.
+		/// </summary>
+		/// <param name="connection">The database connection.</param>
+		/// <param name="schemaName">The schema name.</param>
+		/// <param name="tableName">The table name.</param>
+		/// <param name="values">The field names (key) and values (value).</param>
+		/// <returns>The first column of the first row in the result set.</returns>
+		public Object ExecuteInsertSql(IDbConnection connection, String schemaName, String tableName, params KeyValuePair<String, Object>[] values) {
+			// Build sql.
+			String sqlNames = String.Empty;
+			String sqlValues = String.Empty;
+			foreach (KeyValuePair<String, Object> value in values) {
+				sqlNames += String.Format("\"{0}\",", value.Key);
+				sqlValues += String.Format("@{0},", value.Key);
+			}
+			sqlNames = sqlNames.Trim(',');
+			sqlValues = sqlValues.Trim(',');
+			String sql = String.Format("INSERT INTO \"{0}\".\"{1}\" ({2}) VALUES ({3}); SELECT SCOPE_IDENTITY();", schemaName, tableName, sqlNames, sqlValues);
+
+			// Create the command object.
+			IDbCommand command = connection.CreateCommand();
+			command.CommandText = sql;
+			foreach (KeyValuePair<String, Object> value in values) {
+				IDbDataParameter commandParameter = command.CreateParameter();
+				commandParameter.ParameterName = value.Key;
+				commandParameter.Value = value.Value ?? (Object)DBNull.Value;
+				command.Parameters.Add(commandParameter);
+			}
+			//command.Transaction = null;
+			//command.CommandTimeout = 30 * 1000;
+
+			// Log.
+			this.LogInternal("SQL: Execute sql on '{0}':", connection.Database);
+			this.LogInternal(command.CommandText);
+
+			// Execute the SQL command.
+			Object dataRecordKey = command.ExecuteScalar();
+
+			// Log.
+			this.LogInternal("SQL: {0} key affected.", dataRecordKey.ToString());
+
+			// Return the new key.
+			return dataRecordKey;
+		} // ExecuteInsertSql
+
+		/// <summary>
+		/// Executes a update query on the schema and table.
+		/// The connection must be open.
+		/// </summary>
+		/// <param name="connection">The database connection.</param>
+		/// <param name="schemaName">The schema name.</param>
+		/// <param name="tableName">The table name.</param>
+		/// <param name="values">The field names (key) and values (value).</param>
+		/// <param name="whereFilters">The WHERE filters.</param>
+		/// <returns>The number of records affected.</returns>
+		public Int32 ExecuteUpdateSql(IDbConnection connection, String schemaName, String tableName, IList<KeyValuePair<String, Object>> values, params SqlWhereFilterBase[] whereFilters) {
+			// Build sql name values.
+			String sqlNameValues = String.Empty;
+			foreach (KeyValuePair<String, Object> value in values) {
+				sqlNameValues += String.Format("\"{0}\" = @{0},", value.Key);
+			}
+			sqlNameValues = sqlNameValues.Trim(',');
+
+			// Build sql WHERE filters.
+			String sqlWhereFilters = String.Empty;
+			if (whereFilters.Length > 0) {
+				Boolean firstFilter = true;
+				sqlWhereFilters += " WHERE ";
+				foreach (SqlWhereFilterBase whereFilter in whereFilters) {
+					if (firstFilter == false) {
+						firstFilter = (whereFilter.GetType() == typeof(SqlWhereFilterEndGroup));
+					}
+					sqlWhereFilters += whereFilter.ToString(firstFilter);
+					firstFilter = (whereFilter.GetType() == typeof(SqlWhereFilterBeginGroup));
+				}
+			}
+
+			// Build sql.
+			String sql = String.Format("UPDATE \"{0}\".\"{1}\" SET {2} {3}", schemaName, tableName, sqlNameValues, sqlWhereFilters);
+
+			// Create the command object.
+			IDbCommand command = connection.CreateCommand();
+			command.CommandText = sql;
+			foreach (KeyValuePair<String, Object> value in values) {
+				IDbDataParameter commandParameter = command.CreateParameter();
+				commandParameter.ParameterName = value.Key;
+				commandParameter.Value = value.Value ?? (Object)DBNull.Value;
+				command.Parameters.Add(commandParameter);
+			}
+			//command.Transaction = null;
+			//command.CommandTimeout = 30 * 1000;
+
+			// Log.
+			this.LogInternal("SQL: Execute sql on '{0}':", connection.Database);
+			this.LogInternal(command.CommandText);
+
+			// Execute the SQL command.
+			Int32 dataRecordAffected = command.ExecuteNonQuery();
+
+			// Log.
+			this.LogInternal("SQL: {0} records affected.", dataRecordAffected);
+
+			// Return the number of records affected.
+			return dataRecordAffected;
+		} // ExecuteUpdateSql
 		#endregion
 
 	} // Framework

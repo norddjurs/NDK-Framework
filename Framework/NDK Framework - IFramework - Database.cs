@@ -39,6 +39,29 @@ namespace NDK.Framework {
 		/// <param name="whereFilters">The optional WHERE filters.</param>
 		/// <returns>The data reader result, or null.</returns>
 		IDataReader ExecuteSql(IDbConnection connection, String schemaName, String tableName, params SqlWhereFilterBase[] whereFilters);
+
+		/// <summary>
+		/// Executes a insert query on the schema and table.
+		/// The connection must be open.
+		/// </summary>
+		/// <param name="connection">The database connection.</param>
+		/// <param name="schemaName">The schema name.</param>
+		/// <param name="tableName">The table name.</param>
+		/// <param name="values">The field names (key) and values (value).</param>
+		/// <returns>The first column of the first row in the result set.</returns>
+		Object ExecuteInsertSql(IDbConnection connection, String schemaName, String tableName, params KeyValuePair<String, Object>[] values);
+
+		/// <summary>
+		/// Executes a update query on the schema and table.
+		/// The connection must be open.
+		/// </summary>
+		/// <param name="connection">The database connection.</param>
+		/// <param name="schemaName">The schema name.</param>
+		/// <param name="tableName">The table name.</param>
+		/// <param name="values">The field names (key) and values (value).</param>
+		/// <param name="whereFilters">The WHERE filters.</param>
+		/// <returns>The number of records affected.</returns>
+		Int32 ExecuteUpdateSql(IDbConnection connection, String schemaName, String tableName, IList<KeyValuePair<String, Object>> values, params SqlWhereFilterBase[] whereFilters);
 		#endregion
 
 	} // IFramework

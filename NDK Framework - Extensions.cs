@@ -7,6 +7,36 @@ using System.Data.SqlClient;
 
 namespace NDK.Framework {
 
+	#region String extension class.
+	public static class StringExtensions {
+
+		/// <summary>
+		/// Gets true if the argumented value is either null, empty or consists entirely of white-spaces.
+		/// </summary>
+		/// <param name="value">The string.</param>
+		/// <returns></returns>
+		public static Boolean IsNullOrWhiteSpace(this String value) {
+			return String.IsNullOrWhiteSpace(value);
+		} // IsNullOrWhiteSpace
+
+	} // StringExtensions
+	#endregion
+
+	#region DateTime extension class.
+	public static class DateTimeExtensions {
+
+		/// <summary>
+		/// Gets true if the argumented value is either DateTime.MinValue or DateTime.MaxValue.
+		/// </summary>
+		/// <param name="value">The date time.</param>
+		/// <returns></returns>
+		public static Boolean IsMinOrMax(this DateTime value) {
+			return ((value.Equals(DateTime.MinValue) == true) || (value.Equals(DateTime.MaxValue) == true));
+		} // IsMinOrMax
+
+	} // DateTimeExtensions
+	#endregion
+
 	#region IDateReader extension class.
 	public static class IDateReaderExtensions {
 
