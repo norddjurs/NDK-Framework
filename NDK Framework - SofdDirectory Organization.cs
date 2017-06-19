@@ -8,6 +8,8 @@ namespace NDK.Framework {
 	#region SofdOrganization class.
 	public class SofdOrganization : IEqualityComparer<SofdOrganization>, IEquatable<SofdOrganization>, IComparable {
 		private IFramework framework;
+		private Boolean isNew = false;
+		private Boolean isChanged = false;
 
 		#region Field name constants.
 		public const String SCHEMA_NAME = "etl";
@@ -45,6 +47,7 @@ namespace NDK.Framework {
 		#endregion
 
 		#region Variables.
+		// Value.
 		private Int32 organisationHistorikId = -1;
 		private Int32 organisationId = -1;
 		private Boolean aktiv = false;
@@ -75,17 +78,67 @@ namespace NDK.Framework {
 		private Boolean lederNedarvet = false;
 		private String lederNavn = String.Empty;
 		private String lederAdBrugerNavn = String.Empty;
+
+		// Changed.
+		private Boolean organisationHistorikIdChanged = false;
+		private Boolean organisationIdChanged = false;
+		private Boolean aktivChanged = false;
+		private Boolean senestAktivChanged = false;
+		private Boolean aktivFraChanged = false;
+		private Boolean aktivTilChanged = false;
+		private Boolean sidstAendretChanged = false;
+		private Boolean losOrganisationIdChanged = false;
+		private Boolean losForaelderOrganisationIdChanged = false;
+		private Boolean losSidstAendretChanged = false;
+		private Boolean kortNavnChanged = false;
+		private Boolean navnChanged = false;
+		private Boolean gadeChanged = false;
+		private Boolean stedNavnChanged = false;
+		private Boolean postNummerChanged = false;
+		private Boolean byChanged = false;
+		private Boolean telefonNummerChanged = false;
+		private Boolean cvrNummerChanged = false;
+		private Boolean seNummerChanged = false;
+		private Boolean eanNummerChanged = false;
+		private Boolean pNummerChanged = false;
+		private Boolean omkostningsstedChanged = false;
+		private Boolean organisationTypeIDChanged = false;
+		private Boolean organisationTypeChanged = false;
+		private Boolean uuidChanged = false;
+		private Boolean lederMaNummerChanged = false;
+		private Boolean lederMedarbejderIdChanged = false;
+		private Boolean lederNedarvetChanged = false;
+		private Boolean lederNavnChanged = false;
+		private Boolean lederAdBrugerNavnChanged = false;
 		#endregion
 
 		#region Constructor methods.
 		/// <summary>
+		/// Instantiates a new SOFD organization object, that does not exist in the database.
+		/// </summary>
+		/// <param name="framework">The framework.</param>
+		public SofdOrganization(IFramework framework) {
+			this.framework = framework;
+			this.isNew = true;
+			this.isChanged = false;
+
+			// Initialize values into the fields that do not allow NULL.
+			this.aktivFra = DateTime.Now.Date;
+			this.sidstAendret = DateTime.Now.Date;
+			this.aktiv = false;
+			this.losOrganisationId = 0;
+		} // SofdOrganization
+
+		/// <summary>
 		/// Instantiates a new SOFD organization object, and initializes with values from the current
 		/// record in the data reader.
 		/// </summary>
+		/// <param name="framework">The framework.</param>
 		/// <param name="dbReader">The data reader.</param>
-		/// <param name="sofdDirectory">The SOFD directory.</param>
 		public SofdOrganization(IFramework framework, IDataReader dbReader) {
 			this.framework = framework;
+			this.isNew = false;
+			this.isChanged = false;
 
 			this.organisationHistorikId = dbReader.GetInt32(SofdOrganization.FIELD_ORGANISATION_HISTORIK_ID);
 			this.organisationId = dbReader.GetInt32(SofdOrganization.FIELD_ORGANISATION_ID);
@@ -211,6 +264,13 @@ namespace NDK.Framework {
 			get {
 				return this.aktiv;
 			}
+			set {
+				if (value.Equals(this.aktiv) == false) {
+					this.aktiv = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
+			}
 		} // Aktiv
 
 		public Boolean SenestAktiv {
@@ -241,11 +301,25 @@ namespace NDK.Framework {
 			get {
 				return this.losOrganisationId;
 			}
+			set {
+				if (value.Equals(this.losOrganisationId) == false) {
+					this.losOrganisationId = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
+			}
 		} // LosOrganisationId
 
 		public Int32 LosForaelderOrganisationId {
 			get {
 				return this.losForaelderOrganisationId;
+			}
+			set {
+				if (value.Equals(this.losForaelderOrganisationId) == false) {
+					this.losForaelderOrganisationId = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
 			}
 		} // LosForaelderOrganisationId
 
@@ -253,11 +327,25 @@ namespace NDK.Framework {
 			get {
 				return this.losSidstAendret;
 			}
+			set {
+				if (value.Equals(this.losSidstAendret) == false) {
+					this.losSidstAendret = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
+			}
 		} // LosSidstAendret
 
 		public String KortNavn {
 			get {
 				return this.kortNavn;
+			}
+			set {
+				if (value.Equals(this.kortNavn) == false) {
+					this.kortNavn = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
 			}
 		} // KortNavn
 
@@ -265,11 +353,25 @@ namespace NDK.Framework {
 			get {
 				return this.navn;
 			}
+			set {
+				if (value.Equals(this.navn) == false) {
+					this.navn = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
+			}
 		} // Navn
 
 		public String Gade {
 			get {
 				return this.gade;
+			}
+			set {
+				if (value.Equals(this.gade) == false) {
+					this.gade = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
 			}
 		} // Gade
 
@@ -277,11 +379,25 @@ namespace NDK.Framework {
 			get {
 				return this.stedNavn;
 			}
+			set {
+				if (value.Equals(this.stedNavn) == false) {
+					this.stedNavn = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
+			}
 		} // StedNavn
 
 		public Int16 PostNummer {
 			get {
 				return this.postNummer;
+			}
+			set {
+				if (value.Equals(this.postNummer) == false) {
+					this.postNummer = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
 			}
 		} // PostNummer
 
@@ -289,11 +405,25 @@ namespace NDK.Framework {
 			get {
 				return this.by;
 			}
+			set {
+				if (value.Equals(this.by) == false) {
+					this.by = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
+			}
 		} // By
 
 		public String TelefonNummer {
 			get {
 				return this.telefonNummer;
+			}
+			set {
+				if (value.Equals(this.telefonNummer) == false) {
+					this.telefonNummer = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
 			}
 		} // TelefonNummer
 
@@ -301,11 +431,25 @@ namespace NDK.Framework {
 			get {
 				return this.cvrNummer;
 			}
+			set {
+				if (value.Equals(this.cvrNummer) == false) {
+					this.cvrNummer = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
+			}
 		} // CvrNummer
 
 		public Int32 SeNummer {
 			get {
 				return this.seNummer;
+			}
+			set {
+				if (value.Equals(this.seNummer) == false) {
+					this.seNummer = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
 			}
 		} // SeNummer
 
@@ -313,11 +457,25 @@ namespace NDK.Framework {
 			get {
 				return this.eanNummer;
 			}
+			set {
+				if (value.Equals(this.eanNummer) == false) {
+					this.eanNummer = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
+			}
 		} // EanNummer
 
 		public Int32 PNummer {
 			get {
 				return this.pNummer;
+			}
+			set {
+				if (value.Equals(this.pNummer) == false) {
+					this.pNummer = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
 			}
 		} // PNummer
 
@@ -325,11 +483,25 @@ namespace NDK.Framework {
 			get {
 				return this.omkostningssted;
 			}
+			set {
+				if (value.Equals(this.omkostningssted) == false) {
+					this.omkostningssted = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
+			}
 		} // Omkostningssted
 
 		public Int16 OrganisationTypeID {
 			get {
 				return this.organisationTypeID;
+			}
+			set {
+				if (value.Equals(this.organisationTypeID) == false) {
+					this.organisationTypeID = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
 			}
 		} // OrganisationTypeID
 
@@ -337,11 +509,25 @@ namespace NDK.Framework {
 			get {
 				return this.organisationType;
 			}
+			set {
+				if (value.Equals(this.organisationType) == false) {
+					this.organisationType = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
+			}
 		} // OrganisationType
 
 		public Guid Uuid {
 			get {
 				return this.uuid;
+			}
+			set {
+				if (value.Equals(this.uuid) == false) {
+					this.uuid = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
 			}
 		} // Uuid
 
@@ -349,11 +535,25 @@ namespace NDK.Framework {
 			get {
 				return this.lederMaNummer;
 			}
+			set {
+				if (value.Equals(this.lederMaNummer) == false) {
+					this.lederMaNummer = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
+			}
 		} // LederMaNummer
 
 		public Int32 LederMedarbejderId {
 			get {
 				return this.lederMedarbejderId;
+			}
+			set {
+				if (value.Equals(this.lederMedarbejderId) == false) {
+					this.lederMedarbejderId = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
 			}
 		} // LederMedarbejderId
 
@@ -361,11 +561,25 @@ namespace NDK.Framework {
 			get {
 				return this.lederNedarvet;
 			}
+			set {
+				if (value.Equals(this.lederNedarvet) == false) {
+					this.lederNedarvet = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
+			}
 		} // LederNedarvet
 
 		public String LederNavn {
 			get {
 				return this.lederNavn;
+			}
+			set {
+				if (value.Equals(this.lederNavn) == false) {
+					this.lederNavn = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
 			}
 		} // LederNavn
 
@@ -373,7 +587,321 @@ namespace NDK.Framework {
 			get {
 				return this.lederAdBrugerNavn;
 			}
+			set {
+				if (value.Equals(this.lederAdBrugerNavn) == false) {
+					this.lederAdBrugerNavn = value;
+					this.aktivChanged = true;
+					this.isChanged = true;
+				}
+			}
 		} // LederAdBrugerNavn
+		#endregion
+
+		#region Properties (other).
+		public Boolean IsNew {
+			get {
+				return this.isNew;
+			}
+		} // IsNew
+
+		public Boolean IsChanged {
+			get {
+				return this.isChanged;
+			}
+		} // IsChanged
+		#endregion
+
+		#region Save methods.
+		/// <summary>
+		/// Saves the data to the database.
+		/// Note that the SOFD history works like this:
+		///		* If the current date is different from "SidstAendret", a new record is created with a new history id.
+		///		  Dates and the old record is updated accordingly.
+		///		* Multiple updates the same date, are saved in the same history record.
+		/// 
+		/// Only the fields (properties) with their CHANGED variable set to true are updated.
+		/// All CHANGED variables are set to false after the update.
+		/// </summary>
+		public void Save() {
+			String sofdDatabaseKey = this.framework.GetSystemValue("SofdDirectoryDatabaseKey", "MDM-PROD");
+			Int32 previousHistoryId = this.organisationHistorikId;
+			Boolean dataUpdateExistingRecord = true;
+			Boolean dataUpdateAllFields = false;
+			List<KeyValuePair<String, Object>> dataFields = new List<KeyValuePair<String, Object>>();
+
+			// Create new record.
+			if (this.isNew == true) {
+				// Create new record.
+				dataUpdateExistingRecord = false;
+				dataUpdateAllFields = false;
+
+				// Update mandatory field values.
+				this.aktivFra = DateTime.Now.Date;
+				this.aktivFraChanged = true;
+				this.sidstAendret = DateTime.Now;
+				this.sidstAendretChanged = true;
+				this.aktiv = true;
+				this.aktivChanged = true;
+
+				// Add fields that do not allow NULL.
+				this.aktivFraChanged = true;
+				this.sidstAendretChanged = true;
+				this.aktivChanged = true;
+				this.losOrganisationIdChanged = true;
+			} else if ((this.isChanged == true) && (this.sidstAendret.Date.Equals(DateTime.Now.Date) == false)) {
+				// Always create a new record (copy to create history), when the data in the database was last updated before today.
+				dataUpdateExistingRecord = false;
+				dataUpdateAllFields = true;
+
+				// Update mandatory field values.
+				this.aktivFra = DateTime.Now.Date;
+				this.aktivFraChanged = true;
+				this.sidstAendret = DateTime.Now;
+				this.sidstAendretChanged = true;
+			} else {
+				// Update existing record (no history copy) when it has been updated earlier the same day.
+				dataUpdateExistingRecord = true;
+				dataUpdateAllFields = false;
+
+				// Update mandatory field values.
+				this.sidstAendret = DateTime.Now;
+				this.sidstAendretChanged = true;
+			}
+
+			// Add updated fields.
+			dataFields.Clear();
+			if ((this.organisationIdChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_ORGANISATION_ID, this.organisationId));
+			}
+
+			if ((this.aktivChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_AKTIV, this.aktiv));
+			}
+
+			if ((this.senestAktivChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_SENEST_AKTIV, this.senestAktiv));
+			}
+
+			if ((this.aktivFraChanged == true) || (dataUpdateAllFields == true)) {
+				if (this.aktivFra.IsMinOrMax() == false) {
+					dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_AKTIV_FRA, this.aktivFra));
+				} else {
+					dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_AKTIV_FRA, null));
+				}
+			}
+
+			if ((this.aktivTilChanged == true) || (dataUpdateAllFields == true)) {
+				if (this.aktivTil.IsMinOrMax() == false) {
+					dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_AKTIV_TIL, this.aktivTil));
+				} else {
+					dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_AKTIV_TIL, null));
+				}
+			}
+
+			if ((this.sidstAendretChanged == true) || (dataUpdateAllFields == true)) {
+				if (this.sidstAendret.IsMinOrMax() == false) {
+					dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_SIDST_AENDRET, this.sidstAendret));
+				} else {
+					dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_SIDST_AENDRET, null));
+				}
+			}
+
+			if ((this.losOrganisationIdChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_LOS_ORGANISATION_ID, this.losOrganisationId));
+			}
+
+			if ((this.losForaelderOrganisationIdChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_PARENT_LOS_ORGANISATION_ID, this.losForaelderOrganisationId));
+			}
+
+			if ((this.losSidstAendretChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_LOS_SIDST_AENDRET, this.losSidstAendret));
+			}
+
+			if ((this.kortNavnChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_KORT_NAVN, this.kortNavn));
+			}
+
+			if ((this.navnChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_NAVN, this.navn));
+			}
+
+			if ((this.gadeChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_GADE, this.gade));
+			}
+
+			if ((this.stedNavnChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_STED_NAVN, this.stedNavn));
+			}
+
+			if ((this.postNummerChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_POST_NUMMER, this.postNummer));
+			}
+
+			if ((this.byChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_BY, this.by));
+			}
+
+			if ((this.telefonNummerChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_TELEFON_NUMMER, this.telefonNummer));
+			}
+
+			if ((this.cvrNummerChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_CVR_NUMMER, this.cvrNummer));
+			}
+
+			if ((this.seNummerChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_SE_NUMMER, this.seNummer));
+			}
+
+			if ((this.eanNummerChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_EAN_NUMMER, this.eanNummer));
+			}
+
+			if ((this.pNummerChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_P_NUMMER, this.pNummer));
+			}
+
+			if ((this.omkostningsstedChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_OMKOSTNINGS_STED, this.omkostningssted));
+			}
+
+			if ((this.organisationTypeIDChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_ORGANISATION_TYPE_ID, this.organisationTypeID));
+			}
+
+			if ((this.organisationTypeChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_ORGANISATION_TYPE, this.organisationType));
+			}
+
+			if ((this.uuidChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_UUID, this.uuid));
+			}
+
+			if ((this.lederMaNummerChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_LEDER_MA_NUMMER, this.lederMaNummer));
+			}
+
+			if ((this.lederMedarbejderIdChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_LEDER_MEDARBEJDER_ID, this.lederMedarbejderId));
+			}
+
+			if ((this.lederNedarvetChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_LEDER_NEDARVET, this.lederNedarvet));
+			}
+
+			if ((this.lederNavnChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_LEDER_NAVN, this.lederNavn));
+			}
+
+			if ((this.lederAdBrugerNavnChanged == true) || (dataUpdateAllFields == true)) {
+				dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_LEDER_AD_BRUGER_NAVN, this.LederAdBrugerNavn));
+			}
+
+			// Either create a new record, or update the existing record.
+			if (dataFields.Count > 0) {
+				if (dataUpdateExistingRecord == false) {
+					// Create new record.
+					using (IDbConnection dataConnection = this.framework.GetDatabaseConnection(sofdDatabaseKey)) {
+						Object result = this.framework.ExecuteInsertSql(
+							dataConnection,
+							SofdOrganization.SCHEMA_NAME,
+							SofdOrganization.TABLE_NAME,
+							dataFields.ToArray()
+						);
+
+						// Set the key field "OrganisationHistorikId".
+						this.organisationHistorikId = Int32.Parse(result.ToString());
+
+						// Post update:
+						// Set and update the field "OrganisationId" in the new record.
+						if (this.isNew == true) {
+							this.organisationId = this.organisationHistorikId;
+
+							dataFields.Clear();
+							dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_ORGANISATION_ID, this.organisationId));
+
+							this.framework.ExecuteUpdateSql(
+								dataConnection,
+								SofdOrganization.SCHEMA_NAME,
+								SofdOrganization.TABLE_NAME,
+								dataFields,
+								new SofdOrganizationFilter_OrganisationHistorikId(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, this.organisationHistorikId)
+							);
+						}
+
+						// History update:
+						// Update the history fields in the previous record.
+						if (this.isNew == false) {
+							dataFields.Clear();
+							dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_AKTIV_TIL, this.aktivFra.Date.AddDays(-1)));
+							dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_SIDST_AENDRET, this.sidstAendret));
+							dataFields.Add(new KeyValuePair<String, Object>(SofdOrganization.FIELD_AKTIV, false));
+
+							this.framework.ExecuteUpdateSql(
+								dataConnection,
+								SofdOrganization.SCHEMA_NAME,
+								SofdOrganization.TABLE_NAME,
+								dataFields,
+								new SofdOrganizationFilter_OrganisationHistorikId(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, previousHistoryId)
+							);
+						}
+
+						// Log.
+						this.framework.Log("SOFD: Created new organization record identified by history id '{0}'.", this.organisationHistorikId);
+					}
+				} else {
+					// Update existing record.
+					using (IDbConnection dataConnection = this.framework.GetDatabaseConnection(sofdDatabaseKey)) {
+						this.framework.ExecuteUpdateSql(
+							dataConnection,
+							SofdOrganization.SCHEMA_NAME,
+							SofdOrganization.TABLE_NAME,
+							dataFields,
+							new SofdOrganizationFilter_OrganisationHistorikId(SqlWhereFilterOperator.AND, SqlWhereFilterValueOperator.Equals, this.organisationHistorikId)
+						);
+
+						// Log.
+						this.framework.Log("SOFD: Updated existing organization record identified by history id '{0}'.", this.organisationHistorikId);
+					}
+				}
+			}
+
+			// The record is not new or changed any more.
+			this.isNew = false;
+			this.isChanged = false;
+
+			this.organisationHistorikIdChanged = false;
+			this.organisationIdChanged = false;
+			this.aktivChanged = false;
+			this.senestAktivChanged = false;
+			this.aktivFraChanged = false;
+			this.aktivTilChanged = false;
+			this.sidstAendretChanged = false;
+			this.losOrganisationIdChanged = false;
+			this.losForaelderOrganisationIdChanged = false;
+			this.losSidstAendretChanged = false;
+			this.kortNavnChanged = false;
+			this.navnChanged = false;
+			this.gadeChanged = false;
+			this.stedNavnChanged = false;
+			this.postNummerChanged = false;
+			this.byChanged = false;
+			this.telefonNummerChanged = false;
+			this.cvrNummerChanged = false;
+			this.seNummerChanged = false;
+			this.eanNummerChanged = false;
+			this.pNummerChanged = false;
+			this.omkostningsstedChanged = false;
+			this.organisationTypeIDChanged = false;
+			this.organisationTypeChanged = false;
+			this.uuidChanged = false;
+			this.lederMaNummerChanged = false;
+			this.lederMedarbejderIdChanged = false;
+			this.lederNedarvetChanged = false;
+			this.lederNavnChanged = false;
+			this.lederAdBrugerNavnChanged = false;
+		} // Save
 		#endregion
 
 		#region Get methods.
