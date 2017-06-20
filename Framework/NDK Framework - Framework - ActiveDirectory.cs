@@ -101,6 +101,225 @@ namespace NDK.Framework {
 		public List<AdUser> GetAllUsers(AdGroup group, Boolean recursive = true) {
 			return group.GetMembers(recursive);
 		} // GetAllUsers
+
+		/// <summary>
+		/// Gets the CPR number from the user.
+		/// This uses the "ActiveDirectoryCprAttribute" system configuration to determane which field that stores the value.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		public String GetUserCprNumber(AdUser user) {
+			try {
+				String userCprAttribute = this.GetSystemValue("ActiveDirectoryCprAttribute", "EmployeeId");
+
+				switch (userCprAttribute.ToLower()) {
+					case "extensionattribute1":
+						return user.ExtensionAttribute1;
+					case "extensionattribute2":
+						return user.ExtensionAttribute2;
+					case "extensionattribute3":
+						return user.ExtensionAttribute3;
+					case "extensionattribute4":
+						return user.ExtensionAttribute4;
+					case "extensionattribute5":
+						return user.ExtensionAttribute5;
+					case "extensionattribute6":
+						return user.ExtensionAttribute6;
+					case "extensionattribute7":
+						return user.ExtensionAttribute7;
+					case "extensionattribute8":
+						return user.ExtensionAttribute8;
+					case "extensionattribute9":
+						return user.ExtensionAttribute9;
+					case "extensionattribute10":
+						return user.ExtensionAttribute10;
+					case "extensionattribute11":
+						return user.ExtensionAttribute11;
+					case "extensionattribute12":
+						return user.ExtensionAttribute12;
+					case "extensionattribute13":
+						return user.ExtensionAttribute13;
+					case "extensionattribute14":
+						return user.ExtensionAttribute14;
+					case "extensionattribute15":
+						return user.ExtensionAttribute15;
+					case "employeeid":
+					default:
+						return user.EmployeeId;
+				}
+			} catch {
+				return String.Empty;
+			}
+		} // GetUserCprNumber
+
+		/// <summary>
+		/// Gets the MiFare identifier from the user.
+		/// This uses the "ActiveDirectoryMiFareAttribute" system configuration to determane which field that stores the value.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		public String GetUserMiFareId(AdUser user) {
+			try {
+				String userMiFareAttribute = this.GetSystemValue("ActiveDirectoryMiFareAttribute", String.Empty);
+
+				switch (userMiFareAttribute.ToLower()) {
+					case "extensionattribute1":
+						return user.ExtensionAttribute1;
+					case "extensionattribute2":
+						return user.ExtensionAttribute2;
+					case "extensionattribute3":
+						return user.ExtensionAttribute3;
+					case "extensionattribute4":
+						return user.ExtensionAttribute4;
+					case "extensionattribute5":
+						return user.ExtensionAttribute5;
+					case "extensionattribute6":
+						return user.ExtensionAttribute6;
+					case "extensionattribute7":
+						return user.ExtensionAttribute7;
+					case "extensionattribute8":
+						return user.ExtensionAttribute8;
+					case "extensionattribute9":
+						return user.ExtensionAttribute9;
+					case "extensionattribute10":
+						return user.ExtensionAttribute10;
+					case "extensionattribute11":
+						return user.ExtensionAttribute11;
+					case "extensionattribute12":
+						return user.ExtensionAttribute12;
+					case "extensionattribute13":
+						return user.ExtensionAttribute13;
+					case "extensionattribute14":
+						return user.ExtensionAttribute14;
+					case "extensionattribute15":
+						return user.ExtensionAttribute15;
+					default:
+						return String.Empty;
+				}
+			} catch {
+				return String.Empty;
+			}
+		} // GetUserMiFareId
+
+		/// <summary>
+		/// Sets the CPR number in the user.
+		/// This uses the "ActiveDirectoryCprAttribute" system configuration to determane which field that stores the value.
+		/// This method does not commit the change.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		/// <param name="cprNumber">The CPR number.</param>
+		public void SetUserCprNumber(AdUser user, String cprNumber) {
+			String userCprAttribute = this.GetSystemValue("ActiveDirectoryCprAttribute", "EmployeeId");
+
+			switch (userCprAttribute.ToLower()) {
+				case "extensionattribute1":
+					user.ExtensionAttribute1 = cprNumber;
+					break;
+				case "extensionattribute2":
+					user.ExtensionAttribute2 = cprNumber;
+					break;
+				case "extensionattribute3":
+					user.ExtensionAttribute3 = cprNumber;
+					break;
+				case "extensionattribute4":
+					user.ExtensionAttribute4 = cprNumber;
+					break;
+				case "extensionattribute5":
+					user.ExtensionAttribute5 = cprNumber;
+					break;
+				case "extensionattribute6":
+					user.ExtensionAttribute6 = cprNumber;
+					break;
+				case "extensionattribute7":
+					user.ExtensionAttribute7 = cprNumber;
+					break;
+				case "extensionattribute8":
+					user.ExtensionAttribute8 = cprNumber;
+					break;
+				case "extensionattribute9":
+					user.ExtensionAttribute9 = cprNumber;
+					break;
+				case "extensionattribute10":
+					user.ExtensionAttribute10 = cprNumber;
+					break;
+				case "extensionattribute11":
+					user.ExtensionAttribute11 = cprNumber;
+					break;
+				case "extensionattribute12":
+					user.ExtensionAttribute12 = cprNumber;
+					break;
+				case "extensionattribute13":
+					user.ExtensionAttribute13 = cprNumber;
+					break;
+				case "extensionattribute14":
+					user.ExtensionAttribute14 = cprNumber;
+					break;
+				case "extensionattribute15":
+					user.ExtensionAttribute15 = cprNumber;
+					break;
+				case "employeeid":
+				default:
+					user.EmployeeId = cprNumber;
+					break;
+			}
+		} // SetUserCprNumber
+
+		/// <summary>
+		/// Gets the MiFare identifier int the user.
+		/// This uses the "ActiveDirectoryMiFareAttribute" system configuration to determane which field that stores the value.
+		/// This method does not commit the change.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		/// <param name="miFareId">The MiFare identifier.</param>
+		public void SetUserMiFareId(AdUser user, String miFareId) {
+			String userMiFareAttribute = this.GetSystemValue("ActiveDirectoryMiFareAttribute", String.Empty);
+
+			switch (userMiFareAttribute.ToLower()) {
+				case "extensionattribute1":
+					user.ExtensionAttribute1 = miFareId;
+					break;
+				case "extensionattribute2":
+					user.ExtensionAttribute2 = miFareId;
+					break;
+				case "extensionattribute3":
+					user.ExtensionAttribute3 = miFareId;
+					break;
+				case "extensionattribute4":
+					user.ExtensionAttribute4 = miFareId;
+					break;
+				case "extensionattribute5":
+					user.ExtensionAttribute5 = miFareId;
+					break;
+				case "extensionattribute6":
+					user.ExtensionAttribute6 = miFareId;
+					break;
+				case "extensionattribute7":
+					user.ExtensionAttribute7 = miFareId;
+					break;
+				case "extensionattribute8":
+					user.ExtensionAttribute8 = miFareId;
+					break;
+				case "extensionattribute9":
+					user.ExtensionAttribute9 = miFareId;
+					break;
+				case "extensionattribute10":
+					user.ExtensionAttribute10 = miFareId;
+					break;
+				case "extensionattribute11":
+					user.ExtensionAttribute11 = miFareId;
+					break;
+				case "extensionattribute12":
+					user.ExtensionAttribute12 = miFareId;
+					break;
+				case "extensionattribute13":
+					user.ExtensionAttribute13 = miFareId;
+					break;
+				case "extensionattribute14":
+					user.ExtensionAttribute14 = miFareId;
+					break;
+				case "extensionattribute15":
+					user.ExtensionAttribute15 = miFareId;
+					break;
+			}
+		} // SetUserMiFareId
 		#endregion
 
 		#region Public Active Directory group methods.

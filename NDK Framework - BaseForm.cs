@@ -956,6 +956,47 @@ namespace NDK.Framework {
 		} // GetAllUsers
 
 		/// <summary>
+		/// Gets the CPR number from the user.
+		/// This uses the "ActiveDirectoryCprAttribute" system configuration to determane which field that stores the value.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		public String GetUserCprNumber(AdUser user) {
+			return this.framework.GetUserCprNumber(user);
+		} // GetUserCprNumber
+
+		/// <summary>
+		/// Gets the MiFare identifier from the user.
+		/// This uses the "ActiveDirectoryMiFareAttribute" system configuration to determane which field that stores the value.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		public String GetUserMiFareId(AdUser user) {
+			return this.framework.GetUserMiFareId(user);
+		} // GetUserMiFareId
+
+		/// <summary>
+		/// Sets the CPR number in the user.
+		/// This uses the "ActiveDirectoryCprAttribute" system configuration to determane which field that stores the value.
+		/// This method does not commit the change.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		/// <param name="cprNumber">The CPR number.</param>
+		public void SetUserCprNumber(AdUser user, String cprNumber) {
+			this.framework.SetUserCprNumber(user, cprNumber);
+		} // SetUserCprNumber
+
+		/// <summary>
+		/// Gets the MiFare identifier int the user.
+		/// This uses the "ActiveDirectoryMiFareAttribute" system configuration to determane which field that stores the value.
+		/// This method does not commit the change.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		/// <param name="miFareId">The MiFare identifier.</param>
+		public void SetUserMiFareId(AdUser user, String miFareId) {
+			this.framework.SetUserMiFareId(user, miFareId);
+		} // SetUserMiFareId
+
+
+		/// <summary>
 		/// Gets the group identified by the group id.
 		/// The group id can be Guid, Distinguished Name, Sam Account Name, User Principal Name or Security Identifier.
 		/// </summary>

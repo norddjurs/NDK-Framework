@@ -48,6 +48,38 @@ namespace NDK.Framework {
 		/// <param name="recursive">True to search recursive.</param>
 		/// <returns></returns>
 		List<AdUser> GetAllUsers(AdGroup group, Boolean recursive = true);
+
+		/// <summary>
+		/// Gets the CPR number from the user.
+		/// This uses the "ActiveDirectoryCprAttribute" system configuration to determane which field that stores the value.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		String GetUserCprNumber(AdUser user);
+
+		/// <summary>
+		/// Gets the MiFare identifier from the user.
+		/// This uses the "ActiveDirectoryMiFareAttribute" system configuration to determane which field that stores the value.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		String GetUserMiFareId(AdUser user);
+
+		/// <summary>
+		/// Sets the CPR number in the user.
+		/// This uses the "ActiveDirectoryCprAttribute" system configuration to determane which field that stores the value.
+		/// This method does not commit the change.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		/// <param name="cprNumber">The CPR number.</param>
+		void SetUserCprNumber(AdUser user, String cprNumber);
+
+		/// <summary>
+		/// Gets the MiFare identifier int the user.
+		/// This uses the "ActiveDirectoryMiFareAttribute" system configuration to determane which field that stores the value.
+		/// This method does not commit the change.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		/// <param name="miFareId">The MiFare identifier.</param>
+		void SetUserMiFareId(AdUser user, String miFareId);
 		#endregion
 
 		#region Active Directory group methods.
