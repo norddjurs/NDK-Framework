@@ -622,7 +622,8 @@ namespace NDK.Framework {
 		/// Only the fields (properties) with their CHANGED variable set to true are updated.
 		/// All CHANGED variables are set to false after the update.
 		/// </summary>
-		public void Save() {
+		/// <param name="forceUpdateExistingRecord">If true, the existing record is updated and no history record is created.</param>
+		public void Save(Boolean forceUpdateExistingRecord) {
 			String sofdDatabaseKey = this.framework.GetSystemValue("SofdDirectoryDatabaseKey", "MDM-PROD");
 			Int32 previousHistoryId = this.organisationHistorikId;
 			Boolean dataUpdateExistingRecord = true;
@@ -648,7 +649,7 @@ namespace NDK.Framework {
 				this.sidstAendretChanged = true;
 				this.aktivChanged = true;
 				this.losOrganisationIdChanged = true;
-			} else if ((this.isChanged == true) && (this.sidstAendret.Date.Equals(DateTime.Now.Date) == false)) {
+			} else if ((forceUpdateExistingRecord == false) && (this.isChanged == true) && (this.sidstAendret.Date.Equals(DateTime.Now.Date) == false)) {
 				// Always create a new record (copy to create history), when the data in the database was last updated before today.
 				dataUpdateExistingRecord = false;
 				dataUpdateAllFields = true;
@@ -658,7 +659,7 @@ namespace NDK.Framework {
 				this.aktivFraChanged = true;
 				this.sidstAendret = DateTime.Now;
 				this.sidstAendretChanged = true;
-			} else {
+			} else if (this.isChanged == true) {
 				// Update existing record (no history copy) when it has been updated earlier the same day.
 				dataUpdateExistingRecord = true;
 				dataUpdateAllFields = false;

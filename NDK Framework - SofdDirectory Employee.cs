@@ -228,7 +228,7 @@ namespace NDK.Framework {
 			this.sidstAendret = DateTime.Now.Date;
 			this.adresseBeskyttet = false;
 			this.leder = false;
-			this.intern = false;
+			this.intern = true;
 			this.ekstern = false;
 			this.medUdvalg = false;
 			this.sikkerhedsRepresentant = false;
@@ -839,7 +839,7 @@ namespace NDK.Framework {
 			}
 			set {
 				if (value.Equals(this.cprNummer) == false) {
-					this.cprNummer = value;
+					this.cprNummer = value.Replace("-", String.Empty);
 					this.cprNummerChanged = true;
 					this.isChanged = true;
 				}
@@ -1506,7 +1506,8 @@ namespace NDK.Framework {
 		/// Only the fields (properties) with their CHANGED variable set to true are updated.
 		/// All CHANGED variables are set to false after the update.
 		/// </summary>
-		public void Save() {
+		/// <param name="forceUpdateExistingRecord">If true, the existing record is updated and no history record is created.</param>
+		public void Save(Boolean forceUpdateExistingRecord) {
 			String sofdDatabaseKey = this.framework.GetSystemValue("SofdDirectoryDatabaseKey", "MDM-PROD");
 			Int32 previousHistoryId = this.medarbejderHistorikId;
 			Boolean dataUpdateExistingRecord = true;
@@ -1539,7 +1540,7 @@ namespace NDK.Framework {
 				this.tillidsRepresentantChanged = true;
 				this.tillidsRepresentantSuppleantChanged = true;
 				this.uuidChanged = true;
-			} else if ((this.isChanged == true) && (this.sidstAendret.Date.Equals(DateTime.Now.Date) == false)) {
+			} else if ((forceUpdateExistingRecord == false) && (this.isChanged == true) && (this.sidstAendret.Date.Equals(DateTime.Now.Date) == false)) {
 				// Always create a new record (copy to create history), when the data in the database was last updated before today.
 				dataUpdateExistingRecord = false;
 				dataUpdateAllFields = true;
@@ -1549,7 +1550,7 @@ namespace NDK.Framework {
 				this.aktivFraChanged = true;
 				this.sidstAendret = DateTime.Now;
 				this.sidstAendretChanged = true;
-			} else {
+			} else if (this.isChanged == true) {
 				// Update existing record (no history copy) when it has been updated earlier the same day.
 				dataUpdateExistingRecord = true;
 				dataUpdateAllFields = false;
@@ -2528,6 +2529,24 @@ namespace NDK.Framework {
 		} // SofdEmployeeFilter_OrganisationNavn
 
 	} // SofdEmployeeFilter_OrganisationNavn
+	#endregion
+
+	#region SofdEmployeeFilter_AnsatForhold class
+	/// <summary>
+	/// Employee filter on AnsatForhold.
+	/// </summary>
+	public class SofdEmployeeFilter_AnsatForhold : SqlWhereFilterString {
+
+		/// <summary>
+		/// Employee filter on AnsatForhold.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_AnsatForhold(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_ANSAT_FORHOLD, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_AnsatForhold
+
+	} // SofdEmployeeFilter_AnsatForhold
 	#endregion
 
 	#region SofdEmployeeFilter_LoenKlasse class

@@ -974,6 +974,14 @@ namespace NDK.Framework {
 		} // GetUserMiFareId
 
 		/// <summary>
+		/// Gets the first other mobile number from the user.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		public String GetUserOtherMobile(AdUser user) {
+			return this.framework.GetUserOtherMobile(user);
+		} // GetUserOtherMobile
+
+		/// <summary>
 		/// Sets the CPR number in the user.
 		/// This uses the "ActiveDirectoryCprAttribute" system configuration to determane which field that stores the value.
 		/// This method does not commit the change.
@@ -994,7 +1002,14 @@ namespace NDK.Framework {
 		public void SetUserMiFareId(AdUser user, String miFareId) {
 			this.framework.SetUserMiFareId(user, miFareId);
 		} // SetUserMiFareId
-
+		/// <summary>
+		/// Sets the first other mobile number in the user.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		/// <param name="cprNumber">The CPR number.</param>
+		public void SetUserOtherMobile(AdUser user, String otherMobile) {
+			this.framework.SetUserOtherMobile(user, otherMobile);
+		} // SetUserOtherMobile
 
 		/// <summary>
 		/// Gets the group identified by the group id.

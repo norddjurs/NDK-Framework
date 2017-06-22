@@ -163,7 +163,7 @@ namespace NDK.Framework {
 								}
 
 								if (table[rowIndex][columnIndex] != null) {
-									this.html.AppendLine(table[rowIndex][columnIndex]);
+									this.html.AppendLine(table[rowIndex][columnIndex].Replace(Environment.NewLine, "<br />"));
 								} else {
 									this.html.AppendLine("&nbsp;");
 								}
@@ -223,7 +223,7 @@ namespace NDK.Framework {
 							this.html.AppendLine("<td>");
 							try {
 								for (Int32 columnIndex = 1; columnIndex < table[rowIndex].Count; columnIndex++) {
-									this.html.Append(table[rowIndex][columnIndex].Replace(Environment.NewLine, "<br>"));
+									this.html.Append(table[rowIndex][columnIndex].Replace(Environment.NewLine, "<br />"));
 									if (columnIndex < table[rowIndex].Count - 1) {
 										this.html.Append("<br>");
 									}

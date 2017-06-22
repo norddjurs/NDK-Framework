@@ -113,38 +113,38 @@ namespace NDK.Framework {
 
 				switch (userCprAttribute.ToLower()) {
 					case "extensionattribute1":
-						return user.ExtensionAttribute1;
+						return user.ExtensionAttribute1.FormatStringCpr();
 					case "extensionattribute2":
-						return user.ExtensionAttribute2;
+						return user.ExtensionAttribute2.FormatStringCpr();
 					case "extensionattribute3":
-						return user.ExtensionAttribute3;
+						return user.ExtensionAttribute3.FormatStringCpr();
 					case "extensionattribute4":
-						return user.ExtensionAttribute4;
+						return user.ExtensionAttribute4.FormatStringCpr();
 					case "extensionattribute5":
-						return user.ExtensionAttribute5;
+						return user.ExtensionAttribute5.FormatStringCpr();
 					case "extensionattribute6":
-						return user.ExtensionAttribute6;
+						return user.ExtensionAttribute6.FormatStringCpr();
 					case "extensionattribute7":
-						return user.ExtensionAttribute7;
+						return user.ExtensionAttribute7.FormatStringCpr();
 					case "extensionattribute8":
-						return user.ExtensionAttribute8;
+						return user.ExtensionAttribute8.FormatStringCpr();
 					case "extensionattribute9":
-						return user.ExtensionAttribute9;
+						return user.ExtensionAttribute9.FormatStringCpr();
 					case "extensionattribute10":
-						return user.ExtensionAttribute10;
+						return user.ExtensionAttribute10.FormatStringCpr();
 					case "extensionattribute11":
-						return user.ExtensionAttribute11;
+						return user.ExtensionAttribute11.FormatStringCpr();
 					case "extensionattribute12":
-						return user.ExtensionAttribute12;
+						return user.ExtensionAttribute12.FormatStringCpr();
 					case "extensionattribute13":
-						return user.ExtensionAttribute13;
+						return user.ExtensionAttribute13.FormatStringCpr();
 					case "extensionattribute14":
-						return user.ExtensionAttribute14;
+						return user.ExtensionAttribute14.FormatStringCpr();
 					case "extensionattribute15":
-						return user.ExtensionAttribute15;
+						return user.ExtensionAttribute15.FormatStringCpr();
 					case "employeeid":
 					default:
-						return user.EmployeeId;
+						return user.EmployeeId.FormatStringCpr();
 				}
 			} catch {
 				return String.Empty;
@@ -200,6 +200,18 @@ namespace NDK.Framework {
 		} // GetUserMiFareId
 
 		/// <summary>
+		/// Gets the first other mobile number from the user.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		public String GetUserOtherMobile(AdUser user) {
+			try {
+				return user.OtherMobile[0].FormatStringPhone();
+			} catch {
+				return String.Empty;
+			}
+		} // GetUserOtherMobile
+
+		/// <summary>
 		/// Sets the CPR number in the user.
 		/// This uses the "ActiveDirectoryCprAttribute" system configuration to determane which field that stores the value.
 		/// This method does not commit the change.
@@ -208,6 +220,7 @@ namespace NDK.Framework {
 		/// <param name="cprNumber">The CPR number.</param>
 		public void SetUserCprNumber(AdUser user, String cprNumber) {
 			String userCprAttribute = this.GetSystemValue("ActiveDirectoryCprAttribute", "EmployeeId");
+			cprNumber = cprNumber.FormatStringCpr();
 
 			switch (userCprAttribute.ToLower()) {
 				case "extensionattribute1":
@@ -263,7 +276,7 @@ namespace NDK.Framework {
 		} // SetUserCprNumber
 
 		/// <summary>
-		/// Gets the MiFare identifier int the user.
+		/// Sets the MiFare identifier in the user.
 		/// This uses the "ActiveDirectoryMiFareAttribute" system configuration to determane which field that stores the value.
 		/// This method does not commit the change.
 		/// </summary>
@@ -320,6 +333,21 @@ namespace NDK.Framework {
 					break;
 			}
 		} // SetUserMiFareId
+
+		/// <summary>
+		/// Sets the first other mobile number in the user.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		/// <param name="cprNumber">The CPR number.</param>
+		public void SetUserOtherMobile(AdUser user, String otherMobile) {
+			if ((user.OtherMobile != null) && (user.OtherMobile.Length > 0)) {
+				String[] values = user.OtherMobile;
+				values[0] = otherMobile.FormatStringPhone();
+				user.OtherMobile = values;
+			} else {
+				user.OtherMobile = new String[] { otherMobile.FormatStringPhone() };
+			}
+		} // SetUserOtherMobile
 		#endregion
 
 		#region Public Active Directory group methods.

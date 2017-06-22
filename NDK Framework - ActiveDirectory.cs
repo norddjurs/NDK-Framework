@@ -9,7 +9,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Net.Mail;
+using System.Globalization;
 using System.Security;
 using System.Text;
 
@@ -198,6 +198,13 @@ namespace NDK.Framework {
 			HomeDirectory
 			HomeDrive
 
+			Manager
+			StreetAddress
+			st
+			l
+			postalCode
+			co
+
 				Certificates
 				AdvancedSearchFilter
 				Context
@@ -318,6 +325,27 @@ namespace NDK.Framework {
 				base.ExtensionSet("info", value);
 			}
 		} // Info
+
+		public String SmtpProxyAddress {
+			get {
+				String[] addresses = this.SmtpProxyAddresses;
+				if (addresses.Length > 0) {
+					return addresses[0];
+				} else {
+					return String.Empty;
+				}
+			}
+			set {
+				String[] addresses = this.SmtpProxyAddresses;
+				if (addresses.Length > 0) {
+					addresses[0] = value;
+				} else if (value.IsNullOrWhiteSpace() == false){
+					addresses = new String[] { value };
+				}
+				this.SmtpProxyAddresses = addresses;
+			}
+		} // SmtpProxyAddress
+
 
 		[DirectoryProperty("proxyAddresses")]
 		public String[] SmtpProxyAddresses {
@@ -571,6 +599,95 @@ namespace NDK.Framework {
 				base.ExtensionSet("otherIpPhone", value);
 			}
 		} // OtherIpPhone
+
+		[DirectoryProperty("manager")]
+		public String Manager {
+			get {
+				if (base.ExtensionGet("manager").Length != 1) {
+					return null;
+				} else {
+					return (String)base.ExtensionGet("manager")[0];
+				}
+			}
+			set {
+				base.ExtensionSet("manager", value);
+			}
+		} // Manager
+
+		[DirectoryProperty("streetAddress")]
+		public String Street {
+			get {
+				if (base.ExtensionGet("streetAddress").Length != 1) {
+					return null;
+				} else {
+					return (String)base.ExtensionGet("streetAddress")[0];
+				}
+			}
+			set {
+				base.ExtensionSet("streetAddress", value);
+			}
+		} // Street
+
+		[DirectoryProperty("st")]
+		public String State {
+			get {
+				if (base.ExtensionGet("st").Length != 1) {
+					return null;
+				} else {
+					return (String)base.ExtensionGet("st")[0];
+				}
+			}
+			set {
+				base.ExtensionSet("st", value);
+			}
+		} // State
+
+		[DirectoryProperty("l")]
+		public String City {
+			get {
+				if (base.ExtensionGet("l").Length != 1) {
+					return null;
+				} else {
+					return (String)base.ExtensionGet("l")[0];
+				}
+			}
+			set {
+				base.ExtensionSet("l", value);
+			}
+		} // City
+
+		[DirectoryProperty("postalCode")]
+		public String PostalCode {
+			get {
+				if (base.ExtensionGet("postalCode").Length != 1) {
+					return null;
+				} else {
+					return (String)base.ExtensionGet("postalCode")[0];
+				}
+			}
+			set {
+				base.ExtensionSet("postalCode", value);
+			}
+		} // PostalCode
+
+		[DirectoryProperty("c")]
+		public String Country {
+			get {
+				if (base.ExtensionGet("c").Length != 1) {
+					return null;
+				} else {
+					return (String)base.ExtensionGet("c")[0];
+				}
+			}
+			set {
+				try {
+					RegionInfo region = new RegionInfo(value);
+					base.ExtensionSet("c", region.TwoLetterISORegionName);
+				} catch {
+					base.ExtensionSet("c", value);
+				}
+			}
+		} // Country
 
 		[DirectoryProperty("extensionAttribute1")]
 		public String ExtensionAttribute1 {

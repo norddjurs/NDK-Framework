@@ -11,6 +11,20 @@ namespace NDK.Framework {
 	public static class StringExtensions {
 
 		/// <summary>
+		/// Gets the null value, if the string value is NULL.
+		/// </summary>
+		/// <param name="value">The string.</param>
+		/// <param name="nullValue">The returned value when the string is null.</param>
+		/// <returns></returns>
+		public static String GetNotNull(this String value, String nullValue = "") {
+			if (value == null) {
+				return nullValue;
+			} else {
+				return value;
+			}
+		} // GetNotNull
+
+		/// <summary>
 		/// Gets true if the argumented value is either null, empty or consists entirely of white-spaces.
 		/// </summary>
 		/// <param name="value">The string.</param>
@@ -37,8 +51,8 @@ namespace NDK.Framework {
 	} // DateTimeExtensions
 	#endregion
 
-	#region IDateReader extension class.
-	public static class IDateReaderExtensions {
+	#region IDataReader extension class.
+	public static class IDataReaderExtensions {
 
 		/// <summary>
 		/// Gets the boolean value of the field identified by the name.
@@ -190,7 +204,86 @@ namespace NDK.Framework {
 			}
 		} // GetString
 
-	} // IDateReaderExtensions
+	} // IDataReaderExtensions
+	#endregion
+
+	#region Format extension class.
+	public static class FormatExtensions {
+
+		/// <summary>
+		/// Format a string containing a CPR number to standard string "XXXXXX-XXXX".
+		/// </summary>
+		/// <param name="value">The string to format.</param>
+		/// <returns>The formatted string.</returns>
+		public static String FormatStringCpr(this String value) {
+			try {
+				value				= value.Trim().Replace(" ", "").Replace("-", "");
+				return String.Format("{0:000000-0000}", Int64.Parse(value.Substring(0, 10)));
+			} catch {
+				return String.Empty;
+			}
+		} // FormatStringCpr
+
+		/// <summary>
+		/// Format a string containing a phone number to standard string "XX XX XX XX".
+		/// </summary>
+		/// <param name="value">The string to format.</param>
+		/// <returns>The formatted string.</returns>
+		public static String FormatStringPhone(this String value) {
+			try {
+				if (value.IsNullOrWhiteSpace() == false) {
+					// Trim the string.
+					value	= value.Replace(" ", "");
+					if (value.Length <= 8) {
+						return String.Format("{0:## ## ## ##}", Int64.Parse(value.Substring(0, 8)));
+					} else {
+						return String.Format("{0:## ## ## ##} {1}", Int64.Parse(value.Substring(0, 8)), value.Substring(8));
+					}
+				} else {
+					return String.Empty;
+				}
+			} catch {
+				return String.Empty;
+			}
+		} // FormatStringPhone
+
+		/// <summary>
+		/// Format a date to standard string "dd.MM.yyyy".
+		/// </summary>
+		/// <param name="value">The DateTime to format.</param>
+		/// <returns>The formatted string.</returns>
+		public static String FormatStringDate(this DateTime value) {
+			try {
+				if ((value.IsMinOrMax() == false) &&
+					(value.Date.Year > 1900)) {
+					return value.ToString("dd.MM.yyyy");
+				} else {
+					return String.Empty;
+				}
+			} catch {
+				return String.Empty;
+			}
+		} // FormatStringDate
+
+		/// <summary>
+		/// Format a date/time to standard string "dd.MM.yyyy  HH.mm".
+		/// </summary>
+		/// <param name="value">The DateTime to format.</param>
+		/// <returns>The formatted string.</returns>
+		public static String FormatStringDateTime(this DateTime value) {
+			try {
+				if ((value.IsMinOrMax() == false) &&
+					(value.Date.Year > 1900)) {
+					return value.ToString("dd.MM.yyyy  HH.mm");
+				} else {
+					return String.Empty;
+				}
+			} catch {
+				return String.Empty;
+			}
+		} // FormatStringDateTime
+
+	} // FormatExtensions
 	#endregion
 
 } // NDK.Framework

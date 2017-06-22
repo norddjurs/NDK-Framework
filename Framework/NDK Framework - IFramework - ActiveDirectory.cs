@@ -64,6 +64,12 @@ namespace NDK.Framework {
 		String GetUserMiFareId(AdUser user);
 
 		/// <summary>
+		/// Gets the first other mobile number from the user.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		String GetUserOtherMobile(AdUser user);
+
+		/// <summary>
 		/// Sets the CPR number in the user.
 		/// This uses the "ActiveDirectoryCprAttribute" system configuration to determane which field that stores the value.
 		/// This method does not commit the change.
@@ -73,13 +79,20 @@ namespace NDK.Framework {
 		void SetUserCprNumber(AdUser user, String cprNumber);
 
 		/// <summary>
-		/// Gets the MiFare identifier int the user.
+		/// Sets the MiFare identifier in the user.
 		/// This uses the "ActiveDirectoryMiFareAttribute" system configuration to determane which field that stores the value.
 		/// This method does not commit the change.
 		/// </summary>
 		/// <param name="user">The user.</param>
 		/// <param name="miFareId">The MiFare identifier.</param>
 		void SetUserMiFareId(AdUser user, String miFareId);
+
+		/// <summary>
+		/// Sets the first other mobile number in the user.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		/// <param name="cprNumber">The CPR number.</param>
+		void SetUserOtherMobile(AdUser user, String otherMobile);
 		#endregion
 
 		#region Active Directory group methods.
