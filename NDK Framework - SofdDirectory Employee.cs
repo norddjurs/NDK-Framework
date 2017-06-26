@@ -799,7 +799,7 @@ namespace NDK.Framework {
 				return this.opusBrugerNavn;
 			}
 			set {
-				if (value.Equals(this.opusBrugerNavn) == false) {
+				if (value.EqualsHandleNull(this.opusBrugerNavn) == false) {
 					this.opusBrugerNavn = value;
 					this.opusBrugerNavnChanged = true;
 					this.isChanged = true;
@@ -812,7 +812,7 @@ namespace NDK.Framework {
 				return this.adBrugerNavn;
 			}
 			set {
-				if (value.Equals(this.adBrugerNavn) == false) {
+				if (value.EqualsHandleNull(this.adBrugerNavn) == false) {
 					this.adBrugerNavn = value;
 					this.adBrugerNavnChanged = true;
 					this.isChanged = true;
@@ -838,11 +838,13 @@ namespace NDK.Framework {
 				return this.cprNummer;
 			}
 			set {
-				if (value.Equals(this.cprNummer) == false) {
-					this.cprNummer = value.Replace("-", String.Empty);
-					this.cprNummerChanged = true;
-					this.isChanged = true;
-				}
+				try {
+					if (value.Replace("-", String.Empty).Equals(this.cprNummer.Replace("-", String.Empty)) == false) {
+						this.cprNummer = value.Replace("-", String.Empty);
+						this.cprNummerChanged = true;
+						this.isChanged = true;
+					}
+				} catch { }
 			}
 		} // CprNummer
 
@@ -864,7 +866,7 @@ namespace NDK.Framework {
 				return this.forNavn;
 			}
 			set {
-				if (value.Equals(this.forNavn) == false) {
+				if (value.EqualsHandleNull(this.forNavn) == false) {
 					this.forNavn = value;
 					this.forNavnChanged = true;
 					this.isChanged = true;
@@ -877,7 +879,7 @@ namespace NDK.Framework {
 				return this.efterNavn;
 			}
 			set {
-				if (value.Equals(this.efterNavn) == false) {
+				if (value.EqualsHandleNull(this.efterNavn) == false) {
 					this.efterNavn = value;
 					this.efterNavnChanged = true;
 					this.isChanged = true;
@@ -890,7 +892,7 @@ namespace NDK.Framework {
 				return this.navn;
 			}
 			set {
-				if (value.Equals(this.navn) == false) {
+				if (value.EqualsHandleNull(this.navn) == false) {
 					this.navn = value;
 					this.navnChanged = true;
 					this.isChanged = true;
@@ -903,7 +905,7 @@ namespace NDK.Framework {
 				return this.kaldeNavn;
 			}
 			set {
-				if (value.Equals(this.kaldeNavn) == false) {
+				if (value.EqualsHandleNull(this.kaldeNavn) == false) {
 					this.kaldeNavn = value;
 					this.kaldeNavnChanged = true;
 					this.isChanged = true;
@@ -939,7 +941,7 @@ namespace NDK.Framework {
 				return this.adresse;
 			}
 			set {
-				if (value.Equals(this.adresse) == false) {
+				if (value.EqualsHandleNull(this.adresse) == false) {
 					this.adresse = value;
 					this.adresseChanged = true;
 					this.isChanged = true;
@@ -952,7 +954,7 @@ namespace NDK.Framework {
 				return this.stedNavn;
 			}
 			set {
-				if (value.Equals(this.stedNavn) == false) {
+				if (value.EqualsHandleNull(this.stedNavn) == false) {
 					this.stedNavn = value;
 					this.stedNavnChanged = true;
 					this.isChanged = true;
@@ -965,7 +967,7 @@ namespace NDK.Framework {
 				return this.postNummer;
 			}
 			set {
-				if (value.Equals(this.postNummer) == false) {
+				if (value.EqualsHandleNull(this.postNummer) == false) {
 					this.postNummer = value;
 					this.postNummerChanged = true;
 					this.isChanged = true;
@@ -978,7 +980,7 @@ namespace NDK.Framework {
 				return this.by;
 			}
 			set {
-				if (value.Equals(this.by) == false) {
+				if (value.EqualsHandleNull(this.by) == false) {
 					this.by = value;
 					this.byChanged = true;
 					this.isChanged = true;
@@ -991,7 +993,7 @@ namespace NDK.Framework {
 				return this.land;
 			}
 			set {
-				if (value.Equals(this.land) == false) {
+				if (value.EqualsHandleNull(this.land) == false) {
 					this.land = value;
 					this.landChanged = true;
 					this.isChanged = true;
@@ -1017,7 +1019,7 @@ namespace NDK.Framework {
 				return this.telefonNummer;
 			}
 			set {
-				if (value.Equals(this.telefonNummer) == false) {
+				if (value.EqualsHandleNull(this.telefonNummer) == false) {
 					this.telefonNummer = value;
 					this.telefonNummerChanged = true;
 					this.isChanged = true;
@@ -1030,7 +1032,7 @@ namespace NDK.Framework {
 				return this.mobilNummer;
 			}
 			set {
-				if (value.Equals(this.mobilNummer) == false) {
+				if (value.EqualsHandleNull(this.mobilNummer) == false) {
 					this.mobilNummer = value;
 					this.mobilNummerChanged = true;
 					this.isChanged = true;
@@ -1043,7 +1045,7 @@ namespace NDK.Framework {
 				return this.mobilNummer2;
 			}
 			set {
-				if (value.Equals(this.mobilNummer2) == false) {
+				if (value.EqualsHandleNull(this.mobilNummer2) == false) {
 					this.mobilNummer2 = value;
 					this.mobilNummer2Changed = true;
 					this.isChanged = true;
@@ -1056,7 +1058,7 @@ namespace NDK.Framework {
 				return this.epost;
 			}
 			set {
-				if (value.Equals(this.epost) == false) {
+				if (value.EqualsHandleNull(this.epost) == false) {
 					this.epost = value;
 					this.epostChanged = true;
 					this.isChanged = true;
@@ -1069,7 +1071,7 @@ namespace NDK.Framework {
 				return this.afdelingsNummer;
 			}
 			set {
-				if (value.Equals(this.afdelingsNummer) == false) {
+				if (value.EqualsHandleNull(this.afdelingsNummer) == false) {
 					this.afdelingsNummer = value;
 					this.afdelingsNummerChanged = true;
 					this.isChanged = true;
@@ -1082,7 +1084,7 @@ namespace NDK.Framework {
 				return this.gruppeNummer;
 			}
 			set {
-				if (value.Equals(this.gruppeNummer) == false) {
+				if (value.EqualsHandleNull(this.gruppeNummer) == false) {
 					this.gruppeNummer = value;
 					this.gruppeNummerChanged = true;
 					this.isChanged = true;
@@ -1108,7 +1110,7 @@ namespace NDK.Framework {
 				return this.stillingsBetegnelse;
 			}
 			set {
-				if (value.Equals(this.stillingsBetegnelse) == false) {
+				if (value.EqualsHandleNull(this.stillingsBetegnelse) == false) {
 					this.stillingsBetegnelse = value;
 					this.stillingsBetegnelseChanged = true;
 					this.isChanged = true;
@@ -1147,7 +1149,7 @@ namespace NDK.Framework {
 				return this.organisationKortNavn;
 			}
 			set {
-				if (value.Equals(this.organisationKortNavn) == false) {
+				if (value.EqualsHandleNull(this.organisationKortNavn) == false) {
 					this.organisationKortNavn = value;
 					this.organisationKortNavnChanged = true;
 					this.isChanged = true;
@@ -1160,7 +1162,7 @@ namespace NDK.Framework {
 				return this.organisationNavn;
 			}
 			set {
-				if (value.Equals(this.organisationNavn) == false) {
+				if (value.EqualsHandleNull(this.organisationNavn) == false) {
 					this.organisationNavn = value;
 					this.organisationNavnChanged = true;
 					this.isChanged = true;
@@ -1173,7 +1175,7 @@ namespace NDK.Framework {
 				return this.ansatForhold;
 			}
 			set {
-				if (value.Equals(this.ansatForhold) == false) {
+				if (value.EqualsHandleNull(this.ansatForhold) == false) {
 					this.ansatForhold = value;
 					this.ansatForholdChanged = true;
 					this.isChanged = true;
@@ -1186,7 +1188,7 @@ namespace NDK.Framework {
 				return this.ansatForholdText;
 			}
 			set {
-				if (value.Equals(this.ansatForholdText) == false) {
+				if (value.EqualsHandleNull(this.ansatForholdText) == false) {
 					this.ansatForholdText = value;
 					this.ansatForholdTextChanged = true;
 					this.isChanged = true;
@@ -1199,7 +1201,7 @@ namespace NDK.Framework {
 				return this.loenKlasse;
 			}
 			set {
-				if (value.Equals(this.loenKlasse) == false) {
+				if (value.EqualsHandleNull(this.loenKlasse) == false) {
 					this.loenKlasse = value;
 					this.loenKlasseChanged = true;
 					this.isChanged = true;
@@ -1342,7 +1344,7 @@ namespace NDK.Framework {
 				return this.miFareId;
 			}
 			set {
-				if (value.Equals(this.miFareId) == false) {
+				if (value.EqualsHandleNull(this.miFareId) == false) {
 					this.miFareId = value;
 					this.miFareIdChanged = true;
 					this.isChanged = true;
@@ -1381,7 +1383,7 @@ namespace NDK.Framework {
 				return this.fakturaGodkenderNiveau1;
 			}
 			set {
-				if (value.Equals(this.fakturaGodkenderNiveau1) == false) {
+				if (value.EqualsHandleNull(this.fakturaGodkenderNiveau1) == false) {
 					this.fakturaGodkenderNiveau1 = value;
 					this.fakturaGodkenderNiveau1Changed = true;
 					this.isChanged = true;
@@ -1394,7 +1396,7 @@ namespace NDK.Framework {
 				return this.fakturaGodkenderNiveau1Beskrivelse;
 			}
 			set {
-				if (value.Equals(this.fakturaGodkenderNiveau1Beskrivelse) == false) {
+				if (value.EqualsHandleNull(this.fakturaGodkenderNiveau1Beskrivelse) == false) {
 					this.fakturaGodkenderNiveau1Beskrivelse = value;
 					this.fakturaGodkenderNiveau1BeskrivelseChanged = true;
 					this.isChanged = true;
@@ -1407,7 +1409,7 @@ namespace NDK.Framework {
 				return this.fakturaGodkenderNiveau2;
 			}
 			set {
-				if (value.Equals(this.fakturaGodkenderNiveau2) == false) {
+				if (value.EqualsHandleNull(this.fakturaGodkenderNiveau2) == false) {
 					this.fakturaGodkenderNiveau2 = value;
 					this.fakturaGodkenderNiveau2Changed = true;
 					this.isChanged = true;
@@ -1420,7 +1422,7 @@ namespace NDK.Framework {
 				return this.fakturaGodkenderNiveau2Beskrivelse;
 			}
 			set {
-				if (value.Equals(this.fakturaGodkenderNiveau2Beskrivelse) == false) {
+				if (value.EqualsHandleNull(this.fakturaGodkenderNiveau2Beskrivelse) == false) {
 					this.fakturaGodkenderNiveau2Beskrivelse = value;
 					this.fakturaGodkenderNiveau2BeskrivelseChanged = true;
 					this.isChanged = true;
@@ -1446,7 +1448,7 @@ namespace NDK.Framework {
 				return this.naermesteLederCprNummer;
 			}
 			set {
-				if (value.Equals(this.naermesteLederCprNummer) == false) {
+				if (value.EqualsHandleNull(this.naermesteLederCprNummer) == false) {
 					this.naermesteLederCprNummer = value;
 					this.naermesteLederCprNummerChanged = true;
 					this.isChanged = true;
@@ -1459,7 +1461,7 @@ namespace NDK.Framework {
 				return this.naermesteLederNavn;
 			}
 			set {
-				if (value.Equals(this.naermesteLederNavn) == false) {
+				if (value.EqualsHandleNull(this.naermesteLederNavn) == false) {
 					this.naermesteLederNavn = value;
 					this.naermesteLederNavnChanged = true;
 					this.isChanged = true;
@@ -1472,7 +1474,7 @@ namespace NDK.Framework {
 				return this.naermesteLederAdBrugerNavn;
 			}
 			set {
-				if (value.Equals(this.naermesteLederAdBrugerNavn) == false) {
+				if (value.EqualsHandleNull(this.naermesteLederAdBrugerNavn) == false) {
 					this.naermesteLederAdBrugerNavn = value;
 					this.naermesteLederAdBrugerNavnChanged = true;
 					this.isChanged = true;

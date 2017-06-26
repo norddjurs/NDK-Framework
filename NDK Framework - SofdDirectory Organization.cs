@@ -341,7 +341,7 @@ namespace NDK.Framework {
 				return this.kortNavn;
 			}
 			set {
-				if (value.Equals(this.kortNavn) == false) {
+				if (value.EqualsHandleNull(this.kortNavn) == false) {
 					this.kortNavn = value;
 					this.aktivChanged = true;
 					this.isChanged = true;
@@ -354,7 +354,7 @@ namespace NDK.Framework {
 				return this.navn;
 			}
 			set {
-				if (value.Equals(this.navn) == false) {
+				if (value.EqualsHandleNull(this.navn) == false) {
 					this.navn = value;
 					this.aktivChanged = true;
 					this.isChanged = true;
@@ -362,12 +362,35 @@ namespace NDK.Framework {
 			}
 		} // Navn
 
+		public String AdresseText {
+			get {
+				String resultAddress = this.gade ?? String.Empty;
+				String resultPlace = this.stedNavn ?? String.Empty;
+				String resultPostNumber = this.postNummer.ToString() ?? String.Empty;
+				String resultCity = this.by ?? String.Empty;
+				String resultCountry = (this.by.IsNullOrWhiteSpace() == false) ? "DK" : String.Empty;
+
+				// First line: Address, Place
+				String result1 = resultAddress + ", " + resultPlace;
+				result1.Trim(',');
+				result1.Trim();
+
+				// Second line: Country PostNumber City
+				String result2 = resultCountry + "-" + resultPostNumber + "  " + resultCity;
+				result1.Trim('-');
+				result1.Trim();
+
+				// Return the address text.
+				return result1 + Environment.NewLine + result2;
+			}
+		} // AdresseText
+
 		public String Gade {
 			get {
 				return this.gade;
 			}
 			set {
-				if (value.Equals(this.gade) == false) {
+				if (value.EqualsHandleNull(this.gade) == false) {
 					this.gade = value;
 					this.aktivChanged = true;
 					this.isChanged = true;
@@ -380,7 +403,7 @@ namespace NDK.Framework {
 				return this.stedNavn;
 			}
 			set {
-				if (value.Equals(this.stedNavn) == false) {
+				if (value.EqualsHandleNull(this.stedNavn) == false) {
 					this.stedNavn = value;
 					this.aktivChanged = true;
 					this.isChanged = true;
@@ -406,7 +429,7 @@ namespace NDK.Framework {
 				return this.by;
 			}
 			set {
-				if (value.Equals(this.by) == false) {
+				if (value.EqualsHandleNull(this.by) == false) {
 					this.by = value;
 					this.aktivChanged = true;
 					this.isChanged = true;
@@ -419,7 +442,7 @@ namespace NDK.Framework {
 				return this.telefonNummer;
 			}
 			set {
-				if (value.Equals(this.telefonNummer) == false) {
+				if (value.EqualsHandleNull(this.telefonNummer) == false) {
 					this.telefonNummer = value;
 					this.aktivChanged = true;
 					this.isChanged = true;
@@ -510,7 +533,7 @@ namespace NDK.Framework {
 				return this.organisationType;
 			}
 			set {
-				if (value.Equals(this.organisationType) == false) {
+				if (value.EqualsHandleNull(this.organisationType) == false) {
 					this.organisationType = value;
 					this.aktivChanged = true;
 					this.isChanged = true;
@@ -575,7 +598,7 @@ namespace NDK.Framework {
 				return this.lederNavn;
 			}
 			set {
-				if (value.Equals(this.lederNavn) == false) {
+				if (value.EqualsHandleNull(this.lederNavn) == false) {
 					this.lederNavn = value;
 					this.aktivChanged = true;
 					this.isChanged = true;
@@ -588,7 +611,7 @@ namespace NDK.Framework {
 				return this.lederAdBrugerNavn;
 			}
 			set {
-				if (value.Equals(this.lederAdBrugerNavn) == false) {
+				if (value.EqualsHandleNull(this.lederAdBrugerNavn) == false) {
 					this.lederAdBrugerNavn = value;
 					this.aktivChanged = true;
 					this.isChanged = true;

@@ -11,6 +11,23 @@ namespace NDK.Framework {
 	public static class StringExtensions {
 
 		/// <summary>
+		/// Gets true if the two string values are equal.
+		/// This method handles NULL values.
+		/// </summary>
+		/// <param name="value1">The first string.</param>
+		/// <param name="value2">The other string.</param>
+		/// <returns></returns>
+		public static Boolean EqualsHandleNull(this String value1, String value2) {
+			if ((value1 == null) && (value2 == null)) {
+				return true;
+			} else if ((value1 == null) || (value2 == null)) {
+				return false;
+			} else {
+				return value1.Equals(value2);
+			}
+		} // EqualsHandleNull
+
+		/// <summary>
 		/// Gets the null value, if the string value is NULL.
 		/// </summary>
 		/// <param name="value">The string.</param>
