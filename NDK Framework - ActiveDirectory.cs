@@ -353,7 +353,7 @@ namespace NDK.Framework {
 				try {
 					//	Get all SMTP addresses.
 					List<String> addresses = new List<String>();
-					foreach (String address in (String[])base.ExtensionGet("proxyAddresses")) {
+					foreach (String address in (Object[])base.ExtensionGet("proxyAddresses")) {
 						if (address.Trim().StartsWith("SMTP:") == true) {
 							// Always insert the primary address as the first item.
 							addresses.Insert(0, address.Trim().Substring(5));
@@ -373,7 +373,7 @@ namespace NDK.Framework {
 				// Replace all SMTP addresses with the values.
 				// Get all non SMTP addresses.
 				List<String> addresses = new List<String>();
-				foreach (String address in (String[])base.ExtensionGet("proxyAddresses")) {
+				foreach (String address in (Object[])base.ExtensionGet("proxyAddresses")) {
 					if (address.Trim().ToLower().StartsWith("smtp:") == false) {
 						addresses.Add(address.Trim());
 					}

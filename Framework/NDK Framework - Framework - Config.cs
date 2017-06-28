@@ -70,6 +70,20 @@ namespace NDK.Framework {
 		/// If more then one value is associated with the empty guid and key, the first value is returned.
 		/// If no value is associated with the empty guid and key, the default value is returned.
 		/// 
+		/// The value is parsed as a Int64. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		public Int64 GetSystemValue(String key, Int64 defaultValue) {
+			return this.GetConfigValue(Guid.Empty, key, defaultValue);
+		} // GetSystemValue
+
+		/// <summary>
+		/// Gets the system configuration value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// 
 		/// The value is parsed as a DateTime. The default value is returned on parse errors.
 		/// </summary>
 		/// <param name="key">The key.</param>
@@ -130,6 +144,15 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
 		public void SetSystemValue(String key, Int32 value) {
+			this.SetConfigValues(Guid.Empty, key, value.ToString());
+		} // SetSystemValue
+
+		/// <summary>
+		/// Sets the system configuration value associated with the empty guid and key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetSystemValue(String key, Int64 value) {
 			this.SetConfigValues(Guid.Empty, key, value.ToString());
 		} // SetSystemValue
 
@@ -204,6 +227,20 @@ namespace NDK.Framework {
 		/// If more then one value is associated with the framework class guid and key, the first value is returned.
 		/// If no value is associated with the framework class guid and key, the default value is returned.
 		/// 
+		/// The value is parsed as a Int64. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		public Int64 GetLocalValue(String key, Int64 defaultValue) {
+			return this.GetConfigValue(this.GetGuid(), key, defaultValue);
+		} // GetLocalValue
+
+		/// <summary>
+		/// Gets the local configuration value associated with the framework class guid and key.
+		/// If more then one value is associated with the framework class guid and key, the first value is returned.
+		/// If no value is associated with the framework class guid and key, the default value is returned.
+		/// 
 		/// The value is parsed as a DateTime. The default value is returned on parse errors.
 		/// </summary>
 		/// <param name="key">The key.</param>
@@ -264,6 +301,15 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
 		public void SetLocalValue(String key, Int32 value) {
+			this.SetConfigValues(this.GetGuid(), key, value.ToString());
+		} // SetLocalValue
+
+		/// <summary>
+		/// Sets the local configuration value associated with the framework class guid and key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetLocalValue(String key, Int64 value) {
 			this.SetConfigValues(this.GetGuid(), key, value.ToString());
 		} // SetLocalValue
 
@@ -403,6 +449,27 @@ namespace NDK.Framework {
 		/// If more then one value is associated with the guid and key, the first value is returned.
 		/// If no value is associated with the guid and key, the default value is returned.
 		/// 
+		/// The value is parsed as a Int64. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value (null).</param>
+		/// <returns>The value.</returns>
+		public Int64 GetConfigValue(Guid guid, String key, Int64 defaultValue) {
+			try {
+				String value = this.GetConfigValue(guid, key);
+				return Int64.Parse(value);
+			} catch {
+				// Return the default value.
+				return defaultValue;
+			}
+		} // GetConfigValue
+
+		/// <summary>
+		/// Gets the configuration value associated with the guid and key.
+		/// If more then one value is associated with the guid and key, the first value is returned.
+		/// If no value is associated with the guid and key, the default value is returned.
+		/// 
 		/// The value is parsed as a DateTime. The default value is returned on parse errors.
 		/// </summary>
 		/// <param name="guid">The guid.</param>
@@ -509,6 +576,16 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
 		public void SetConfigValue(Guid guid, String key, Int32 value) {
+			this.SetConfigValues(guid, key, value.ToString());
+		} // SetConfigValue
+
+		/// <summary>
+		/// Sets the configuration value associated with the guid and key.
+		/// </summary>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetConfigValue(Guid guid, String key, Int64 value) {
 			this.SetConfigValues(guid, key, value.ToString());
 		} // SetConfigValue
 

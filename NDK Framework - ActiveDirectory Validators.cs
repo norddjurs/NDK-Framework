@@ -13,6 +13,8 @@ namespace NDK.Framework {
 	/// </summary>
 	public class ActiveDirectoryUserValidator {
 		private IFramework framework;
+		private String keyPrefix = String.Empty;
+		private String keySufflix = String.Empty;
 
 		private Boolean configFailOnGroupNotFound = true;
 
@@ -47,21 +49,22 @@ namespace NDK.Framework {
 		/// <param name="keySufflix">The sufflix added to the configuration keys.</param>
 		public ActiveDirectoryUserValidator(IFramework framework, String keyPrefix, String keySufflix = null) {
 			this.framework = framework;
+			this.keyPrefix = keyPrefix;
+			this.keySufflix = keySufflix;
 
-			if (keyPrefix == null) {
-				keyPrefix = String.Empty;
+			if (this.keyPrefix == null) {
+				this.keyPrefix = String.Empty;
 			}
 
-			if (keySufflix == null) {
-				keySufflix = String.Empty;
+			if (this.keySufflix == null) {
+				this.keySufflix = String.Empty;
 			}
 
-			this.configFailOnGroupNotFound = this.framework.GetLocalValue(keyPrefix + "FailOnGroupNotFound" + keySufflix, true);
-
-			this.configWhiteGroupOneStrings = this.framework.GetLocalValues(keyPrefix + "WhiteGroupsOne" + keySufflix);
-			this.configWhiteGroupAllStrings = this.framework.GetLocalValues(keyPrefix + "WhiteGroupsAll" + keySufflix);
-			this.configBlackGroupOneStrings = this.framework.GetLocalValues(keyPrefix + "BlackGroupsOne" + keySufflix);
-			this.configBlackGroupAllStrings = this.framework.GetLocalValues(keyPrefix + "BlackGroupsAll" + keySufflix);
+			this.configFailOnGroupNotFound = this.framework.GetLocalValue(this.keyPrefix + "FailOnGroupNotFound" + this.keySufflix, true);
+			this.configWhiteGroupOneStrings = this.framework.GetLocalValues(this.keyPrefix + "WhiteGroupsOne" + this.keySufflix);
+			this.configWhiteGroupAllStrings = this.framework.GetLocalValues(this.keyPrefix + "WhiteGroupsAll" + this.keySufflix);
+			this.configBlackGroupOneStrings = this.framework.GetLocalValues(this.keyPrefix + "BlackGroupsOne" + this.keySufflix);
+			this.configBlackGroupAllStrings = this.framework.GetLocalValues(this.keyPrefix + "BlackGroupsAll" + this.keySufflix);
 
 			this.configWhiteGroupOneGroups = new List<AdGroup>();
 			this.configWhiteGroupAllGroups = new List<AdGroup>();
@@ -295,6 +298,18 @@ namespace NDK.Framework {
 				return false;
 			}
 		} // ValidateUser
+
+		/// <summary>
+		/// Adds the options to the list, intended to be used by the HtmlBuilder.AppendVerticalTable method.
+		/// </summary>
+		/// <param name="table">The list containing the table data.</param>
+		public void AddOptionsToHtmlBuilderVerticalTable(List<List<String>> table) {
+			table.Add(new List<String>() { this.keyPrefix + "FailOnGroupNotFound" + this.keySufflix, this.configFailOnGroupNotFound.ToString() });
+			table.Add(new List<String>() { this.keyPrefix + "WhiteGroupsOne" + this.keySufflix, String.Join(Environment.NewLine, this.configWhiteGroupOneStrings) });
+			table.Add(new List<String>() { this.keyPrefix + "WhiteGroupsAll" + this.keySufflix, String.Join(Environment.NewLine, this.configWhiteGroupAllStrings) });
+			table.Add(new List<String>() { this.keyPrefix + "BlackGroupsOne" + this.keySufflix, String.Join(Environment.NewLine, this.configBlackGroupOneStrings) });
+			table.Add(new List<String>() { this.keyPrefix + "BlackGroupsAll" + this.keySufflix, String.Join(Environment.NewLine, this.configBlackGroupAllStrings) });
+		} // AddOptionsToHtmlBuilderVerticalTable
 		#endregion
 
 	} // ActiveDirectoryUserValidator

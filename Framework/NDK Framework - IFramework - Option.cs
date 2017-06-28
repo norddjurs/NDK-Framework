@@ -47,6 +47,18 @@ namespace NDK.Framework {
 		/// If more then one value is associated with the framework class guid and key, the first value is returned.
 		/// If no value is associated with the framework class guid and key, the default value is returned.
 		/// 
+		/// The value is parsed as a Int64. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value.</param>
+		/// <returns>The value.</returns>
+		Int64 GetOptionValue(String key, Int64 defaultValue);
+
+		/// <summary>
+		/// Gets the user option value associated with the framework class guid and key.
+		/// If more then one value is associated with the framework class guid and key, the first value is returned.
+		/// If no value is associated with the framework class guid and key, the default value is returned.
+		/// 
 		/// The value is parsed as a DateTime. The default value is returned on parse errors.
 		/// </summary>
 		/// <param name="key">The key.</param>
@@ -97,6 +109,13 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
 		void SetOptionValue(String key, Int32 value);
+
+		/// <summary>
+		/// Sets the user option value associated with the framework class guid and the key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		void SetOptionValue(String key, Int64 value);
 
 		/// <summary>
 		/// Sets the user option value associated with the framework class guid and the key.

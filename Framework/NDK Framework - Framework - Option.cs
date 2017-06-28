@@ -68,6 +68,20 @@ namespace NDK.Framework {
 		/// If more then one value is associated with the empty guid and key, the first value is returned.
 		/// If no value is associated with the empty guid and key, the default value is returned.
 		/// 
+		/// The value is parsed as a Int64. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value.</param>
+		/// <returns>The value.</returns>
+		public Int64 GetOptionValue(String key, Int64 defaultValue) {
+			return this.GetOptionValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey, this.GetGuid(), key, defaultValue);
+		} // GetOptionValue
+
+		/// <summary>
+		/// Gets the user option value associated with the empty guid and key.
+		/// If more then one value is associated with the empty guid and key, the first value is returned.
+		/// If no value is associated with the empty guid and key, the default value is returned.
+		/// 
 		/// The value is parsed as a DateTime. The default value is returned on parse errors.
 		/// </summary>
 		/// <param name="key">The key.</param>
@@ -128,6 +142,15 @@ namespace NDK.Framework {
 		/// <param name="key">The key.</param>
 		/// <param name="value">The value</param>
 		public void SetOptionValue(String key, Int32 value) {
+			this.SetOptionValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey, this.GetGuid(), key, value);
+		} // SetOptionValue
+
+		/// <summary>
+		/// Sets the user option value associated with the framework class guid and the key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		public void SetOptionValue(String key, Int64 value) {
 			this.SetOptionValue(RegistryHive.CurrentUser, this.defaultRegistryUserKey, this.GetGuid(), key, value);
 		} // SetOptionValue
 
@@ -274,6 +297,40 @@ namespace NDK.Framework {
 					return (Int32)value;
 				} else {
 					return Int32.Parse(value.ToString());
+				}
+			} catch (Exception exception) {
+				// Log exception.
+				this.LogError(exception);
+
+				// Return default value.
+				return defaultValue;
+			}
+		} // GetOptionValue
+
+		/// <summary>
+		/// Gets the user option value associated with the guid and key.
+		/// If more then one value is associated with the guid and key, the first value is returned.
+		/// If no value is associated with the guid and key, the default value is returned.
+		/// 
+		/// The value is parsed as a Int64. The default value is returned on parse errors.
+		/// </summary>
+		/// <param name="registryHive">The registry hive.</param>
+		/// <param name="registryKey">The registry key.</param>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="defaultValue">The optional default value.</param>
+		/// <returns>The value.</returns>
+		private Int64 GetOptionValue(RegistryHive registryHive, String registryKey, Guid guid, String key, Int64 defaultValue) {
+			try {
+				// Log.
+				this.LogInternal("Option: Read integer value for key '{1}' in guid '{0}'.", guid, key);
+
+				// Get data.
+				Object value = this.GetValue(RegistryHive.CurrentUser, registryKey + "\\" + guid.ToString(), key, RegistryView.Registry64, defaultValue, true);
+				if (value is Int64) {
+					return (Int64)value;
+				} else {
+					return Int64.Parse(value.ToString());
 				}
 			} catch (Exception exception) {
 				// Log exception.
@@ -459,6 +516,31 @@ namespace NDK.Framework {
 				// Set data.
 				if (value >= 0) {
 					this.SetValue(RegistryHive.CurrentUser, registryKey + "\\" + guid.ToString(), key, value, RegistryValueKind.DWord, RegistryView.Registry64, true);
+				} else {
+					this.SetValue(RegistryHive.CurrentUser, registryKey + "\\" + guid.ToString(), key, value, RegistryValueKind.String, RegistryView.Registry64, true);
+				}
+			} catch (Exception exception) {
+				// Log exception.
+				this.LogError(exception);
+			}
+		} // SetOptionValue
+
+		/// <summary>
+		/// Sets the user option value associated with the guid and key.
+		/// </summary>
+		/// <param name="registryHive">The registry hive.</param>
+		/// <param name="registryKey">The registry key.</param>
+		/// <param name="guid">The guid.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value</param>
+		private void SetOptionValue(RegistryHive registryHive, String registryKey, Guid guid, String key, Int64 value) {
+			try {
+				// Log.
+				this.LogInternal("Option: Write integer value for key '{1}' in guid '{0}'.", guid, key);
+
+				// Set data.
+				if (value >= 0) {
+					this.SetValue(RegistryHive.CurrentUser, registryKey + "\\" + guid.ToString(), key, value, RegistryValueKind.QWord, RegistryView.Registry64, true);
 				} else {
 					this.SetValue(RegistryHive.CurrentUser, registryKey + "\\" + guid.ToString(), key, value, RegistryValueKind.String, RegistryView.Registry64, true);
 				}

@@ -2119,6 +2119,24 @@ namespace NDK.Framework {
 	} // SofdEmployeeFilter_Aktiv
 	#endregion
 
+	#region SofdEmployeeFilter_SenestAktiv class
+	/// <summary>
+	/// Employee filter on SenestAktiv.
+	/// </summary>
+	public class SofdEmployeeFilter_SenestAktiv : SqlWhereFilterInt32 {
+
+		/// <summary>
+		/// Employee filter on SenestAktiv.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_SenestAktiv(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Boolean filterValue) : base(filterOperator, SofdEmployee.FIELD_SENEST_AKTIV, filterValueOperator, ((filterValue == true) ? 1 : 0)) {
+		} // SofdEmployeeFilter_SenestAktiv
+
+	} // SofdEmployeeFilter_SenestAktiv
+	#endregion
+
 	#region SofdEmployeeFilter_MaNummer class
 	/// <summary>
 	/// Employee filter on MaNummer.
@@ -2243,6 +2261,24 @@ namespace NDK.Framework {
 		} // SofdEmployeeFilter_JubilaeumsAncinnitetsDato
 
 	} // SofdEmployeeFilter_JubilaeumsAncinnitetsDato
+	#endregion
+
+	#region SofdEmployeeFilter_AnsaettelseAktiv class
+	/// <summary>
+	/// Employee filter on AnsaettelseAktiv.
+	/// </summary>
+	public class SofdEmployeeFilter_AnsaettelseAktiv : SqlWhereFilterInt32 {
+
+		/// <summary>
+		/// Employee filter on AnsaettelseAktiv.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_AnsaettelseAktiv(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Boolean filterValue) : base(filterOperator, SofdEmployee.FIELD_ANSAETTELSE_AKTIV, filterValueOperator, ((filterValue == true) ? 1 : 0)) {
+		} // SofdEmployeeFilter_AnsaettelseAktiv
+
+	} // SofdEmployeeFilter_AnsaettelseAktiv
 	#endregion
 
 	#region SofdEmployeeFilter_SidstAendret class
@@ -2569,6 +2605,42 @@ namespace NDK.Framework {
 	} // SofdEmployeeFilter_LoenKlasse
 	#endregion
 
+	#region SofdEmployeeFilter_Intern class
+	/// <summary>
+	/// Employee filter on Intern.
+	/// </summary>
+	public class SofdEmployeeFilter_Intern : SqlWhereFilterInt32 {
+
+		/// <summary>
+		/// Employee filter on Intern.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_Intern(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Boolean filterValue) : base(filterOperator, SofdEmployee.FIELD_INTERN, filterValueOperator, ((filterValue == true) ? 1 : 0)) {
+		} // SofdEmployeeFilter_Intern
+
+	} // SofdEmployeeFilter_Intern
+	#endregion
+
+	#region SofdEmployeeFilter_Extern class
+	/// <summary>
+	/// Employee filter on Extern.
+	/// </summary>
+	public class SofdEmployeeFilter_Extern : SqlWhereFilterInt32 {
+
+		/// <summary>
+		/// Employee filter on Extern.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_Extern(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Boolean filterValue) : base(filterOperator, SofdEmployee.FIELD_EKSTERN, filterValueOperator, ((filterValue == true) ? 1 : 0)) {
+		} // SofdEmployeeFilter_Extern
+
+	} // SofdEmployeeFilter_Extern
+	#endregion
+
 	#region SofdEmployeeFilter_Uuid class
 	/// <summary>
 	/// Employee filter on Uuid.
@@ -2603,6 +2675,24 @@ namespace NDK.Framework {
 		} // SofdEmployeeFilter_MifareId
 
 	} // SofdEmployeeFilter_MifareId
+	#endregion
+
+	#region SofdEmployeeFilter_Leder class
+	/// <summary>
+	/// Employee filter on Leder.
+	/// </summary>
+	public class SofdEmployeeFilter_Leder : SqlWhereFilterInt32 {
+
+		/// <summary>
+		/// Employee filter on Leder.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_Leder(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Boolean filterValue) : base(filterOperator, SofdEmployee.FIELD_LEDER, filterValueOperator, ((filterValue == true) ? 1 : 0)) {
+		} // SofdEmployeeFilter_Leder
+
+	} // SofdEmployeeFilter_Leder
 	#endregion
 
 	#region SofdEmployeeFilter_NaermesteLederMaNummer class
