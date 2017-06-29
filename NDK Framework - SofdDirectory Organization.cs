@@ -1065,6 +1065,78 @@ namespace NDK.Framework {
 	} // SofdOrganizationFilter_Aktiv
 	#endregion
 
+	#region SofdOrganizationFilter_SenestAktiv class
+	/// <summary>
+	/// Organization filter on SenestAktiv.
+	/// </summary>
+	public class SofdOrganizationFilter_SenestAktiv : SqlWhereFilterInt32 {
+
+		/// <summary>
+		/// Organization filter on SenestAktiv.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdOrganizationFilter_SenestAktiv(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Boolean filterValue) : base(filterOperator, SofdOrganization.FIELD_SENEST_AKTIV, filterValueOperator, ((filterValue == true) ? 1 : 0)) {
+		} // SofdOrganizationFilter_SenestAktiv
+
+	} // SofdOrganizationFilter_SenestAktiv
+	#endregion
+
+	#region SofdOrganizationFilter_AktivFra class
+	/// <summary>
+	/// Organization filter on AktivFra.
+	/// </summary>
+	public class SofdOrganizationFilter_AktivFra : SqlWhereFilterDateTime {
+
+		/// <summary>
+		/// Organization filter on AktivFra.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdOrganizationFilter_AktivFra(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, DateTime filterValue) : base(filterOperator, SofdOrganization.FIELD_AKTIV_FRA, filterValueOperator, filterValue) {
+		} // SofdOrganizationFilter_AktivFra
+
+	} // SofdOrganizationFilter_AktivFra
+	#endregion
+
+	#region SofdOrganizationFilter_AktivTil class
+	/// <summary>
+	/// Organization filter on AktivTil.
+	/// </summary>
+	public class SofdOrganizationFilter_AktivTil : SqlWhereFilterDateTime {
+
+		/// <summary>
+		/// Organization filter on AktivTil.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdOrganizationFilter_AktivTil(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, DateTime filterValue) : base(filterOperator, SofdOrganization.FIELD_AKTIV_TIL, filterValueOperator, filterValue) {
+		} // SofdOrganizationFilter_AktivTil
+
+	} // SofdOrganizationFilter_AktivTil
+	#endregion
+
+	#region SofdOrganizationFilter_SidstAendret class
+	/// <summary>
+	/// Organization filter on SidstAendret.
+	/// </summary>
+	public class SofdOrganizationFilter_SidstAendret : SqlWhereFilterDateTime {
+
+		/// <summary>
+		/// Organization filter on SidstAendret.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdOrganizationFilter_SidstAendret(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, DateTime filterValue) : base(filterOperator, SofdOrganization.FIELD_SIDST_AENDRET, filterValueOperator, filterValue) {
+		} // SofdOrganizationFilter_SidstAendret
+
+	} // SofdOrganizationFilter_SidstAendret
+	#endregion
+
 	#region SofdOrganizationFilter_LosOrganisationId class
 	/// <summary>
 	/// Organisation filter on LosOrganisationId.
@@ -1101,6 +1173,60 @@ namespace NDK.Framework {
 	} // SofdOrganizationFilter_LosForaelderOrganisationId
 	#endregion
 
+	#region SofdOrganizationFilter_KortNavn class
+	/// <summary>
+	/// Organisation filter on KortNavn.
+	/// </summary>
+	public class SofdOrganizationFilter_KortNavn : SqlWhereFilterString {
+
+		/// <summary>
+		/// Organisation filter on KortNavn.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdOrganizationFilter_KortNavn(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdOrganization.FIELD_KORT_NAVN, filterValueOperator, filterValue) {
+		} // SofdOrganizationFilter_KortNavn
+
+	} // SofdOrganizationFilter_KortNavn
+	#endregion
+
+	#region SofdOrganizationFilter_Navn class
+	/// <summary>
+	/// Organisation filter on Navn.
+	/// </summary>
+	public class SofdOrganizationFilter_Navn : SqlWhereFilterString {
+
+		/// <summary>
+		/// Organisation filter on Navn.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdOrganizationFilter_Navn(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdOrganization.FIELD_NAVN, filterValueOperator, filterValue) {
+		} // SofdOrganizationFilter_Navn
+
+	} // SofdOrganizationFilter_Navn
+	#endregion
+
+	#region SofdOrganizationFilter_TelefonNummer class
+	/// <summary>
+	/// Organisation filter on TelefonNummer.
+	/// </summary>
+	public class SofdOrganizationFilter_TelefonNummer : SqlWhereFilterString {
+
+		/// <summary>
+		/// Organisation filter on TelefonNummer.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdOrganizationFilter_TelefonNummer(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdOrganization.FIELD_TELEFON_NUMMER, filterValueOperator, filterValue) {
+		} // SofdOrganizationFilter_TelefonNummer
+
+	} // SofdOrganizationFilter_TelefonNummer
+	#endregion
+
 	#region SofdOrganizationFilter_CvrNumber class
 	/// <summary>
 	/// Organisation filter on CvrNumber.
@@ -1113,7 +1239,7 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdOrganizationFilter_CvrNumber(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganization.FIELD_ORGANISATION_HISTORIK_ID, filterValueOperator, filterValue) {
+		public SofdOrganizationFilter_CvrNumber(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganization.FIELD_CVR_NUMMER, filterValueOperator, filterValue) {
 		} // SofdOrganizationFilter_CvrNumber
 
 	} // SofdOrganizationFilter_CvrNumber
@@ -1131,7 +1257,7 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdOrganizationFilter_SeNumber(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganization.FIELD_ORGANISATION_HISTORIK_ID, filterValueOperator, filterValue) {
+		public SofdOrganizationFilter_SeNumber(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganization.FIELD_SE_NUMMER, filterValueOperator, filterValue) {
 		} // SofdOrganizationFilter_SeNumber
 
 	} // SofdOrganizationFilter_SeNumber
@@ -1149,7 +1275,7 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdOrganizationFilter_EanNumber(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganization.FIELD_ORGANISATION_HISTORIK_ID, filterValueOperator, filterValue) {
+		public SofdOrganizationFilter_EanNumber(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganization.FIELD_EAN_NUMMER, filterValueOperator, filterValue) {
 		} // SofdOrganizationFilter_EanNumber
 
 	} // SofdOrganizationFilter_EanNumber
@@ -1167,10 +1293,28 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdOrganizationFilter_PNumber(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganization.FIELD_ORGANISATION_HISTORIK_ID, filterValueOperator, filterValue) {
+		public SofdOrganizationFilter_PNumber(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganization.FIELD_P_NUMMER, filterValueOperator, filterValue) {
 		} // SofdOrganizationFilter_PNumber
 
 	} // SofdOrganizationFilter_PNumber
+	#endregion
+
+	#region SofdOrganizationFilter_OmkostningsSted class
+	/// <summary>
+	/// Organisation filter on OmkostningsSted.
+	/// </summary>
+	public class SofdOrganizationFilter_OmkostningsSted : SqlWhereFilterInt32 {
+
+		/// <summary>
+		/// Organisation filter on OmkostningsSted.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdOrganizationFilter_OmkostningsSted(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Int32 filterValue) : base(filterOperator, SofdOrganization.FIELD_OMKOSTNINGS_STED, filterValueOperator, filterValue) {
+		} // SofdOrganizationFilter_OmkostningsSted
+
+	} // SofdOrganizationFilter_OmkostningsSted
 	#endregion
 
 	#region SofdOrganizationFilter_Uuid class
@@ -1185,7 +1329,7 @@ namespace NDK.Framework {
 		/// <param name="filterOperator">The filter operator.</param>
 		/// <param name="filterValueOperator">The filter value operator.</param>
 		/// <param name="filterValue">The filter value.</param>
-		public SofdOrganizationFilter_Uuid(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Guid filterValue) : base(filterOperator, SofdOrganization.FIELD_ORGANISATION_HISTORIK_ID, filterValueOperator, filterValue.ToString()) {
+		public SofdOrganizationFilter_Uuid(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, Guid filterValue) : base(filterOperator, SofdOrganization.FIELD_UUID, filterValueOperator, filterValue.ToString()) {
 		} // SofdOrganizationFilter_Uuid
 
 	} // SofdOrganizationFilter_Uuid

@@ -2749,4 +2749,22 @@ namespace NDK.Framework {
 	} // SofdEmployeeFilter_NaermesteLederAdBrugerNavn
 	#endregion
 
+	#region SofdEmployeeFilter_NaermesteLederNavn class
+	/// <summary>
+	/// Employee filter on NaermesteLederNavn.
+	/// </summary>
+	public class SofdEmployeeFilter_NaermesteLederNavn : SqlWhereFilterString {
+
+		/// <summary>
+		/// Employee filter on NaermesteLederNavn.
+		/// </summary>
+		/// <param name="filterOperator">The filter operator.</param>
+		/// <param name="filterValueOperator">The filter value operator.</param>
+		/// <param name="filterValue">The filter value.</param>
+		public SofdEmployeeFilter_NaermesteLederNavn(SqlWhereFilterOperator filterOperator, SqlWhereFilterValueOperator filterValueOperator, String filterValue) : base(filterOperator, SofdEmployee.FIELD_NAERMESTE_LEDER_NAVN, filterValueOperator, filterValue) {
+		} // SofdEmployeeFilter_NaermesteLederNavn
+
+	} // SofdEmployeeFilter_NaermesteLederNavn
+	#endregion
+
 } // NDK.Framework

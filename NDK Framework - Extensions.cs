@@ -42,6 +42,20 @@ namespace NDK.Framework {
 		} // GetNotNull
 
 		/// <summary>
+		/// Gets the value converted to a integer.
+		/// </summary>
+		/// <param name="value">The string.</param>
+		/// <param name="defaultvalue">The returned value when the convertion fails.</param>
+		/// <returns></returns>
+		public static Int32 ToInt32(this String value, Int32 defaultvalue = 0) {
+			try {
+				return Int32.Parse(value);
+			} catch {
+				return defaultvalue;
+			}
+		} // ToInt32
+
+		/// <summary>
 		/// Gets true if the argumented value is either null, empty or consists entirely of white-spaces.
 		/// </summary>
 		/// <param name="value">The string.</param>
