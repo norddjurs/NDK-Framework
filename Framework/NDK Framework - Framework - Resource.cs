@@ -216,62 +216,67 @@ namespace NDK.Framework {
 				}
 				key = Path.ChangeExtension(key, ".dll");
 
-				// Log.
-				this.LogInternal("Resource: Reading assembly resource '{0}'.", key);
+				if (key != "NDK Framework.dll") {
+					// Log.
+					this.LogInternal("Resource: Reading assembly resource '{0}'.", key);
 
-				// Find the resource with the name matching the key in the calling assembly.
-				foreach (String name in Assembly.GetCallingAssembly().GetManifestResourceNames()) {
-					Int32 index = name.ToLower().IndexOf(".resources.");
-					if ((index > -1) && (name.ToLower().Substring(index + 11).Equals(key.ToLower()) == true)) {
-						Stream resurceStream = Assembly.GetCallingAssembly().GetManifestResourceStream(name);
-						using (MemoryStream memoryStream = new MemoryStream()) {
-							resurceStream.CopyTo(memoryStream);
-							return Assembly.Load(memoryStream.ToArray());
-						}
-					}
-				}
-
-				// Find the resource with the name matching the key in the executing assembly.
-				foreach (String name in Assembly.GetExecutingAssembly().GetManifestResourceNames()) {
-					Int32 index = name.ToLower().IndexOf(".resources.");
-					if ((index > -1) && (name.ToLower().Substring(index + 11).Equals(key.ToLower()) == true)) {
-						Stream resurceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name);
-						using (MemoryStream memoryStream = new MemoryStream()) {
-							resurceStream.CopyTo(memoryStream);
-							return Assembly.Load(memoryStream.ToArray());
-						}
-					}
-				}
-
-				// Find the resource with the name matching the key in the entry assembly.
-				foreach (String name in Assembly.GetEntryAssembly().GetManifestResourceNames()) {
-					Int32 index = name.ToLower().IndexOf(".resources.");
-					if ((index > -1) && (name.ToLower().Substring(index + 11).Equals(key.ToLower()) == true)) {
-						Stream resurceStream = Assembly.GetEntryAssembly().GetManifestResourceStream(name);
-						using (MemoryStream memoryStream = new MemoryStream()) {
-							resurceStream.CopyTo(memoryStream);
-							return Assembly.Load(memoryStream.ToArray());
-						}
-					}
-				}
-
-				// Find the resource with the name matching the key in all the assemblies.
-				// This is last, because I want to try the calling, executing and entry assemblies first.
-				foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies()) {
-					foreach (String name in assembly.GetManifestResourceNames()) {
+					// Find the resource with the name matching the key in the calling assembly.
+					foreach (String name in Assembly.GetCallingAssembly().GetManifestResourceNames()) {
 						Int32 index = name.ToLower().IndexOf(".resources.");
 						if ((index > -1) && (name.ToLower().Substring(index + 11).Equals(key.ToLower()) == true)) {
-							Stream resurceStream = assembly.GetManifestResourceStream(name);
+							Stream resurceStream = Assembly.GetCallingAssembly().GetManifestResourceStream(name);
 							using (MemoryStream memoryStream = new MemoryStream()) {
 								resurceStream.CopyTo(memoryStream);
 								return Assembly.Load(memoryStream.ToArray());
 							}
 						}
 					}
-				}
 
-				// Log.
-				this.LogInternal("Resource: Assembly resource not found.");
+					// Find the resource with the name matching the key in the executing assembly.
+					foreach (String name in Assembly.GetExecutingAssembly().GetManifestResourceNames()) {
+						Int32 index = name.ToLower().IndexOf(".resources.");
+						if ((index > -1) && (name.ToLower().Substring(index + 11).Equals(key.ToLower()) == true)) {
+							Stream resurceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name);
+							using (MemoryStream memoryStream = new MemoryStream()) {
+								resurceStream.CopyTo(memoryStream);
+								return Assembly.Load(memoryStream.ToArray());
+							}
+						}
+					}
+
+					// Find the resource with the name matching the key in the entry assembly.
+					foreach (String name in Assembly.GetEntryAssembly().GetManifestResourceNames()) {
+						Int32 index = name.ToLower().IndexOf(".resources.");
+						if ((index > -1) && (name.ToLower().Substring(index + 11).Equals(key.ToLower()) == true)) {
+							Stream resurceStream = Assembly.GetEntryAssembly().GetManifestResourceStream(name);
+							using (MemoryStream memoryStream = new MemoryStream()) {
+								resurceStream.CopyTo(memoryStream);
+								return Assembly.Load(memoryStream.ToArray());
+							}
+						}
+					}
+
+					// Find the resource with the name matching the key in all the assemblies.
+					// This is last, because I want to try the calling, executing and entry assemblies first.
+					foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies()) {
+						//try {
+						foreach (String name in assembly.GetManifestResourceNames()) {
+							Int32 index = name.ToLower().IndexOf(".resources.");
+							if ((index > -1) && (name.ToLower().Substring(index + 11).Equals(key.ToLower()) == true)) {
+								Stream resurceStream = assembly.GetManifestResourceStream(name);
+								using (MemoryStream memoryStream = new MemoryStream()) {
+									resurceStream.CopyTo(memoryStream);
+									return Assembly.Load(memoryStream.ToArray());
+								}
+							}
+						}
+						//} catch (NotSupportedException exception) {
+						//}
+					}
+
+					// Log.
+					this.LogInternal("Resource: Assembly resource not found.");
+				}
 
 				// Return null.
 				return null;

@@ -113,6 +113,11 @@ This includes querieng enployees by cpr number and some other filters.
 
 
 
+###CPR name query
+The NDK Framework makes it easy to query names (first, last, full) from either CPR Broker or KomBIT Serviceplatformen.
+
+
+
 ###Execution
 The NDK Framework makes it easy to execute plugins, either as a application or as s Windows service.
 
