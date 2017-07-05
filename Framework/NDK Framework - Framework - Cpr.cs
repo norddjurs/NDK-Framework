@@ -79,6 +79,9 @@ namespace NDK.Framework {
 		#region Private CPR methods.
 		private CprSearchResult CprBrokerSearch(String cprNumber) {
 			try {
+				// Format CPR number.
+				cprNumber = cprNumber.FormatStringCpr();
+
 				RpcCprBroker cprBroker = new RpcCprBroker(cprBrokerServiceUrl, cprBrokerApplicationName, cprBrokerApplicationToken, cprBrokerUserToken);
 				NDK.Framework.CprBroker.Admin.ApplicationType cprBrokerAppType = cprBroker.ApplicationIsRegistered();
 				if (cprBrokerAppType == null) {

@@ -21,15 +21,48 @@ namespace NDK.Framework.CprBroker {
 			this.MiddleName = cprBrokerResult.ToPartPersonMiddleName();
 			this.LastName = cprBrokerResult.ToPartPersonLastName();
 			this.FullName = cprBrokerResult.ToPartPersonFullName();
+
+			/* debug code
+			NDK.Framework.CprBroker.Part.RegistreringType1 partPersonType = (NDK.Framework.CprBroker.Part.RegistreringType1)cprBrokerResult.LaesResultat.Item;
+			NDK.Framework.CprBroker.Part.CprBorgerType partBorgerType = (NDK.Framework.CprBroker.Part.CprBorgerType)partPersonType.AttributListe.RegisterOplysning[0].Item;
+			NDK.Framework.CprBroker.Part.PersonNameStructureType partPersonName = partPersonType.AttributListe.Egenskab[0].NavnStruktur.PersonNameStructure;
+
+			Console.WriteLine("=====================================================");
+			Console.WriteLine(CprNumber);
+			Console.WriteLine("Note = " + partPersonType.AttributListe.Egenskab[0].NavnStruktur.NoteTekst);
+			Console.WriteLine("Kaldenavn = " + partPersonType.AttributListe.Egenskab[0].NavnStruktur.KaldenavnTekst);
+			Console.WriteLine("Adressenavn = " + partPersonType.AttributListe.Egenskab[0].NavnStruktur.PersonNameForAddressingName);
+			Console.WriteLine("Fornavn = " + partPersonType.AttributListe.Egenskab[0].NavnStruktur.PersonNameStructure.PersonGivenName);
+			Console.WriteLine("Mellemnavn = " + partPersonType.AttributListe.Egenskab[0].NavnStruktur.PersonNameStructure.PersonMiddleName);
+			Console.WriteLine("Efternavn = " + partPersonType.AttributListe.Egenskab[0].NavnStruktur.PersonNameStructure.PersonSurnameName);
+			Console.WriteLine("=====================================================");
+			*/
 		} // CprSearchResult
 
 
 		public CprSearchResult(String cprNumber, Dictionary<String, String> cprKombitResult) {
 			this.CprNumber = cprNumber;
-			this.FirstName = cprKombitResult["CNVN_FORNVN"];
-			this.MiddleName = String.Empty;
-			this.LastName = cprKombitResult["CNVN_EFTERNVN"];
-			this.FullName = cprKombitResult["CNVN_ADRNVN"];
+			if (cprKombitResult.ContainsKey("CNVN_FORNVN") == true) {
+				this.FirstName = cprKombitResult["CNVN_FORNVN"];
+			}
+			if (cprKombitResult.ContainsKey("CNVN_MELNVN") == true) {
+				this.MiddleName = cprKombitResult["CNVN_MELNVN"];
+			}
+			if (cprKombitResult.ContainsKey("CNVN_EFTERNVN") == true) {
+				this.LastName = cprKombitResult["CNVN_EFTERNVN"];
+			}
+			if (cprKombitResult.ContainsKey("CNVN_ADRNVN") == true) {
+				this.FullName = cprKombitResult["CNVN_ADRNVN"];
+			}
+
+			/* debug code
+			Console.WriteLine("=====================================================");
+			Console.WriteLine(CprNumber);
+			foreach (String key in cprKombitResult.Keys) {
+				Console.WriteLine(key + " = " + cprKombitResult[key]);
+			}
+			Console.WriteLine("=====================================================");
+			*/
 		} // CprSearchResult
 		#endregion
 
